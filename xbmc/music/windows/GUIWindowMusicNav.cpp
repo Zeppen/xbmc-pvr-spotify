@@ -105,6 +105,8 @@ bool CGUIWindowMusicNav::OnMessage(CGUIMessage& message)
       if (!CGUIWindowMusicBase::OnMessage(message))
         return false;
 
+      //spotify, force the library to be enabled even if there are no local songs
+      /*
       //  base class has opened the database, do our check
       DisplayEmptyDatabaseMessage(m_musicdatabase.GetSongsCount() <= 0);
 
@@ -116,7 +118,7 @@ bool CGUIWindowMusicNav::OnMessage(CGUIMessage& message)
         SetHistoryForPath("");
         Update("");
       }
-
+      */
       return true;
     }
     break;

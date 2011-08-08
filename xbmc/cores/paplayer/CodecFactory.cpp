@@ -41,6 +41,7 @@
 #endif
 #include "URL.h"
 #include "DVDPlayerCodec.h"
+#include "../../music/spotyXBMC/Addon.music.spotify.h"
 
 ICodec* CodecFactory::CreateCodec(const CStdString& strFileType)
 {
@@ -105,6 +106,10 @@ ICodec* CodecFactory::CreateCodec(const CStdString& strFileType)
 #endif
   else if (strFileType.Equals("tta"))
     return new DVDPlayerCodec();
+  //spotify
+  //TODO see if any addon has the ability to play the format.... now hardcode spotify
+  else if (strFileType.Left(7).Equals("spotify"))
+    return g_spotify->getCodec();
 
   return NULL;
 }
