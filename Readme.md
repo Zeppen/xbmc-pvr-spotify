@@ -35,7 +35,7 @@ OSX - Not supported, if you want to help please contact me
 
 Known issues
 ------------
-Exiting XBMC will result in a crash, will be fixed sson I hope.
+Exiting XBMC will result in a crash, will be fixed soon I hope.
 
 Enable preloading of artists together with preloading of top 100 lists and/or a massiv collection of starred tracks will result in a short freeze of XBMC during start (about 5-10 seconds depending on your internet speed, computer...).
 
