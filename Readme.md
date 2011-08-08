@@ -14,8 +14,8 @@ A video showing most of the features can be seen [here](http://www.youtube.com/w
 * Spotify playlists shows up in the playlist section.
 * The normal music search will return local music and spotify search result.
 * Top 100 spotify lists with artists, albums and tracks is available in the top 100 section. 
-* Modifying playlists and star unstar items in the spotify client will result in that the lists is updated in XBMC.
-* Multidisc albums are split up into seperate albums with prefix "disc #".
+* Modifying playlists and star/unstar items in the spotify client will result in that the lists is updated in XBMC.
+* Multidisc albums are split up into seperate albums with suffix "disc #".
 * Browsing artist albums will provide a "similar artists" folder with spotify similar artists.
 * The settings is changed from within a builtin addon.
 * Two spotify "radios" is provided int the music root, visit the settings to set name, years and genres.
