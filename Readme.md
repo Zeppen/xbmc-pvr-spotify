@@ -181,6 +181,10 @@ Modified files:
 * xbmc/GUIInfoManager.cpp
 * xbmc/XBApplicationEx.cpp
 
+By me a beer?
+-------------
+<a href='http://www.pledgie.com/campaigns/15827'><img alt='Click here to lend your support to: spotyXBMC2 and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/15827.png?skin_name=chrome' border='0' /></a>
+
 Contact
 -------
 
