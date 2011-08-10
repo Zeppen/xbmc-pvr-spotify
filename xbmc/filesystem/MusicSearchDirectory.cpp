@@ -50,16 +50,10 @@ bool CMusicSearchDirectory::GetDirectory(const CStdString& strPath, CFileItemLis
     return false;
 
   // and retrieve the search details
-<<<<<<< HEAD
-  items.m_strPath = strPath;
-
+  items.SetPath(strPath);
   //spotify perform a search in spotify.
   //TODO search all addons providing search functionality
   g_spotify->search(search, items);
-
-=======
-  items.SetPath(strPath);
->>>>>>> upstream/master
   unsigned int time = XbmcThreads::SystemClockMillis();
   CMusicDatabase db;
   db.Open();

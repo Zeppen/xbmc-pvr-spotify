@@ -134,7 +134,7 @@ bool Addon_music_spotify::getArtistAlbums(CFileItemList& items, CStdString artis
       CFileItemPtr pItem(new CFileItem(Settings::getSimilarArtistsString()));
       CStdString path;
       path.Format("musicdb://1/%s/", artistStr);
-      pItem->m_strPath = path;
+      pItem->SetPath(path);
       pItem->m_bIsFolder = true;
       items.Add(pItem);
       pItem->SetIconImage("DefaultMusicArtists.png");
@@ -284,8 +284,8 @@ bool Addon_music_spotify::getRadioTracks(CFileItemList& items, int radio) {
       for (int i = 0; i < tracks.size(); i++) {
         const CFileItemPtr pItem = SxTrackToItem(tracks[i],"", i + lowestTrackNumber + 1);
         CStdString path;
-        path.Format("%s%s%i%s%i",pItem->m_strPath,"radio#",radio,"#",i + lowestTrackNumber);
-        pItem->m_strPath = path;
+        path.Format("%s%s%i%s%i",pItem->GetPath(),"radio#",radio,"#",i + lowestTrackNumber);
+        pItem->SetPath(path);
         items.Add(pItem);
       }
     }
@@ -369,7 +369,7 @@ bool Addon_music_spotify::getTopLists(CFileItemList& items) {
     CFileItemPtr pItem(new CFileItem(Settings::getTopListTrackString()));
     CStdString path;
     path.Format("musicdb://2/spotify:toplist/-1/");
-    pItem->m_strPath = path;
+    pItem->SetPath(path);
     pItem->m_bIsFolder = true;
     items.Add(pItem);
     pItem->SetProperty("fanart_image", Settings::getFanart());
@@ -377,7 +377,7 @@ bool Addon_music_spotify::getTopLists(CFileItemList& items) {
     //add the album entry
     CFileItemPtr pItem2(new CFileItem(Settings::getTopListAlbumString()));
     path.Format("musicdb://2/spotify:toplist");
-    pItem2->m_strPath = path;
+    pItem2->SetPath(path);
     pItem2->m_bIsFolder = true;
     items.Add(pItem2);
     pItem2->SetProperty("fanart_image", Settings::getFanart());
@@ -385,7 +385,7 @@ bool Addon_music_spotify::getTopLists(CFileItemList& items) {
     //add the artist entry
     CFileItemPtr pItem3(new CFileItem(Settings::getTopListArtistString()));
     path.Format("musicdb://1/spotify:toplist");
-    pItem3->m_strPath = path;
+    pItem3->SetPath(path);
     pItem3->m_bIsFolder = true;
     items.Add(pItem3);
     pItem3->SetProperty("fanart_image", Settings::getFanart());
@@ -401,7 +401,7 @@ bool Addon_music_spotify::getCustomEntries(CFileItemList& items) {
     CFileItemPtr pItem(new CFileItem(name));
     CStdString path;
     path.Format("musicdb://3/spotify:radio:1/");
-    pItem->m_strPath = path;
+    pItem->SetPath(path);
     pItem->m_bIsFolder = true;
     items.Add(pItem);
     pItem->SetProperty("fanart_image", Settings::getFanart());
@@ -410,7 +410,7 @@ bool Addon_music_spotify::getCustomEntries(CFileItemList& items) {
     name.Format("%s%s", Settings::getRadioPrefixString(), Settings::getRadio2Name());
     CFileItemPtr pItem2(new CFileItem(name));
     path.Format("musicdb://3/spotify:radio:2/");
-    pItem2->m_strPath = path;
+    pItem2->SetPath(path);
     pItem2->m_bIsFolder = true;
     items.Add(pItem2);
     pItem2->SetProperty("fanart_image", Settings::getFanart());
