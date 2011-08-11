@@ -45,7 +45,7 @@ bool CDirectoryNodeSong::GetContent(CFileItemList& items) const {
 
   //spotify
   //TODO scan through all addons that provide songs, also create a better naming system for addon sources
-  bSuccess = g_spotify->getTracks(items, strBaseDir,musicdatabase.GetArtistById(params.GetArtistId()),params.GetAlbumId());
+  bSuccess = g_spotify->GetTracks(items, strBaseDir,musicdatabase.GetArtistById(params.GetArtistId()),params.GetAlbumId());
 
   musicdatabase.Close();
 

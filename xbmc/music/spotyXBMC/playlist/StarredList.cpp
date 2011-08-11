@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #include "StarredList.h"
 #include <set>
@@ -53,73 +53,82 @@ StarredList::~StarredList() {
   }
 }
 
+void *StarredList::populateAlbumsAndArtistsThread(void *s) {
+  Logger::printOut("Populate starred albums and artists thread start");
+  StarredList *list = (StarredList*) s;
+  set<sp_album*> tempAlbums;
+   set<sp_artist*> tempArtists;
+   for (int i = 0; i < list->getNumberOfTracks(); i++) {
+
+     sp_album* tempAlbum = sp_track_album(list->m_tracks[i]->getSpTrack());
+     if (tempAlbum != NULL) {
+       tempAlbums.insert(tempAlbum);
+       tempArtists.insert(sp_track_artist(list->m_tracks[i]->getSpTrack(), 0));
+     }
+   }
+
+   //now we have a set with unique sp_albums, lets load them and see if they have all tracks starred or not
+
+   vector<SxAlbum*> newAlbums;
+   //find out witch albums that has complete set of starred tracks
+   for (set<sp_album*>::const_iterator albumIt = tempAlbums.begin(); albumIt != tempAlbums.end(); ++albumIt) {
+     SxAlbum* album = AlbumStore::getInstance()->getAlbum((sp_album*) *albumIt, true);
+     Logger::printOut(album->getAlbumName());
+     while (!album->isLoaded()) {
+       Session::getInstance()->processEvents();
+     }
+
+     if (!album->hasTracksAndDetails() || album->getTracks().size() == 0 || !sp_album_is_available(album->getSpAlbum())) {
+       AlbumStore::getInstance()->removeAlbum(album);
+       continue;
+     }
+     bool albumIsStarred = true;
+     vector<SxTrack*> tracks = album->getTracks();
+     for (int i = 0; i < tracks.size(); i++) {
+       if (!sp_track_is_starred(Session::getInstance()->getSpSession(), tracks[i]->getSpTrack())) {
+         albumIsStarred = false;
+         break;
+       }
+     }
+
+     if (albumIsStarred)
+       newAlbums.push_back(AlbumStore::getInstance()->getAlbum(album->getSpAlbum(), true));
+   }
+   while (!list->m_albums.empty()) {
+     AlbumStore::getInstance()->removeAlbum(list->m_albums.back()->getSpAlbum());
+     list->m_albums.pop_back();
+   }
+
+   //add all artists that we have collected
+
+   vector<SxArtist*> newArtists;
+   for (set<sp_artist*>::const_iterator artistIt = tempArtists.begin(); artistIt != tempArtists.end(); ++artistIt) {
+     SxArtist* artist = ArtistStore::getInstance()->getArtist((sp_artist*) *artistIt, false);
+     if (artist != NULL)
+       newArtists.push_back(artist);
+   }
+
+   while (!list->m_artists.empty()) {
+     ArtistStore::getInstance()->removeArtist(list->m_artists.back());
+     list->m_artists.pop_back();
+   }
+
+   list->m_artists = newArtists;
+
+   list->m_albums = newAlbums;
+   XBMCUpdater::updateAllArtists();
+   XBMCUpdater::updateAllAlbums();
+   Logger::printOut("Populate starred albums and artists thread done");
+}
+
 void StarredList::populateAlbumsAndArtists() {
   Logger::printOut("Populate starred albums and artists");
   //ok so we got the tracks list populated within the playlist, now create the albums we want
-
-  set<sp_album*> tempAlbums;
-  set<sp_artist*> tempArtists;
-  for (int i = 0; i < getNumberOfTracks(); i++) {
-
-    sp_album* tempAlbum  = sp_track_album(m_tracks[i]->getSpTrack());
-    if (tempAlbum != NULL){
-      tempAlbums.insert(tempAlbum);
-      tempArtists.insert(sp_track_artist(m_tracks[i]->getSpTrack(),0));
+  //we cant do it in this thread becouse the albums will never load... create a new thread
+  pthread_t initThread;
+    if ((pthread_create(&initThread, NULL, &populateAlbumsAndArtistsThread, (void*)this))) {
+      Logger::printOut("Failed to create populateAlbumsAndArtists thread");
     }
-  }
-
-  //now we have a set with unique sp_albums, lets load them and see if they have all tracks starred or not
-
-  vector<SxAlbum*> newAlbums;
-  //find out witch albums that has complete set of starred tracks
-  for (set<sp_album*>::const_iterator albumIt = tempAlbums.begin(); albumIt != tempAlbums.end(); ++albumIt) {
-    SxAlbum* album = AlbumStore::getInstance()->getAlbum((sp_album*)*albumIt, true);
-    Logger::printOut(album->getAlbumName());
-    while (!album->isLoaded()) {
-        clock_t goal = 50 + clock();
-        while (goal > clock())
-          ;
-      }
-
-    if (!album->hasTracksAndDetails() || album->getTracks().size() == 0 ||  !sp_album_is_available(album->getSpAlbum())) {
-      AlbumStore::getInstance()->removeAlbum(album);
-      continue;
-    }
-    bool albumIsStarred = true;
-    vector<SxTrack*> tracks = album->getTracks();
-    for (int i = 0; i < tracks.size(); i++) {
-      if (!sp_track_is_starred(Session::getInstance()->getSpSession(), tracks[i]->getSpTrack())) {
-        albumIsStarred = false;
-        break;
-      }
-    }
-
-    if (albumIsStarred)
-      newAlbums.push_back(AlbumStore::getInstance()->getAlbum(album->getSpAlbum(), true));
-  }
-  while (!m_albums.empty()) {
-    AlbumStore::getInstance()->removeAlbum(m_albums.back()->getSpAlbum());
-    m_albums.pop_back();
-  }
-
-  //add all artists that we have collected
-
-  vector<SxArtist*> newArtists;
-  for (set<sp_artist*>::const_iterator artistIt = tempArtists.begin(); artistIt != tempArtists.end(); ++artistIt) {
-    SxArtist* artist = ArtistStore::getInstance()->getArtist((sp_artist*)*artistIt, false);
-    if (artist != NULL)
-      newArtists.push_back(artist);
-  }
-
-  while (!m_artists.empty()) {
-    ArtistStore::getInstance()->removeArtist(m_artists.back());
-    m_artists.pop_back();
-  }
-
-  m_artists = newArtists;
-
-  m_albums = newAlbums;
-  Logger::printOut("Populate starred albums and artists done");
 }
 
 void StarredList::reLoad() {
@@ -127,7 +136,7 @@ void StarredList::reLoad() {
   if (m_isValid && !isFolder()) {
     vector<SxTrack*> newTracks;
     for (int index = 0; index < sp_playlist_num_tracks(m_spPlaylist); index++) {
-      if (!sp_track_is_available(Session::getInstance()->getSpSession(),sp_playlist_track(m_spPlaylist, index)))
+      if (!sp_track_is_available(Session::getInstance()->getSpSession(), sp_playlist_track(m_spPlaylist, index)))
         continue;
       SxTrack* track = TrackStore::getInstance()->getTrack(sp_playlist_track(m_spPlaylist, index));
       if (track) {
@@ -142,7 +151,6 @@ void StarredList::reLoad() {
   }
   populateAlbumsAndArtists();
   Logger::printOut("reload star done");
-  XBMCUpdater::updateAllAlbums();
   XBMCUpdater::updateAllTracks();
   //TODO update all artists
 
@@ -173,7 +181,6 @@ bool StarredList::isLoaded() {
     if (!m_artists[i]->isLoaded())
       return false;
   }
-
 
   return true;
 }

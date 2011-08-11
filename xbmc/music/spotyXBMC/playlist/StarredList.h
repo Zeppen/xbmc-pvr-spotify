@@ -45,6 +45,7 @@ public:
   SxArtist* getArtist(int index);
 
 private:
+  static void *populateAlbumsAndArtistsThread(void *s);
   vector<SxAlbum*> m_albums;
   vector<SxArtist*> m_artists;
 };

@@ -1325,7 +1325,7 @@ bool CGUIWindowMusicBase::GetDirectory(const CStdString &strDirectory, CFileItem
     //spotify, this is probably not the right place to do this but cant find a better one.
     //load up the spotify playlists
     //TODO scan all plugins for playlists
-    g_spotify->getPlaylists(items);
+    g_spotify->GetPlaylists(items);
 
     CFileItemPtr newPlaylist(new CFileItem(g_settings.GetUserDataItem("PartyMode.xsp"),false));
     newPlaylist->SetLabel(g_localizeStrings.Get(16035));

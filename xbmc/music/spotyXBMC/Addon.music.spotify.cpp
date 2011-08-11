@@ -73,7 +73,7 @@ bool Addon_music_spotify::processAddonThread() {
   return Session::getInstance()->processEvents();
 }
 
-bool Addon_music_spotify::getPlaylists(CFileItemList& items) {
+bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
   if (isReady()) {
     PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
     CMediaSource playlistShare;
@@ -97,7 +97,7 @@ bool Addon_music_spotify::getPlaylists(CFileItemList& items) {
   return true;
 }
 
-bool Addon_music_spotify::getAlbums(CFileItemList& items, CStdString path, CStdString artistName) {
+bool Addon_music_spotify::GetAlbums(CFileItemList& items, CStdString& path, CStdString artistName) {
   CURL url(path);
   CStdString uri = url.GetFileNameWithoutPath();
   if (uri.Left(14).Equals("spotify:artist")) {
@@ -110,7 +110,7 @@ bool Addon_music_spotify::getAlbums(CFileItemList& items, CStdString path, CStdS
   return true;
 }
 
-bool Addon_music_spotify::getArtistAlbums(CFileItemList& items, CStdString artistStr) {
+bool Addon_music_spotify::getArtistAlbums(CFileItemList& items, CStdString& artistStr) {
   if (isReady()) {
     sp_link *spLink = sp_link_create_from_string(artistStr);
     if (!spLink)
@@ -151,7 +151,7 @@ bool Addon_music_spotify::getArtistAlbums(CFileItemList& items, CStdString artis
   return true;
 }
 
-bool Addon_music_spotify::getAllAlbums(CFileItemList& items, CStdString artistStr) {
+bool Addon_music_spotify::getAllAlbums(CFileItemList& items, CStdString& artistStr) {
 
   Logger::printOut("get album");
   if (isReady()) {
@@ -181,7 +181,7 @@ bool Addon_music_spotify::getAllAlbums(CFileItemList& items, CStdString artistSt
 
 }
 
-bool Addon_music_spotify::getTracks(CFileItemList& items, CStdString path, CStdString artistName, int albumId) {
+bool Addon_music_spotify::GetTracks(CFileItemList& items, CStdString& path, CStdString artistName, int albumId) {
   Logger::printOut("get tracks");
   CURL url(path);
   CStdString uri = url.GetFileNameWithoutPath();
@@ -207,7 +207,7 @@ bool Addon_music_spotify::getTracks(CFileItemList& items, CStdString path, CStdS
   return true;
 }
 
-bool Addon_music_spotify::getAlbumTracks(CFileItemList& items, CStdString path) {
+bool Addon_music_spotify::getAlbumTracks(CFileItemList& items, CStdString& path) {
   if (isReady()) {
     //lets split the string to get the album uri and the disc number
     CStdString uri = path.Left(path.Find('#'));
@@ -233,7 +233,7 @@ bool Addon_music_spotify::getAlbumTracks(CFileItemList& items, CStdString path) 
   return true;
 }
 
-bool Addon_music_spotify::getArtistTracks(CFileItemList& items, CStdString path) {
+bool Addon_music_spotify::getArtistTracks(CFileItemList& items, CStdString& path) {
   Logger::printOut("get artist tracks");
   if (isReady()) {
     sp_link *spLink = sp_link_create_from_string(path);
@@ -258,7 +258,7 @@ bool Addon_music_spotify::getArtistTracks(CFileItemList& items, CStdString path)
   return true;
 }
 
-bool Addon_music_spotify::getAllTracks(CFileItemList& items, CStdString path) {
+bool Addon_music_spotify::getAllTracks(CFileItemList& items, CStdString& path) {
   Logger::printOut("get tracks");
   Logger::printOut(path);
   if (isReady()) {
@@ -294,7 +294,7 @@ bool Addon_music_spotify::getRadioTracks(CFileItemList& items, int radio) {
   return false;
 }
 
-bool Addon_music_spotify::getArtists(CFileItemList& items, CStdString path) {
+bool Addon_music_spotify::GetArtists(CFileItemList& items, CStdString& path) {
   CURL url(path);
   CStdString uri = url.GetFileNameWithoutPath();
   if (uri.Left(15).Equals("spotify:toplist")) {
@@ -358,7 +358,7 @@ bool Addon_music_spotify::getPlaylistTracks(CFileItemList& items, int index) {
   return true;
 }
 
-bool Addon_music_spotify::getTopLists(CFileItemList& items) {
+bool Addon_music_spotify::GetTopLists(CFileItemList& items) {
   if (isReady()) {
     Logger::printOut("get the toplist entry list");
     TopLists* topLists = Session::getInstance()->getTopLists();
@@ -393,7 +393,7 @@ bool Addon_music_spotify::getTopLists(CFileItemList& items) {
   return true;
 }
 
-bool Addon_music_spotify::getCustomEntries(CFileItemList& items) {
+bool Addon_music_spotify::GetCustomEntries(CFileItemList& items) {
   if (isReady()) {
     //add radio 1
     CStdString name;
@@ -483,7 +483,7 @@ bool Addon_music_spotify::getTopListTracks(CFileItemList& items) {
   return true;
 }
 
-bool Addon_music_spotify::search(CStdString query, CFileItemList& items) {
+bool Addon_music_spotify::Search(CStdString query, CFileItemList& items) {
 //do the search, if we are already searching and are to fetch results this want do anything
   Logger::printOut("new search");
   if (isReady()) {
@@ -520,7 +520,7 @@ bool Addon_music_spotify::search(CStdString query, CFileItemList& items) {
   return true;
 }
 
-ICodec* Addon_music_spotify::getCodec() {
+ICodec* Addon_music_spotify::GetCodec() {
   return (ICodec*) PlayerHandler::getInstance()->getCodec();
 }
 

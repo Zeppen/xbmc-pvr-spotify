@@ -84,7 +84,9 @@ void Codec::DeInit() {
 }
 
 __int64 Codec::Seek(__int64 iSeekTime) {
-  return 0;
+  Logger::printOut("trying to seek");
+  sp_session_player_seek(getSession(), iSeekTime/1000);
+  return iSeekTime;
 }
 
 int Codec::ReadPCM(BYTE *pBuffer, int size, int *actualsize) {

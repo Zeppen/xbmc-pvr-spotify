@@ -58,7 +58,8 @@ bool CDirectoryNodeArtist::GetContent(CFileItemList& items) const {
 
   //spotify
   // TODO ask all loaded music addons for artists
-  bSuccess = g_spotify->getArtists(items, BuildPath());
+  CStdString strBaseDir = BuildPath();
+  bSuccess = g_spotify->GetArtists(items, strBaseDir);
 
 
   musicdatabase.Close();

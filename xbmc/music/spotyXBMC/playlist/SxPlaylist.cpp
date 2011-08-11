@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #include "SxPlaylist.h"
 #include "../session/Session.h"
@@ -133,7 +133,7 @@ void SxPlaylist::reLoad() {
     vector<SxTrack*> newTracks;
     for (int index = 0; index < sp_playlist_num_tracks(m_spPlaylist); index++) {
       sp_track* spTrack = sp_playlist_track(m_spPlaylist, index);
-      if (!sp_track_is_available(Session::getInstance()->getSpSession(),spTrack))
+      if (!sp_track_is_available(Session::getInstance()->getSpSession(), spTrack))
         continue;
       SxTrack* track = TrackStore::getInstance()->getTrack(spTrack);
       if (track) {
@@ -157,7 +157,8 @@ void SxPlaylist::reLoad() {
 
 void SxPlaylist::cb_tracks_removed(sp_playlist *pl, const int *tracks, int num_tracks, void *userdata) {
   SxPlaylist* plist = (SxPlaylist*) userdata;
-  plist->reLoad();
+  if (plist->isLoaded())
+    plist->reLoad();
 }
 
 void SxPlaylist::cb_playlist_renamed(sp_playlist *pl, void *userdata) {
@@ -166,12 +167,14 @@ void SxPlaylist::cb_playlist_renamed(sp_playlist *pl, void *userdata) {
 
 void SxPlaylist::cb_playlist_metadata_updated(sp_playlist *pl, void *userdata) {
   SxPlaylist* plist = (SxPlaylist*) userdata;
-  plist->reLoad();
+  if (plist->isLoaded())
+    plist->reLoad();
 }
 
 void SxPlaylist::cb_tracks_moved(sp_playlist *pl, const int *tracks, int num_tracks, int new_position, void *userdata) {
   SxPlaylist* plist = (SxPlaylist*) userdata;
-  plist->reLoad();
+  if (plist->isLoaded())
+    plist->reLoad();
 }
 
 void SxPlaylist::cb_state_change(sp_playlist *pl, void *userdata) {
@@ -179,7 +182,8 @@ void SxPlaylist::cb_state_change(sp_playlist *pl, void *userdata) {
 
 void SxPlaylist::cb_tracks_added(sp_playlist *pl, sp_track * const *tracks, int num_tracks, int position, void *userdata) {
   SxPlaylist* plist = (SxPlaylist*) userdata;
-  plist->reLoad();
+  if (plist->isLoaded())
+    plist->reLoad();
 }
 
 } /* namespace addon_music_spotify */

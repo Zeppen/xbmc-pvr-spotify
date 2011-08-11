@@ -98,7 +98,7 @@ bool CDirectoryNodeOverview::GetContent(CFileItemList& items) const
 
   //spotify
    // TODO ask all loaded music addons for custom entries
-   g_spotify->getCustomEntries(items);
+   g_spotify->GetCustomEntries(items);
 
 
   return true;

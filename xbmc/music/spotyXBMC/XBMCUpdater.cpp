@@ -62,10 +62,34 @@ void XBMCUpdater::updatePlaylist(int index) {
    g_windowManager.SendThreadMessage(message);*/
 }
 
+void XBMCUpdater::updateAllArtists() {
+  Logger::printOut("updating all artists");
+  CGUIMessage message(GUI_MSG_NOTIFY_ALL, 0, 0, GUI_MSG_UPDATE_PATH);
+  CStdString path;
+  path.Format("musicdb://2/");
+  Logger::printOut(path);
+  message.SetStringParam(path);
+  g_windowManager.SendThreadMessage(message);
+}
+
 void XBMCUpdater::updateAllAlbums() {
+  Logger::printOut("updating all albums");
+  CGUIMessage message(GUI_MSG_NOTIFY_ALL, 0, 0, GUI_MSG_UPDATE_PATH);
+  CStdString path;
+  path.Format("musicdb://3/");
+  Logger::printOut(path);
+  message.SetStringParam(path);
+  g_windowManager.SendThreadMessage(message);
 }
 
 void XBMCUpdater::updateAllTracks() {
+  Logger::printOut("updating all tracks");
+  CGUIMessage message(GUI_MSG_NOTIFY_ALL, 0, 0, GUI_MSG_UPDATE_PATH);
+  CStdString path;
+  path.Format("musicdb://4/");
+  Logger::printOut(path);
+  message.SetStringParam(path);
+  g_windowManager.SendThreadMessage(message);
 }
 
 void XBMCUpdater::updateRadio(int radio){

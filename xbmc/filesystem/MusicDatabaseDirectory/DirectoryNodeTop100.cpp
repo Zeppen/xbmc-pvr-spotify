@@ -70,7 +70,7 @@ bool CDirectoryNodeTop100::GetContent(CFileItemList& items) const
 
   //spotify
   //get all toplists from addons, now just fetch the spotify lists
-  g_spotify->getTopLists(items);
+  g_spotify->GetTopLists(items);
 
   return true;
 }

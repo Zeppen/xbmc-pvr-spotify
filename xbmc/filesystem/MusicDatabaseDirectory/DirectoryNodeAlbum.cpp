@@ -59,7 +59,7 @@ bool CDirectoryNodeAlbum::GetContent(CFileItemList& items) const {
 
   //spotify
   // TODO ask all loaded music addons for albums
-  bSuccess = g_spotify->getAlbums(items, strBaseDir,musicdatabase.GetArtistById(params.GetArtistId()));
+  bSuccess = g_spotify->GetAlbums(items, strBaseDir,musicdatabase.GetArtistById(params.GetArtistId()));
 
   musicdatabase.Close();
 

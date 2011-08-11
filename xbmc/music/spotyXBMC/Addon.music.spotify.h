@@ -46,28 +46,28 @@ public:
   }
   bool isReady();
 
-  bool getTracks(CFileItemList& items,CStdString path, CStdString artistName, int albumId);
-  bool getAlbums(CFileItemList& items,CStdString path, CStdString artistName);
-  bool getArtists(CFileItemList& items,CStdString path);
-  bool getPlaylists(CFileItemList& items);
-  bool getTopLists(CFileItemList& items);
-  bool getCustomEntries(CFileItemList& items);
-  bool search(CStdString query,CFileItemList& items);
-  ICodec* getCodec();
+  bool GetTracks(CFileItemList& items,CStdString& path, CStdString artistName, int albumId);
+  bool GetAlbums(CFileItemList& items,CStdString& path, CStdString artistName);
+  bool GetArtists(CFileItemList& items,CStdString& path);
+  bool GetPlaylists(CFileItemList& items);
+  bool GetTopLists(CFileItemList& items);
+  bool GetCustomEntries(CFileItemList& items);
+  bool Search(CStdString query,CFileItemList& items);
+  ICodec* GetCodec();
 
 private:
   bool m_isEnabled;
   Session *m_session;
 
-  bool getAlbumTracks(CFileItemList& items,CStdString path);
-  bool getArtistTracks(CFileItemList& items,CStdString path);
-  bool getAllTracks(CFileItemList& items,CStdString path);
+  bool getAlbumTracks(CFileItemList& items,CStdString& path);
+  bool getArtistTracks(CFileItemList& items,CStdString& path);
+  bool getAllTracks(CFileItemList& items,CStdString& path);
   bool getPlaylistTracks(CFileItemList& items,int index);
   bool getTopListTracks(CFileItemList& items);
   bool getRadioTracks(CFileItemList& items, int radio);
 
-  bool getAllAlbums(CFileItemList& items,CStdString path);
-  bool getArtistAlbums(CFileItemList& items,CStdString path);
+  bool getAllAlbums(CFileItemList& items,CStdString& path);
+  bool getArtistAlbums(CFileItemList& items,CStdString& path);
   bool getTopListAlbums(CFileItemList& items);
 
   bool getAllArtists(CFileItemList& items);

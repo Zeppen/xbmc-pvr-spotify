@@ -34,6 +34,7 @@ public:
   static void updatePlaylists();
   static void updatePlaylist(int index);
 
+  static void updateAllArtists();
   static void updateAllAlbums();
   static void updateAllTracks();
 

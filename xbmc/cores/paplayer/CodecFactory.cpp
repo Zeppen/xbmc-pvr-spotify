@@ -109,7 +109,7 @@ ICodec* CodecFactory::CreateCodec(const CStdString& strFileType)
   //spotify
   //TODO see if any addon has the ability to play the format.... now hardcode spotify
   else if (strFileType.Left(7).Equals("spotify"))
-    return g_spotify->getCodec();
+    return g_spotify->GetCodec();
 
   return NULL;
 }
