@@ -70,7 +70,7 @@ For 32 bit:
 4. Obtain spotyXBMC source 
    Make sure you have git installed, if not and in ubuntu install with `sudo apt-get install git-core`
 `$ cd ..`
-`$ git clone git://github.com/akezeke/xbmc.git`
+`$ git clone git://github.com/akezeke/spotyxbmc2.git`
 `$ cd xbmc`
 
 5. Spotify API key
@@ -192,3 +192,4 @@ http://github.com/akezeke/spotyxbmc
 david.erenger@gmail.com
 
 /David
+
