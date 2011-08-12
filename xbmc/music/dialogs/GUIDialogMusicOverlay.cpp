@@ -23,7 +23,6 @@
 #include "GUIInfoManager.h"
 #include "guilib/GUIWindowManager.h"
 #include "input/MouseStat.h"
-#include "Application.h"
 
 #define CONTROL_LOGO_PIC    1
 
@@ -81,12 +80,6 @@ void CGUIDialogMusicOverlay::SetDefaults()
 {
   CGUIDialog::SetDefaults();
   m_renderOrder = 0;
+  SetVisibleCondition("skin.hasmusicoverlay");
 }
 
-void CGUIDialogMusicOverlay::UpdateVisibility()
-{
-  if (g_windowManager.IsOverlayAllowed() && g_application.IsPlayingAudio())
-    Show();
-  else 
-    Close();
-}

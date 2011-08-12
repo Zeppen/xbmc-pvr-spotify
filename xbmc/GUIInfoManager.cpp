@@ -482,7 +482,9 @@ const infomap fanart_labels[] =  {{ "color1",           FANART_COLOR1 },
                                   { "image",            FANART_IMAGE }};
 
 const infomap skin_labels[] =    {{ "currenttheme",     SKIN_THEME },
-                                  { "currentcolourtheme",SKIN_COLOUR_THEME }};
+                                  { "currentcolourtheme",SKIN_COLOUR_THEME },
+                                  {"hasvideooverlay",   SKIN_HAS_VIDEO_OVERLAY},
+                                  {"hasmusicoverlay",   SKIN_HAS_MUSIC_OVERLAY}};
 
 const infomap window_bools[] =   {{ "ismedia",          WINDOW_IS_MEDIA },
                                   { "isactive",         WINDOW_IS_ACTIVE },
@@ -1854,6 +1856,14 @@ bool CGUIInfoManager::GetBool(int condition1, int contextWindow, const CGUIListI
     g_sysinfo.GetInfo(condition);
     bReturn = g_sysinfo.HasInternet();
   }
+  else if (condition == SKIN_HAS_VIDEO_OVERLAY)
+  {
+    bReturn = g_windowManager.IsOverlayAllowed() && g_application.IsPlayingVideo();
+  }
+  else if (condition == SKIN_HAS_MUSIC_OVERLAY)
+  {
+    bReturn = g_windowManager.IsOverlayAllowed() && g_application.IsPlayingAudio();
+  }
   else if (condition == CONTAINER_HASFILES || condition == CONTAINER_HASFOLDERS)
   {
     CGUIWindow *pWindow = GetWindowWithCondition(contextWindow, WINDOW_CONDITION_IS_MEDIA_WINDOW);
@@ -1887,6 +1897,16 @@ bool CGUIInfoManager::GetBool(int condition1, int contextWindow, const CGUIListI
     CGUIWindow *pWindow = GetWindowWithCondition(contextWindow, WINDOW_CONDITION_IS_MEDIA_WINDOW);
     if (pWindow)
       bReturn = ((CGUIMediaWindow*)pWindow)->CurrentDirectory().HasThumbnail();
+  }
+  else if (condition == CONTAINER_HAS_NEXT || condition == CONTAINER_HAS_PREVIOUS || condition == CONTAINER_SCROLLING)
+  {
+    CGUIWindow *window = GetWindowWithCondition(contextWindow, WINDOW_CONDITION_IS_MEDIA_WINDOW);
+    if (window)
+    {
+      const CGUIControl* control = window->GetControl(window->GetViewContainerID());
+      if (control)
+        bReturn = control->GetCondition(condition, 0);
+    }
   }
   else if (condition == VIDEOPLAYER_HAS_INFO)
     bReturn = (m_currentFile->HasVideoInfoTag() && !m_currentFile->GetVideoInfoTag()->IsEmpty());

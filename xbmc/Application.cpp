@@ -1680,6 +1680,13 @@ void CApplication::LoadSkin(const SkinPtr& skin)
   if (g_SkinInfo->HasSkinFile("DialogFullScreenInfo.xml"))
     g_windowManager.Add(new CGUIDialogFullScreenInfo);
 
+  { // we can't register visible condition in dialog's ctor because infomanager is cleared when unloading skin
+    CGUIDialog *overlay = (CGUIDialog *)g_windowManager.GetWindow(WINDOW_DIALOG_VIDEO_OVERLAY);
+    if (overlay) overlay->SetVisibleCondition("skin.hasvideooverlay");
+    overlay = (CGUIDialog *)g_windowManager.GetWindow(WINDOW_DIALOG_MUSIC_OVERLAY);
+    if (overlay) overlay->SetVisibleCondition("skin.hasmusicoverlay");
+  }
+
   CLog::Log(LOGINFO, "  skin loaded...");
 
   // leave the graphics lock
@@ -3312,9 +3319,9 @@ bool CApplication::PlayMedia(const CFileItem& item, int iPlaylist)
   }
   if (item.IsSmartPlayList())
   {
-    CDirectory dir;
     CFileItemList items;
-    if (dir.GetDirectory(item.GetPath(), items) && items.Size())
+    CUtil::GetRecursiveListing(item.GetPath(), items, "");
+    if (items.Size())
     {
       CSmartPlaylist smartpl;
       //get name and type of smartplaylist, this will always succeed as GetDirectory also did this.
