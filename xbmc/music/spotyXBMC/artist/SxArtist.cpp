@@ -55,13 +55,20 @@ SxArtist::SxArtist(sp_artist *artist, bool loadTracksAndAlbums) {
   sp_link_release(link);
   m_loadTrackAndAlbums = loadTracksAndAlbums;
 
-  if (Settings::getPreloadArtistDetails())
-    doLoadDetails();
+  //disable for now, libspotify is not thread safe yet so this might crash it
+ // if (Settings::getPreloadArtistDetails())
+ //   doLoadDetails();
 
   Logger::printOut("creating artist done");
 }
 
 SxArtist::~SxArtist() {
+  while (m_isLoadingDetails){
+    Session::getInstance()->processEvents();
+    Logger::printOut("waiting for artist to die");
+  }
+
+
   while (!m_tracks.empty()) {
     TrackStore::getInstance()->removeTrack(m_tracks.back());
     m_tracks.pop_back();

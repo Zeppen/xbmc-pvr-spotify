@@ -114,11 +114,12 @@ void *StarredList::populateAlbumsAndArtistsThread(void *s) {
    }
 
    list->m_artists = newArtists;
-
    list->m_albums = newAlbums;
+
    while (!list->isLoaded()) {
      Session::getInstance()->processEvents();
    }
+
    XBMCUpdater::updateAllAlbums();
    XBMCUpdater::updateAllArtists();
    Logger::printOut("Populate starred albums and artists thread done");

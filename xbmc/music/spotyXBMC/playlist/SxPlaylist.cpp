@@ -78,7 +78,6 @@ void SxPlaylist::init() {
           m_thumb = track->getThumb();
     }
   }
-
 }
 
 SxPlaylist::~SxPlaylist() {
@@ -156,31 +155,37 @@ void SxPlaylist::reLoad() {
 }
 
 void SxPlaylist::cb_tracks_removed(sp_playlist *pl, const int *tracks, int num_tracks, void *userdata) {
+  Logger::printOut("playlists cb_tracks_removed");
   SxPlaylist* plist = (SxPlaylist*) userdata;
   if (plist->isLoaded())
     plist->reLoad();
 }
 
 void SxPlaylist::cb_playlist_renamed(sp_playlist *pl, void *userdata) {
+  Logger::printOut("playlists cb_playlist_renamed");
   //set some kind of dirty flag to the store
 }
 
 void SxPlaylist::cb_playlist_metadata_updated(sp_playlist *pl, void *userdata) {
+  Logger::printOut("playlists cb_playlist_metadata_updated");
   SxPlaylist* plist = (SxPlaylist*) userdata;
   if (plist->isLoaded())
     plist->reLoad();
 }
 
 void SxPlaylist::cb_tracks_moved(sp_playlist *pl, const int *tracks, int num_tracks, int new_position, void *userdata) {
+  Logger::printOut("playlists cb_tracks_moved");
   SxPlaylist* plist = (SxPlaylist*) userdata;
   if (plist->isLoaded())
     plist->reLoad();
 }
 
 void SxPlaylist::cb_state_change(sp_playlist *pl, void *userdata) {
+  Logger::printOut("playlists cb_state_change");
 }
 
 void SxPlaylist::cb_tracks_added(sp_playlist *pl, sp_track * const *tracks, int num_tracks, int position, void *userdata) {
+  Logger::printOut("playlists cb_tracks_added");
   SxPlaylist* plist = (SxPlaylist*) userdata;
   if (plist->isLoaded())
     plist->reLoad();
