@@ -163,8 +163,14 @@ void TopLists::cb_toplistAlbumsComplete(sp_toplistbrowse *result, void *userdata
   vector<SxAlbum*> newAlbums;
 
   for (int index = 0; index < sp_toplistbrowse_num_albums(result); index++) {
-    if (sp_album_is_available(sp_toplistbrowse_album(result, index))) {
-      SxAlbum* album = AlbumStore::getInstance()->getAlbum(sp_toplistbrowse_album(result, index), true);
+    sp_album* tempalbum = sp_toplistbrowse_album(result, index);
+    if (tempalbum == NULL)
+      continue;
+    while (!sp_album_is_loaded(tempalbum))
+      ;
+
+    if (sp_album_is_available(tempalbum)) {
+      SxAlbum* album = AlbumStore::getInstance()->getAlbum(tempalbum, true);
       if (album != NULL)
         newAlbums.push_back(album);
     }

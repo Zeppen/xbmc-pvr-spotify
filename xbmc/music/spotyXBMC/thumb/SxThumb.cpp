@@ -55,6 +55,9 @@ SxThumb::~SxThumb() {
 void SxThumb::thumbLoaded(sp_image *image) {
   if (sp_image_error(image) != SP_ERROR_OK) {
     Logger::printOut("creating image error");
+    m_file = "";
+    //well its loaded but without image
+    m_isLoaded = true;
     return;
   }
   fstream file(m_file.c_str(), ios::out | ios::binary);

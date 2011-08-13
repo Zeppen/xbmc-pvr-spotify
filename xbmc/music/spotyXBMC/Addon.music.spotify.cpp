@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #include "Addon.music.spotify.h"
 #include <stdint.h>
@@ -78,16 +78,18 @@ bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
     PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
     CMediaSource playlistShare;
     for (int i = 0; i < ps->getPlaylistCount(); i++) {
-      if (!ps->getPlaylist(i)->isFolder()) {
+      if (!ps->getPlaylist(i)->isFolder() && ps->getPlaylist(i)->isLoaded()) {
         playlistShare.strPath.Format("musicdb://3/spotify:playlist:%i", i);
         const char* owner = ps->getPlaylist(i)->getOwnerName();
-        if (owner != NULL)
+        if (owner != NULL
+        )
           playlistShare.strName.Format("%s %s %s", ps->getPlaylist(i)->getName(), Settings::getByString(), owner);
         else
           playlistShare.strName.Format("%s", ps->getPlaylist(i)->getName());
         CFileItemPtr pItem(new CFileItem(playlistShare));
         SxThumb* thumb = ps->getPlaylist(i)->getThumb();
-        if (thumb != NULL)
+        if (thumb != NULL
+        )
           pItem->SetThumbnailImage(thumb->getPath());
         pItem->SetProperty("fanart_image", Settings::getFanart());
         items.Add(pItem);
@@ -159,6 +161,11 @@ bool Addon_music_spotify::getAllAlbums(CFileItemList& items, CStdString& artistS
       //load all starred albums
       PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
       StarredList* sl = ps->getStarredList();
+      if (sl == NULL
+      )
+        return true;
+      if (!sl->isLoaded())
+        return true;
       for (int i = 0; i < sl->getNumberOfAlbums(); i++) {
         SxAlbum* album = sl->getAlbum(i);
         //if its a multidisc we need to add them all
@@ -200,7 +207,7 @@ bool Addon_music_spotify::GetTracks(CFileItemList& items, CStdString& path, CStd
   } else if (artist.Left(15).Equals("spotify:toplist")) {
     return g_spotify->getTopListTracks(items);
   } else if (uri.Left(13).Equals("spotify:radio")) {
-    return getRadioTracks(items,atoi(uri.Right(1)));
+    return getRadioTracks(items, atoi(uri.Right(1)));
   } else if (albumId == -1) {
     return getAllTracks(items, artistName);
   }
@@ -267,6 +274,12 @@ bool Addon_music_spotify::getAllTracks(CFileItemList& items, CStdString& path) {
       PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
       StarredList* sl = ps->getStarredList();
 
+      if (sl == NULL
+      )
+        return true;
+      if (!sl->isLoaded())
+        return true;
+
       for (int i = 0; i < sl->getNumberOfTracks(); i++) {
         items.Add(SxTrackToItem(sl->getTrack(i)));
       }
@@ -282,9 +295,9 @@ bool Addon_music_spotify::getRadioTracks(CFileItemList& items, int radio) {
     if (radio == 1 || radio == 2) {
       vector<SxTrack*> tracks = RadioHandler::getInstance()->getTracks(radio);
       for (int i = 0; i < tracks.size(); i++) {
-        const CFileItemPtr pItem = SxTrackToItem(tracks[i],"", i + lowestTrackNumber + 1);
+        const CFileItemPtr pItem = SxTrackToItem(tracks[i], "", i + lowestTrackNumber + 1);
         CStdString path;
-        path.Format("%s%s%i%s%i",pItem->GetPath(),"radio#",radio,"#",i + lowestTrackNumber);
+        path.Format("%s%s%i%s%i", pItem->GetPath(), "radio#", radio, "#", i + lowestTrackNumber);
         pItem->SetPath(path);
         items.Add(pItem);
       }
@@ -312,6 +325,12 @@ bool Addon_music_spotify::getAllArtists(CFileItemList& items) {
   if (isReady()) {
     PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
     StarredList* sl = ps->getStarredList();
+
+    if (sl == NULL
+    )
+      return true;
+    if (!sl->isLoaded())
+      return true;
 
     for (int i = 0; i < sl->getNumberOfArtists(); i++) {
       items.Add(SxArtistToItem(sl->getArtist(i)));
@@ -362,6 +381,10 @@ bool Addon_music_spotify::GetTopLists(CFileItemList& items) {
   if (isReady()) {
     Logger::printOut("get the toplist entry list");
     TopLists* topLists = Session::getInstance()->getTopLists();
+
+    if (topLists == NULL)
+      return true;
+
     if (!topLists->isLoaded())
       return true;
 
@@ -459,7 +482,7 @@ bool Addon_music_spotify::getTopListAlbums(CFileItemList& items) {
       items.Add(SxAlbumToItem(albums[i]));
     }
   }
-return true;
+  return true;
 }
 
 bool Addon_music_spotify::getTopListTracks(CFileItemList& items) {

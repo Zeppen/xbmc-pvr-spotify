@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #include "PlaylistStore.h"
 #include "../session/Session.h"
@@ -55,72 +55,57 @@ PlaylistStore::PlaylistStore() {
   sp_playlistcontainer_add_callbacks(m_spContainer, &m_pcCallbacks, this);
 }
 
-void *loadPlaylists(void *s) {
+void *PlaylistStore::loadPlaylists(void *s) {
   Logger::printOut("starting load playlist thread");
   PlaylistStore *store = (PlaylistStore*) s;
-  bool done = false;
 
-  while (!done) {
-    done = true;
-    if (!sp_playlist_is_loaded(store->getStarredSpList())) {
-      Logger::printOut("Starred list not loaded");
-      done = false;
+  //add all playlists to container and loop through until all are loaded
+  vector<sp_playlist*> spPlaylists;
+
+  for (int i = 0; i < sp_playlistcontainer_num_playlists(store->getContainer()); i++) {
+    sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
+    if (spType == SP_PLAYLIST_TYPE_PLAYLIST)
+      spPlaylists.push_back(sp_playlistcontainer_playlist(store->getContainer(), i));
+  }
+
+  vector<SxPlaylist*> newPlaylists;
+  int playlistNumber = 0;
+  while (!spPlaylists.empty() || !store->getStarredList()) {
+    for (int i = 0; i < spPlaylists.size(); i++) {
+      if (sp_playlist_is_loaded(spPlaylists[i])) {
+        //sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
+        newPlaylists.push_back(new SxPlaylist(spPlaylists[i], playlistNumber, false));
+        playlistNumber++;
+        spPlaylists.erase(spPlaylists.begin() + i);
+      }
+    }
+    XBMCUpdater::updatePlaylists();
+
+    if (!store->m_starredList && sp_playlist_is_loaded(store->getStarredSpList())) {
+      store->m_starredList = new StarredList(store->m_spStarredList);
+      Logger::printOut("m_starredList created");
     }
 
-    if (done == true)
-      for (int i = 0; i < sp_playlistcontainer_num_playlists(store->getContainer()); i++) {
-        sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->getContainer(), i);
-        if (spType != SP_PLAYLIST_TYPE_PLAYLIST)
-          continue;
-
-        if (!sp_playlist_is_loaded(sp_playlistcontainer_playlist(store->getContainer(), i))) {
-          done = false;
-          Logger::printOut("All playlists not loaded");
-          break;
-        }
-      }
-
-    clock_t goal = 10000 + clock();
+    //TODO sleep thread
+    clock_t goal = 100 + clock();
     while (goal > clock())
       ;
   }
-  Logger::printOut("init playliststore from loadthread");
-  store->init();
-}
 
-void PlaylistStore::init() {
-  Logger::printOut("init playliststore");
-
-  vector<SxPlaylist*> newPlaylists;
-
-  //add the playlists
-  for (int i = 0; i < sp_playlistcontainer_num_playlists(m_spContainer); i++) {
-    sp_playlist_type spType = sp_playlistcontainer_playlist_type(m_spContainer, i);
-    newPlaylists.push_back(new SxPlaylist(sp_playlistcontainer_playlist(m_spContainer, i), i, spType != SP_PLAYLIST_TYPE_PLAYLIST));
-  }
+  Logger::printOut("All playlists loaded");
 
   //empty the old one if we are updating
-  while (!m_playlists.empty()) {
-    delete m_playlists.back();
-    m_playlists.pop_back();
+  while (!store->m_playlists.empty()) {
+    delete store->m_playlists.back();
+    store->m_playlists.pop_back();
   }
 
-  m_playlists = newPlaylists;
+  store->m_playlists = newPlaylists;
 
-  //add the starred list
-  StarredList *newStarredList = new StarredList(m_spStarredList);
-  Logger::printOut("after m_spStarredList");
-  if (m_starredList)
-    delete m_starredList;
-  m_starredList = newStarredList;
-  m_isLoaded = true;
+  if (!store->m_topLists)
+    store->m_topLists = new TopLists();
 
-  //load the toplists
-  TopLists* newLists = new TopLists();
-  delete m_topLists;
-  m_topLists = newLists;
-  XBMCUpdater::updatePlaylists();
-  XBMCUpdater::updateMenu();
+  //TODO update toplists menu
 }
 
 PlaylistStore::~PlaylistStore() {
@@ -173,9 +158,6 @@ SxPlaylist *PlaylistStore::getPlaylist(int index) {
 }
 
 void PlaylistStore::pc_loaded(sp_playlistcontainer *pc, void *userdata) {
-  // PlaylistStore *store = (PlaylistStore*) userdata;
-  // if (store->m_isLoaded)
-  //  return;
   Logger::printOut("pc loaded");
   pthread_t initThread;
   if ((pthread_create(&initThread, NULL, &loadPlaylists, userdata))) {

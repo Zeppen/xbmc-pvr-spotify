@@ -66,6 +66,8 @@ public:
   void addPlaylist(sp_playlist* playlist, int position);
 
 private:
+
+  static void *loadPlaylists(void *s);
   bool m_isLoaded;
   vector<SxPlaylist*> m_playlists;
   StarredList* m_starredList;

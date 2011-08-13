@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #include <stdio.h>
 #include <math.h>
@@ -56,18 +56,18 @@ SxArtist::SxArtist(sp_artist *artist, bool loadTracksAndAlbums) {
   m_loadTrackAndAlbums = loadTracksAndAlbums;
 
   //disable for now, libspotify is not thread safe yet so this might crash it
- // if (Settings::getPreloadArtistDetails())
- //   doLoadDetails();
+
+// if (Settings::getPreloadArtistDetails())
+  //   doLoadDetails();
 
   Logger::printOut("creating artist done");
 }
 
 SxArtist::~SxArtist() {
-  while (m_isLoadingDetails){
+  while (m_isLoadingDetails) {
     Session::getInstance()->processEvents();
     Logger::printOut("waiting for artist to die");
   }
-
 
   while (!m_tracks.empty()) {
     TrackStore::getInstance()->removeTrack(m_tracks.back());
@@ -171,7 +171,7 @@ void SxArtist::doLoadTracksAndAlbums() {
 
   int addedArtists = 0;
   for (int index = 0; index < sp_artistbrowse_num_similar_artists(m_browse) && addedArtists < maxArtists; index++) {
-    m_artists.push_back(ArtistStore::getInstance()->getArtist(sp_artistbrowse_similar_artist(m_browse, index),false));
+    m_artists.push_back(ArtistStore::getInstance()->getArtist(sp_artistbrowse_similar_artist(m_browse, index), false));
     addedArtists++;
   }
 
@@ -245,7 +245,7 @@ void SxArtist::detailsLoaded(sp_artistbrowse *result) {
 
       int addedArtists = 0;
       for (int index = 0; index < sp_artistbrowse_num_similar_artists(m_browse) && addedArtists < maxArtists; index++) {
-        m_artists.push_back(ArtistStore::getInstance()->getArtist(sp_artistbrowse_similar_artist(m_browse, index),false));
+        m_artists.push_back(ArtistStore::getInstance()->getArtist(sp_artistbrowse_similar_artist(m_browse, index), false));
         addedArtists++;
       }
 
