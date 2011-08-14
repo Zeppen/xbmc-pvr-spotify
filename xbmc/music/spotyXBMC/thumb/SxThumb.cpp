@@ -30,58 +30,57 @@
 
 namespace addon_music_spotify {
 
-using namespace std;
+  using namespace std;
 
-SxThumb::SxThumb(sp_image* image, string path) {
-  m_isLoaded = false;
-  m_image = image;
-  sp_link *link = sp_link_create_from_image(image);
-  char linkString[256];
-  sp_link_as_string(link, linkString, 256);
-  sp_link_release(link);
-  m_file = path + linkString + ".jpg";
-  CStdString pathS(m_file);
-  CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
-  if (!cached.IsEmpty()) {
-    Logger::printOut("Thumb already in XBMC cache, no need to download again");
-    m_file = cached;
-    m_isLoaded = true;
-  } else
-    sp_image_add_load_callback(m_image, &cb_imageLoaded, this);
+  SxThumb::SxThumb(sp_image* image, string path) {
+    m_isLoaded = false;
+    m_image = image;
+    sp_link *link = sp_link_create_from_image(image);
+    char linkString[256];
+    sp_link_as_string(link, linkString, 256);
+    sp_link_release(link);
+    m_file = path + linkString + ".jpg";
+    CStdString pathS(m_file);
+    CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
+    if (!cached.IsEmpty()) {
+      Logger::printOut("Thumb already in XBMC cache, no need to download again");
+      m_file = cached;
+      m_isLoaded = true;
+    } else
+      sp_image_add_load_callback(m_image, &cb_imageLoaded, this);
 
-  m_references = 1;
+    m_references = 1;
 
-}
-
-SxThumb::~SxThumb() {
-  if (!m_isLoaded)
-    sp_image_remove_load_callback(m_image, &cb_imageLoaded, this);
-  sp_image_release(m_image);
-  FileSystemHelper::removeFile(m_file.c_str());
-
-}
-
-void SxThumb::thumbLoaded(sp_image *image) {
-  if (sp_image_error(image) != SP_ERROR_OK) {
-    Logger::printOut("creating image error");
-    m_file = "";
-    //well its loaded but without image
-    m_isLoaded = true;
-    return;
   }
-  fstream file(m_file.c_str(), ios::out | ios::binary);
-  const void *buffer;
-  size_t len;
-  buffer = sp_image_data(image, &len);
-  file.write((const char*) buffer, len);
-  file.close();
-  m_isLoaded = true;
-  //Logger::printOut("thumb downloaded");
-}
 
-void SxThumb::cb_imageLoaded(sp_image *image, void *userdata) {
-  SxThumb *thumb = (SxThumb*) userdata;
-  thumb->thumbLoaded(image);
-}
+  SxThumb::~SxThumb() {
+    if (!m_isLoaded) sp_image_remove_load_callback(m_image, &cb_imageLoaded, this);
+    sp_image_release(m_image);
+    FileSystemHelper::removeFile(m_file.c_str());
+
+  }
+
+  void SxThumb::thumbLoaded(sp_image *image) {
+    if (sp_image_error(image) != SP_ERROR_OK) {
+      Logger::printOut("creating image error");
+      m_file = "";
+      //well its loaded but without image
+      m_isLoaded = true;
+      return;
+    }
+    fstream file(m_file.c_str(), ios::out | ios::binary);
+    const void *buffer;
+    size_t len;
+    buffer = sp_image_data(image, &len);
+    file.write((const char*) buffer, len);
+    file.close();
+    m_isLoaded = true;
+    //Logger::printOut("thumb downloaded");
+  }
+
+  void SxThumb::cb_imageLoaded(sp_image *image, void *userdata) {
+    SxThumb *thumb = (SxThumb*) userdata;
+    thumb->thumbLoaded(image);
+  }
 
 } /* namespace addon_music_spotify */

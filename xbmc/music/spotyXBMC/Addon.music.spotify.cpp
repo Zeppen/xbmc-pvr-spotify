@@ -48,8 +48,7 @@ using namespace std;
 Addon_music_spotify* g_spotify;
 
 Addon_music_spotify::Addon_music_spotify() {
-  if (Settings::enabled())
-    Session::getInstance()->enable();
+  if (Settings::enabled()) Session::getInstance()->enable();
 }
 
 Addon_music_spotify::~Addon_music_spotify() {
@@ -81,14 +80,15 @@ bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
       if (!ps->getPlaylist(i)->isFolder() && ps->getPlaylist(i)->isLoaded()) {
         playlistShare.strPath.Format("musicdb://3/spotify:playlist:%i", i);
         const char* owner = ps->getPlaylist(i)->getOwnerName();
-        if (owner != NULL)
+        if (owner != NULL
+          )
           playlistShare.strName.Format("%s %s %s", ps->getPlaylist(i)->getName(), Settings::getByString(), owner);
         else
           playlistShare.strName.Format("%s", ps->getPlaylist(i)->getName());
         CFileItemPtr pItem(new CFileItem(playlistShare));
         SxThumb* thumb = ps->getPlaylist(i)->getThumb();
-        if (thumb != NULL)
-          pItem->SetThumbnailImage(thumb->getPath());
+        if (thumb != NULL )
+        pItem->SetThumbnailImage(thumb->getPath());
         pItem->SetProperty("fanart_image", Settings::getFanart());
         items.Add(pItem);
       }
@@ -102,25 +102,23 @@ bool Addon_music_spotify::GetAlbums(CFileItemList& items, CStdString& path, CStd
   CStdString uri = url.GetFileNameWithoutPath();
   if (uri.Left(14).Equals("spotify:artist")) {
     return getArtistAlbums(items, uri);
-  } else if (uri.Left(15).Equals("spotify:toplist")) {
-    return getTopListAlbums(items);
-  } else {
-    return getAllAlbums(items, artistName);
-  }
+  } else
+    if (uri.Left(15).Equals("spotify:toplist")) {
+      return getTopListAlbums(items);
+    } else {
+      return getAllAlbums(items, artistName);
+    }
   return true;
 }
 
 bool Addon_music_spotify::getArtistAlbums(CFileItemList& items, CStdString& artistStr) {
   if (isReady()) {
     sp_link *spLink = sp_link_create_from_string(artistStr);
-    if (!spLink)
-      return true;
+    if (!spLink) return true;
     sp_artist *spArtist = sp_link_as_artist(spLink);
-    if (!spArtist)
-      return true;
+    if (!spArtist) return true;
     SxArtist* artist = ArtistStore::getInstance()->getArtist(spArtist, true);
-    if (!artist)
-      return true;
+    if (!artist) return true;
 
     //if its the first call the artist might not be loaded yet
     artist->doLoadTracksAndAlbums();
@@ -160,10 +158,8 @@ bool Addon_music_spotify::getAllAlbums(CFileItemList& items, CStdString& artistS
       PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
       StarredList* sl = ps->getStarredList();
       if (sl == NULL
-      )
-        return true;
-      if (!sl->isLoaded())
-        return true;
+      ) return true;
+      if (!sl->isLoaded()) return true;
       for (int i = 0; i < sl->getNumberOfAlbums(); i++) {
         SxAlbum* album = sl->getAlbum(i);
         //if its a multidisc we need to add them all
@@ -197,18 +193,23 @@ bool Addon_music_spotify::GetTracks(CFileItemList& items, CStdString& path, CStd
 
   if (uri.Left(13).Equals("spotify:album")) {
     return getAlbumTracks(items, uri);
-  } else if (artist.Left(14).Equals("spotify:artist")) {
-    return getArtistTracks(items, artist);
-  } else if (uri.Left(16).Equals("spotify:playlist")) {
-    uri.Delete(0, 17);
-    return getPlaylistTracks(items, atoi(uri));
-  } else if (artist.Left(15).Equals("spotify:toplist")) {
-    return g_spotify->getTopListTracks(items);
-  } else if (uri.Left(13).Equals("spotify:radio")) {
-    return getRadioTracks(items, atoi(uri.Right(1)));
-  } else if (albumId == -1) {
-    return getAllTracks(items, artistName);
-  }
+  } else
+    if (artist.Left(14).Equals("spotify:artist")) {
+      return getArtistTracks(items, artist);
+    } else
+      if (uri.Left(16).Equals("spotify:playlist")) {
+        uri.Delete(0, 17);
+        return getPlaylistTracks(items, atoi(uri));
+      } else
+        if (artist.Left(15).Equals("spotify:toplist")) {
+          return g_spotify->getTopListTracks(items);
+        } else
+          if (uri.Left(13).Equals("spotify:radio")) {
+            return getRadioTracks(items, atoi(uri.Right(1)));
+          } else
+            if (albumId == -1) {
+              return getAllTracks(items, artistName);
+            }
   return true;
 }
 
@@ -221,8 +222,7 @@ bool Addon_music_spotify::getAlbumTracks(CFileItemList& items, CStdString& path)
     int disc = atoi(discStr);
 
     //0 means its not a multidisc, so we need to change it to 1
-    if (disc == 0)
-      disc = 1;
+    if (disc == 0) disc = 1;
 
     sp_link *spLink = sp_link_create_from_string(uri);
     sp_album *spAlbum = sp_link_as_album(spLink);
@@ -231,8 +231,7 @@ bool Addon_music_spotify::getAlbumTracks(CFileItemList& items, CStdString& path)
 
     vector<SxTrack*> tracks = salbum->getTracks();
     for (int i = 0; i < tracks.size(); i++) {
-      if (disc == tracks[i]->getDisc())
-        items.Add(SxTrackToItem(tracks[i]));
+      if (disc == tracks[i]->getDisc()) items.Add(SxTrackToItem(tracks[i]));
     }
   }
   return true;
@@ -242,14 +241,11 @@ bool Addon_music_spotify::getArtistTracks(CFileItemList& items, CStdString& path
   Logger::printOut("get artist tracks");
   if (isReady()) {
     sp_link *spLink = sp_link_create_from_string(path);
-    if (!spLink)
-      return true;
+    if (!spLink) return true;
     sp_artist *spArtist = sp_link_as_artist(spLink);
-    if (!spArtist)
-      return true;
+    if (!spArtist) return true;
     SxArtist* artist = ArtistStore::getInstance()->getArtist(spArtist, true);
-    if (!artist)
-      return true;
+    if (!artist) return true;
 
     //if its the first call the artist might not be loaded yet, the artist will update the view when its ready
     artist->doLoadTracksAndAlbums();
@@ -273,10 +269,8 @@ bool Addon_music_spotify::getAllTracks(CFileItemList& items, CStdString& path) {
       StarredList* sl = ps->getStarredList();
 
       if (sl == NULL
-      )
-        return true;
-      if (!sl->isLoaded())
-        return true;
+      ) return true;
+      if (!sl->isLoaded()) return true;
 
       for (int i = 0; i < sl->getNumberOfTracks(); i++) {
         items.Add(SxTrackToItem(sl->getTrack(i)));
@@ -310,11 +304,12 @@ bool Addon_music_spotify::GetArtists(CFileItemList& items, CStdString& path) {
   CStdString uri = url.GetFileNameWithoutPath();
   if (uri.Left(15).Equals("spotify:toplist")) {
     getTopListArtists(items);
-  } else if (uri.Left(14).Equals("spotify:artist")) {
-    getArtistSimilarArtists(items, uri);
-  } else {
-    getAllArtists(items);
-  }
+  } else
+    if (uri.Left(14).Equals("spotify:artist")) {
+      getArtistSimilarArtists(items, uri);
+    } else {
+      getAllArtists(items);
+    }
   return true;
 }
 
@@ -325,10 +320,8 @@ bool Addon_music_spotify::getAllArtists(CFileItemList& items) {
     StarredList* sl = ps->getStarredList();
 
     if (sl == NULL
-    )
-      return true;
-    if (!sl->isLoaded())
-      return true;
+    ) return true;
+    if (!sl->isLoaded()) return true;
 
     for (int i = 0; i < sl->getNumberOfArtists(); i++) {
       items.Add(SxArtistToItem(sl->getArtist(i)));
@@ -341,14 +334,11 @@ bool Addon_music_spotify::getArtistSimilarArtists(CFileItemList& items, CStdStri
   Logger::printOut("get similar artists");
   if (isReady()) {
     sp_link *spLink = sp_link_create_from_string(uri);
-    if (!spLink)
-      return true;
+    if (!spLink) return true;
     sp_artist *spArtist = sp_link_as_artist(spLink);
-    if (!spArtist)
-      return true;
+    if (!spArtist) return true;
     SxArtist* artist = ArtistStore::getInstance()->getArtist(spArtist, true);
-    if (!artist)
-      return true;
+    if (!artist) return true;
 
     //if its the first call the artist might not be loaded yet, the artist will update the view when its ready
     artist->doLoadTracksAndAlbums();
@@ -380,11 +370,10 @@ bool Addon_music_spotify::GetTopLists(CFileItemList& items) {
     Logger::printOut("get the toplist entry list");
     TopLists* topLists = Session::getInstance()->getTopLists();
 
-    if (topLists == NULL)
-      return true;
+    if (topLists == NULL )
+    return true;
 
-    if (!topLists->isLoaded())
-      return true;
+    if (!topLists->isLoaded()) return true;
 
     //add the tracks entry
     CFileItemPtr pItem(new CFileItem(Settings::getTopListTrackString()));
@@ -446,8 +435,7 @@ bool Addon_music_spotify::getTopListArtists(CFileItemList& items) {
     PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
     TopLists* tl = ps->getTopLists();
 
-    if (!tl->isArtistsLoaded())
-      tl->reLoadArtists();
+    if (!tl->isArtistsLoaded()) tl->reLoadArtists();
 
     while (!tl->isArtistsLoaded()) {
       Session::getInstance()->processEvents();
@@ -468,8 +456,7 @@ bool Addon_music_spotify::getTopListAlbums(CFileItemList& items) {
     PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
     TopLists* tl = ps->getTopLists();
 
-    if (!tl->isAlbumsLoaded())
-      tl->reLoadAlbums();
+    if (!tl->isAlbumsLoaded()) tl->reLoadAlbums();
 
     while (!tl->isAlbumsLoaded()) {
       Session::getInstance()->processEvents();
@@ -489,8 +476,7 @@ bool Addon_music_spotify::getTopListTracks(CFileItemList& items) {
     PlaylistStore* ps = Session::getInstance()->getPlaylistStore();
     TopLists* tl = ps->getTopLists();
 
-    if (!tl->isTracksLoaded())
-      tl->reLoadTracks();
+    if (!tl->isTracksLoaded()) tl->reLoadTracks();
 
     while (!tl->isTracksLoaded()) {
       Session::getInstance()->processEvents();
@@ -565,8 +551,7 @@ const CFileItemPtr Addon_music_spotify::SxAlbumToItem(SxAlbum *album, string pre
   CStdString path;
   path.Format("musicdb://3/%s#%i", album->getUri(), discNumber);
   const CFileItemPtr pItem(new CFileItem(path, outAlbum));
-  if (album->hasThumb())
-    pItem->SetThumbnailImage(album->getThumb()->getPath());
+  if (album->hasThumb()) pItem->SetThumbnailImage(album->getThumb()->getPath());
   pItem->SetProperty("fanart_image", Settings::getFanart());
   return pItem;
 }
@@ -597,8 +582,7 @@ const CFileItemPtr Addon_music_spotify::SxTrackToItem(SxTrack* track, string pre
   outSong.strAlbumArtist = track->getAlbumArtistName();
 
   const CFileItemPtr pItem(new CFileItem(outSong));
-  if (track->hasThumb())
-    pItem->SetThumbnailImage(track->getThumb()->getPath());
+  if (track->hasThumb()) pItem->SetThumbnailImage(track->getThumb()->getPath());
   pItem->SetProperty("fanart_image", Settings::getFanart());
   return pItem;
 }
@@ -619,8 +603,7 @@ const CFileItemPtr Addon_music_spotify::SxArtistToItem(SxArtist* artist, string 
   label.Format("A %s", artist->getArtistName());
 
   pItem->GetMusicInfoTag()->SetTitle(label);
-  if (artist->hasThumb())
-    pItem->SetThumbnailImage(artist->getThumb()->getPath());
+  if (artist->hasThumb()) pItem->SetThumbnailImage(artist->getThumb()->getPath());
   pItem->SetIconImage("DefaultArtist.png");
   pItem->SetProperty("fanart_image", Settings::getFanart());
   pItem->SetProperty("artist_description", artist->getBio());

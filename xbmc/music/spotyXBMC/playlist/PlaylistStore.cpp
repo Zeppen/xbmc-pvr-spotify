@@ -34,175 +34,171 @@
 
 namespace addon_music_spotify {
 
-PlaylistStore::PlaylistStore() {
-  m_isLoaded = false;
-  m_starredList = NULL;
-  m_topLists = NULL;
-  m_spContainer = sp_session_playlistcontainer(Session::getInstance()->getSpSession());
-  m_spStarredList = sp_session_starred_create(Session::getInstance()->getSpSession());
+  PlaylistStore::PlaylistStore() {
+    m_isLoaded = false;
+    m_starredList = NULL;
+    m_topLists = NULL;
+    m_spContainer = sp_session_playlistcontainer(Session::getInstance()->getSpSession());
+    m_spStarredList = sp_session_starred_create(Session::getInstance()->getSpSession());
 
-  for (int i = 0; i < sp_playlistcontainer_num_playlists(m_spContainer); i++) {
-    sp_playlist_set_in_ram(Session::getInstance()->getSpSession(), sp_playlistcontainer_playlist(m_spContainer, i), true);
+    for (int i = 0; i < sp_playlistcontainer_num_playlists(m_spContainer); i++) {
+      sp_playlist_set_in_ram(Session::getInstance()->getSpSession(), sp_playlistcontainer_playlist(m_spContainer, i), true);
+    }
+
+    sp_playlist_set_in_ram(Session::getInstance()->getSpSession(), m_spStarredList, true);
+
+    m_pcCallbacks.playlist_added = &pc_playlist_added;
+    m_pcCallbacks.playlist_removed = &pc_playlist_removed;
+    m_pcCallbacks.container_loaded = &pc_loaded;
+    m_pcCallbacks.playlist_moved = &pc_playlist_moved;
+
+    sp_playlistcontainer_add_callbacks(m_spContainer, &m_pcCallbacks, this);
   }
 
-  sp_playlist_set_in_ram(Session::getInstance()->getSpSession(), m_spStarredList, true);
+  void *PlaylistStore::loadPlaylists(void *s) {
+    Logger::printOut("starting load playlist thread");
+    PlaylistStore *store = (PlaylistStore*) s;
 
-  m_pcCallbacks.playlist_added = &pc_playlist_added;
-  m_pcCallbacks.playlist_removed = &pc_playlist_removed;
-  m_pcCallbacks.container_loaded = &pc_loaded;
-  m_pcCallbacks.playlist_moved = &pc_playlist_moved;
+    //add all playlists to container and loop through until all are loaded
+    vector<sp_playlist*> spPlaylists;
 
-  sp_playlistcontainer_add_callbacks(m_spContainer, &m_pcCallbacks, this);
-}
+    for (int i = 0; i < sp_playlistcontainer_num_playlists(store->getContainer()); i++) {
+      sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
+      if (spType == SP_PLAYLIST_TYPE_PLAYLIST) spPlaylists.push_back(sp_playlistcontainer_playlist(store->getContainer(), i));
+    }
 
-void *PlaylistStore::loadPlaylists(void *s) {
-  Logger::printOut("starting load playlist thread");
-  PlaylistStore *store = (PlaylistStore*) s;
+    vector<SxPlaylist*> newPlaylists;
+    int playlistNumber = 0;
+    while (!spPlaylists.empty() || !store->getStarredList()) {
+      for (int i = 0; i < spPlaylists.size(); i++) {
+        if (sp_playlist_is_loaded(spPlaylists[i])) {
+          //sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
+          newPlaylists.push_back(new SxPlaylist(spPlaylists[i], playlistNumber, false));
+          playlistNumber++;
+          spPlaylists.erase(spPlaylists.begin() + i);
+        }
+      }
+      XBMCUpdater::updatePlaylists();
 
-  //add all playlists to container and loop through until all are loaded
-  vector<sp_playlist*> spPlaylists;
+      if (!store->m_starredList && sp_playlist_is_loaded(store->getStarredSpList())) {
+        store->m_starredList = new StarredList(store->m_spStarredList);
+        Logger::printOut("m_starredList created");
+      }
 
-  for (int i = 0; i < sp_playlistcontainer_num_playlists(store->getContainer()); i++) {
-    sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
-    if (spType == SP_PLAYLIST_TYPE_PLAYLIST)
-      spPlaylists.push_back(sp_playlistcontainer_playlist(store->getContainer(), i));
+      //TODO sleep thread
+      clock_t goal = 100 + clock();
+      while (goal > clock())
+        ;
+    }
+
+    Logger::printOut("All playlists loaded");
+
+    //empty the old one if we are updating
+    while (!store->m_playlists.empty()) {
+      delete store->m_playlists.back();
+      store->m_playlists.pop_back();
+    }
+    store->m_playlists = newPlaylists;
+
+    if (store->m_topLists == NULL
+    ) store->m_topLists = new TopLists();
+
+    store->m_isLoaded = true;
+    XBMCUpdater::updateToplistMenu();
   }
 
-  vector<SxPlaylist*> newPlaylists;
-  int playlistNumber = 0;
-  while (!spPlaylists.empty() || !store->getStarredList()) {
-    for (int i = 0; i < spPlaylists.size(); i++) {
-      if (sp_playlist_is_loaded(spPlaylists[i])) {
-        //sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
-        newPlaylists.push_back(new SxPlaylist(spPlaylists[i], playlistNumber, false));
-        playlistNumber++;
-        spPlaylists.erase(spPlaylists.begin() + i);
+  PlaylistStore::~PlaylistStore() {
+    sp_playlistcontainer_remove_callbacks(m_spContainer, &m_pcCallbacks, this);
+    Logger::printOut("delete PlaylistStore");
+    while (!m_playlists.empty()) {
+      delete m_playlists.back();
+      m_playlists.pop_back();
+    }
+    Logger::printOut("delete PlaylistStore starred");
+    delete m_starredList;
+    delete m_topLists;
+    m_starredList = NULL;
+
+    Logger::printOut("delete PlaylistStore done");
+  }
+
+  bool PlaylistStore::isLoaded() {
+    if (!m_isLoaded) return false;
+
+    for (int i = 0; i < m_playlists.size(); i++) {
+      if (!m_playlists[i]->isLoaded()) {
+        return false;
       }
     }
-    XBMCUpdater::updatePlaylists();
+    if (m_starredList) if (!m_starredList->isLoaded()) return false;
 
-    if (!store->m_starredList && sp_playlist_is_loaded(store->getStarredSpList())) {
-      store->m_starredList = new StarredList(store->m_spStarredList);
-      Logger::printOut("m_starredList created");
+    if (m_topLists) if (!m_topLists->isLoaded()) return false;
+
+    return true;
+  }
+
+  const char *PlaylistStore::getPlaylistName(int index) {
+    if (index < m_playlists.size()) {
+
+      return m_playlists[index]->getName();
     }
-
-    //TODO sleep thread
-    clock_t goal = 100 + clock();
-    while (goal > clock())
-      ;
+    return "";
   }
 
-  Logger::printOut("All playlists loaded");
-
-  //empty the old one if we are updating
-  while (!store->m_playlists.empty()) {
-    delete store->m_playlists.back();
-    store->m_playlists.pop_back();
+  SxPlaylist *PlaylistStore::getPlaylist(int index) {
+    if (index < m_playlists.size()) {
+      return m_playlists[index];
+    }
+    return NULL;
   }
 
-  store->m_playlists = newPlaylists;
-
-  if (!store->m_topLists)
-    store->m_topLists = new TopLists();
-
-  //TODO update toplists menu
-}
-
-PlaylistStore::~PlaylistStore() {
-  Logger::printOut("delete PlaylistStore");
-  while (!m_playlists.empty()) {
-    delete m_playlists.back();
-    m_playlists.pop_back();
-  }
-  Logger::printOut("delete PlaylistStore starred");
-  delete m_starredList;
-  delete m_topLists;
-  m_starredList = NULL;
-
-  Logger::printOut("delete PlaylistStore done");
-}
-
-bool PlaylistStore::isLoaded() {
-  if (!m_isLoaded)
-    return false;
-
-  for (int i = 0; i < m_playlists.size(); i++) {
-    if (!m_playlists[i]->isLoaded()) {
-      return false;
+  void PlaylistStore::pc_loaded(sp_playlistcontainer *pc, void *userdata) {
+    Logger::printOut("pc loaded");
+    pthread_t initThread;
+    if ((pthread_create(&initThread, NULL, &loadPlaylists, userdata))) {
+      Logger::printOut("Failed to create playlist load thread");
     }
   }
-  if (m_starredList)
-    if (!m_starredList->isLoaded())
-      return false;
 
-  if (m_topLists)
-    if (!m_topLists->isLoaded())
-      return false;
-
-  return true;
-}
-
-const char *PlaylistStore::getPlaylistName(int index) {
-  if (index < m_playlists.size()) {
-
-    return m_playlists[index]->getName();
+  void PlaylistStore::pc_playlist_added(sp_playlistcontainer *pc, sp_playlist *playlist, int position, void *userdata) {
+    PlaylistStore *store = (PlaylistStore*) userdata;
+    store->addPlaylist(playlist, position);
   }
-  return "";
-}
 
-SxPlaylist *PlaylistStore::getPlaylist(int index) {
-  if (index < m_playlists.size()) {
-    return m_playlists[index];
+  void PlaylistStore::pc_playlist_moved(sp_playlistcontainer *pc, sp_playlist *playlist, int position, int new_position, void *userdata) {
+    PlaylistStore *store = (PlaylistStore*) userdata;
+    store->movePlaylist(position, new_position);
   }
-  return NULL;
-}
 
-void PlaylistStore::pc_loaded(sp_playlistcontainer *pc, void *userdata) {
-  Logger::printOut("pc loaded");
-  pthread_t initThread;
-  if ((pthread_create(&initThread, NULL, &loadPlaylists, userdata))) {
-    Logger::printOut("Failed to create playlist load thread");
+  void PlaylistStore::pc_playlist_removed(sp_playlistcontainer *pc, sp_playlist *playlist, int position, void *userdata) {
+    PlaylistStore *store = (PlaylistStore*) userdata;
+    store->removePlaylist(position);
   }
-}
 
-void PlaylistStore::pc_playlist_added(sp_playlistcontainer *pc, sp_playlist *playlist, int position, void *userdata) {
-  PlaylistStore *store = (PlaylistStore*) userdata;
-  store->addPlaylist(playlist, position);
-}
+  StarredList *PlaylistStore::getStarredList() {
+    return m_starredList;
+  }
 
-void PlaylistStore::pc_playlist_moved(sp_playlistcontainer *pc, sp_playlist *playlist, int position, int new_position, void *userdata) {
-  PlaylistStore *store = (PlaylistStore*) userdata;
-  store->movePlaylist(position, new_position);
-}
+  void PlaylistStore::removePlaylist(int position) {
+    Logger::printOut("removing playlist");
+    Logger::printOut(position);
+    if (position < m_playlists.size()) {
+      Logger::printOut("removing playlist inner");
+      m_isLoaded = false;
+      m_playlists[position]->makeInvalid();
+      Logger::printOut("removing playlist inner 2");
+    }
+  }
 
-void PlaylistStore::pc_playlist_removed(sp_playlistcontainer *pc, sp_playlist *playlist, int position, void *userdata) {
-  PlaylistStore *store = (PlaylistStore*) userdata;
-  store->removePlaylist(position);
-}
+  void PlaylistStore::movePlaylist(int position, int newPosition) {
+    Logger::printOut("moving playlist");
+    //skip this now since the playlists are ordered by name anyway
+    //m_isLoaded = false;
+  }
 
-StarredList *PlaylistStore::getStarredList() {
-  return m_starredList;
-}
-
-void PlaylistStore::removePlaylist(int position) {
-  Logger::printOut("removing playlist");
-  Logger::printOut(position);
-  if (position < m_playlists.size()) {
-    Logger::printOut("removing playlist inner");
+  void PlaylistStore::addPlaylist(sp_playlist *playlist, int position) {
+    Logger::printOut("adding playlist");
     m_isLoaded = false;
-    m_playlists[position]->makeInvalid();
-    Logger::printOut("removing playlist inner 2");
   }
-}
-
-void PlaylistStore::movePlaylist(int position, int newPosition) {
-  Logger::printOut("moving playlist");
-  m_isLoaded = false;
-}
-
-void PlaylistStore::addPlaylist(sp_playlist *playlist, int position) {
-  Logger::printOut("adding playlist");
-  m_isLoaded = false;
-}
 
 } /* namespace addon_music_spotify */

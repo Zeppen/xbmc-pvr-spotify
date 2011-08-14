@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #ifndef ADDONMUSICSPOTIFY_H_
 #define ADDONMUSICSPOTIFY_H_
@@ -46,37 +46,37 @@ public:
   }
   bool isReady();
 
-  bool GetTracks(CFileItemList& items,CStdString& path, CStdString artistName, int albumId);
-  bool GetAlbums(CFileItemList& items,CStdString& path, CStdString artistName);
-  bool GetArtists(CFileItemList& items,CStdString& path);
+  bool GetTracks(CFileItemList& items, CStdString& path, CStdString artistName, int albumId);
+  bool GetAlbums(CFileItemList& items, CStdString& path, CStdString artistName);
+  bool GetArtists(CFileItemList& items, CStdString& path);
   bool GetPlaylists(CFileItemList& items);
   bool GetTopLists(CFileItemList& items);
   bool GetCustomEntries(CFileItemList& items);
-  bool Search(CStdString query,CFileItemList& items);
+  bool Search(CStdString query, CFileItemList& items);
   ICodec* GetCodec();
 
 private:
   bool m_isEnabled;
   Session *m_session;
 
-  bool getAlbumTracks(CFileItemList& items,CStdString& path);
-  bool getArtistTracks(CFileItemList& items,CStdString& path);
-  bool getAllTracks(CFileItemList& items,CStdString& path);
-  bool getPlaylistTracks(CFileItemList& items,int index);
+  bool getAlbumTracks(CFileItemList& items, CStdString& path);
+  bool getArtistTracks(CFileItemList& items, CStdString& path);
+  bool getAllTracks(CFileItemList& items, CStdString& path);
+  bool getPlaylistTracks(CFileItemList& items, int index);
   bool getTopListTracks(CFileItemList& items);
   bool getRadioTracks(CFileItemList& items, int radio);
 
-  bool getAllAlbums(CFileItemList& items,CStdString& path);
-  bool getArtistAlbums(CFileItemList& items,CStdString& path);
+  bool getAllAlbums(CFileItemList& items, CStdString& path);
+  bool getArtistAlbums(CFileItemList& items, CStdString& path);
   bool getTopListAlbums(CFileItemList& items);
 
   bool getAllArtists(CFileItemList& items);
-  bool getArtistSimilarArtists(CFileItemList& items,CStdString uri);
+  bool getArtistSimilarArtists(CFileItemList& items, CStdString uri);
   bool getTopListArtists(CFileItemList& items);
 
   const CFileItemPtr SxAlbumToItem(SxAlbum* album, string prefix = "", int discNumber = 0);
-  const CFileItemPtr SxTrackToItem(SxTrack* track,string prefix = "", int trackNumber = -1);
-  const CFileItemPtr SxArtistToItem(SxArtist* artist,string prefix = "");
+  const CFileItemPtr SxTrackToItem(SxTrack* track, string prefix = "", int trackNumber = -1);
+  const CFileItemPtr SxArtistToItem(SxArtist* artist, string prefix = "");
 };
 extern Addon_music_spotify* g_spotify;
 #endif /* ADDONMUSICSPOTIFY_H_ */

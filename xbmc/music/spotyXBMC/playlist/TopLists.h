@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #ifndef TOPLISTS_H_
 #define TOPLISTS_H_
@@ -45,53 +45,61 @@ using namespace std;
 
 namespace addon_music_spotify {
 
-class TopLists {
-public:
-  TopLists();
-  virtual ~TopLists();
+  class TopLists {
+  public:
+    TopLists();
+    virtual ~TopLists();
 
-  static void SP_CALLCONV cb_toplistArtistsComplete(sp_toplistbrowse *result, void *userdata);
-  void artistListLoaded(sp_toplistbrowse *result);
+    static void SP_CALLCONV cb_toplistArtistsComplete(sp_toplistbrowse *result, void *userdata);
+    void artistListLoaded(sp_toplistbrowse *result);
 
-  static void SP_CALLCONV cb_toplistAlbumsComplete(sp_toplistbrowse *result, void *userdata);
-  void albumListLoaded(sp_toplistbrowse *result);
+    static void SP_CALLCONV cb_toplistAlbumsComplete(sp_toplistbrowse *result, void *userdata);
+    void albumListLoaded(sp_toplistbrowse *result);
 
-  static void SP_CALLCONV cb_toplistTracksComplete(sp_toplistbrowse *result, void *userdata);
-  void trackListLoaded(sp_toplistbrowse *result);
+    static void SP_CALLCONV cb_toplistTracksComplete(sp_toplistbrowse *result, void *userdata);
+    void trackListLoaded(sp_toplistbrowse *result);
 
-  //we can load on demand, so even if nothing is loaded, the object is loaded
-  bool isLoaded(){ return true;}
+    //we can load on demand, so even if nothing is loaded, the object is loaded
+    bool isLoaded() {
+      return true;
+    }
 
-  //call this from the advance api thread, it will reload every 12 hours
-  //TODO actually do it!
-  void reLoadArtists();
-  void reLoadAlbums();
-  void reLoadTracks();
-  void unloadLists();
+    //call this from the advance api thread, it will reload every 12 hours
+    //TODO actually do it!
+    void reLoadArtists();
+    void reLoadAlbums();
+    void reLoadTracks();
+    void unloadLists();
 
-  bool isArtistsLoaded();
-  bool isAlbumsLoaded();
-  bool isTracksLoaded();
+    bool isArtistsLoaded();
+    bool isAlbumsLoaded();
+    bool isTracksLoaded();
 
-  vector<SxArtist*> getArtists() { return m_artists; }
-  vector<SxAlbum*> getAlbums() { return m_albums; }
-  vector<SxTrack*> getTracks() { return m_tracks; }
+    vector<SxArtist*> getArtists() {
+      return m_artists;
+    }
+    vector<SxAlbum*> getAlbums() {
+      return m_albums;
+    }
+    vector<SxTrack*> getTracks() {
+      return m_tracks;
+    }
 
-private:
-  vector<SxArtist*> m_artists;
-  vector<SxAlbum*> m_albums;
-  vector<SxTrack*> m_tracks;
+  private:
+    vector<SxArtist*> m_artists;
+    vector<SxAlbum*> m_albums;
+    vector<SxTrack*> m_tracks;
 
-  bool m_albumsLoaded;
-  bool m_artistsLoaded;
-  bool m_tracksLoaded;
-  bool m_waitingForAlbums;
-  bool m_waitingForArtists;
-  bool m_waitingForTracks;
-  XbmcThreads::EndTime m_albumsNextReload;
-  XbmcThreads::EndTime m_artistsNextReload;
-  XbmcThreads::EndTime m_tracksNextReload;
-};
+    bool m_albumsLoaded;
+    bool m_artistsLoaded;
+    bool m_tracksLoaded;
+    bool m_waitingForAlbums;
+    bool m_waitingForArtists;
+    bool m_waitingForTracks;
+    XbmcThreads::EndTime m_albumsNextReload;
+    XbmcThreads::EndTime m_artistsNextReload;
+    XbmcThreads::EndTime m_tracksNextReload;
+  };
 
 } /* namespace addon_music_spotify */
 #endif /* TOPLISTS_H_ */
