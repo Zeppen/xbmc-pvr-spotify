@@ -1,23 +1,23 @@
 /*
-    spotyxbmc2 - A project to integrate Spotify into XBMC
-    Copyright (C) 2011  David Erenger
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    For contact with the author:
-    david.erenger@gmail.com
-*/
+ For contact with the author:
+ david.erenger@gmail.com
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,6 +26,7 @@
 #include "../Logger.h"
 #include <fstream>
 #include "../FileSystemHelper.h"
+#include "../../../TextureCache.h"
 
 namespace addon_music_spotify {
 
@@ -34,12 +35,20 @@ using namespace std;
 SxThumb::SxThumb(sp_image* image, string path) {
   m_isLoaded = false;
   m_image = image;
-  sp_image_add_load_callback(m_image, &cb_imageLoaded, this);
   sp_link *link = sp_link_create_from_image(image);
   char linkString[256];
   sp_link_as_string(link, linkString, 256);
   sp_link_release(link);
   m_file = path + linkString + ".jpg";
+  CStdString pathS(m_file);
+  CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
+  if (!cached.IsEmpty()) {
+    Logger::printOut("Thumb already in XBMC cache, no need to download again");
+    m_file = cached;
+    m_isLoaded = true;
+  } else
+    sp_image_add_load_callback(m_image, &cb_imageLoaded, this);
+
   m_references = 1;
 
 }

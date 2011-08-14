@@ -81,15 +81,13 @@ bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
       if (!ps->getPlaylist(i)->isFolder() && ps->getPlaylist(i)->isLoaded()) {
         playlistShare.strPath.Format("musicdb://3/spotify:playlist:%i", i);
         const char* owner = ps->getPlaylist(i)->getOwnerName();
-        if (owner != NULL
-        )
+        if (owner != NULL)
           playlistShare.strName.Format("%s %s %s", ps->getPlaylist(i)->getName(), Settings::getByString(), owner);
         else
           playlistShare.strName.Format("%s", ps->getPlaylist(i)->getName());
         CFileItemPtr pItem(new CFileItem(playlistShare));
         SxThumb* thumb = ps->getPlaylist(i)->getThumb();
-        if (thumb != NULL
-        )
+        if (thumb != NULL)
           pItem->SetThumbnailImage(thumb->getPath());
         pItem->SetProperty("fanart_image", Settings::getFanart());
         items.Add(pItem);
