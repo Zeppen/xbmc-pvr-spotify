@@ -96,15 +96,14 @@ namespace addon_music_spotify {
     if (m_startStream) {
       if (m_endOfTrack && m_bufferPos == 0) {
         return READ_EOF;
-      } else
-        if (m_bufferPos > 0) {
-          int amountToMove = m_bufferPos;
-          if (m_bufferPos > size) amountToMove = size;
-          memcpy(pBuffer, m_buffer, amountToMove);
-          memmove(m_buffer, m_buffer + amountToMove, m_bufferSize - amountToMove);
-          m_bufferPos -= amountToMove;
-          *actualsize = amountToMove;
-        }
+      } else if (m_bufferPos > 0) {
+        int amountToMove = m_bufferPos;
+        if (m_bufferPos > size) amountToMove = size;
+        memcpy(pBuffer, m_buffer, amountToMove);
+        memmove(m_buffer, m_buffer + amountToMove, m_bufferSize - amountToMove);
+        m_bufferPos -= amountToMove;
+        *actualsize = amountToMove;
+      }
     }
     return READ_SUCCESS;
   }

@@ -74,6 +74,7 @@ namespace addon_music_spotify {
       return m_playlists;
     }
     TopLists* getTopLists() {
+      if (m_playlists == NULL || !m_playlists->isLoaded()) return NULL;
       return m_playlists->getTopLists();
     }
 

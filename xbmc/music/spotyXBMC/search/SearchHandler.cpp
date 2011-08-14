@@ -59,23 +59,19 @@ namespace addon_music_spotify {
   }
 
   vector<SxAlbum*> SearchHandler::getAlbumResults() {
-    if (m_currentSearch != NULL )
-    return m_currentSearch->getAlbums();
+    if (m_currentSearch != NULL) return m_currentSearch->getAlbums();
   }
 
   vector<SxTrack*> SearchHandler::getTrackResults() {
-    if (m_currentSearch != NULL )
-    return m_currentSearch->getTracks();
+    if (m_currentSearch != NULL) return m_currentSearch->getTracks();
   }
 
   vector<SxArtist*> SearchHandler::getArtistResults() {
-    if (m_currentSearch != NULL )
-    return m_currentSearch->getArtists();
+    if (m_currentSearch != NULL) return m_currentSearch->getArtists();
   }
 
   SearchHandler::~SearchHandler() {
-    if (m_currentSearch != NULL )
-    delete m_currentSearch;
+    if (m_currentSearch != NULL) delete m_currentSearch;
   }
 
 } /* namespace addon_music_spotify */

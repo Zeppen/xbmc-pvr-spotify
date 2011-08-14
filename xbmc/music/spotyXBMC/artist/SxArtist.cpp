@@ -86,8 +86,7 @@ namespace addon_music_spotify {
 
     if (m_thumb) ThumbStore::getInstance()->removeThumb(m_thumb);
     delete m_uri;
-    if (hasDetails() && m_browse != NULL )
-    sp_artistbrowse_release(m_browse);
+    if (hasDetails() && m_browse != NULL) sp_artistbrowse_release(m_browse);
     sp_artist_release(m_spArtist);
   }
 
@@ -132,8 +131,7 @@ namespace addon_music_spotify {
       return;
     }
 
-    if (m_browse == NULL )
-    return;
+    if (m_browse == NULL) return;
 
     //add the albums
     int maxAlbums = Settings::getArtistNumberAlbums() == -1 ? sp_artistbrowse_num_albums(m_browse) : Settings::getArtistNumberAlbums();
@@ -186,8 +184,7 @@ namespace addon_music_spotify {
           m_thumb = ThumbStore::getInstance()->getThumb(image);
         }
       }
-      if (m_thumb != NULL )
-      m_hasThumb = true;
+      if (m_thumb != NULL) m_hasThumb = true;
 
       m_bio = sp_artistbrowse_biography(result);
       //remove the links from the bio text (it contains spotify uris so maybe we can do something fun with it later)

@@ -81,14 +81,13 @@ bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
         playlistShare.strPath.Format("musicdb://3/spotify:playlist:%i", i);
         const char* owner = ps->getPlaylist(i)->getOwnerName();
         if (owner != NULL
-          )
+        )
           playlistShare.strName.Format("%s %s %s", ps->getPlaylist(i)->getName(), Settings::getByString(), owner);
         else
           playlistShare.strName.Format("%s", ps->getPlaylist(i)->getName());
         CFileItemPtr pItem(new CFileItem(playlistShare));
         SxThumb* thumb = ps->getPlaylist(i)->getThumb();
-        if (thumb != NULL )
-        pItem->SetThumbnailImage(thumb->getPath());
+        if (thumb != NULL) pItem->SetThumbnailImage(thumb->getPath());
         pItem->SetProperty("fanart_image", Settings::getFanart());
         items.Add(pItem);
       }
@@ -102,12 +101,11 @@ bool Addon_music_spotify::GetAlbums(CFileItemList& items, CStdString& path, CStd
   CStdString uri = url.GetFileNameWithoutPath();
   if (uri.Left(14).Equals("spotify:artist")) {
     return getArtistAlbums(items, uri);
-  } else
-    if (uri.Left(15).Equals("spotify:toplist")) {
-      return getTopListAlbums(items);
-    } else {
-      return getAllAlbums(items, artistName);
-    }
+  } else if (uri.Left(15).Equals("spotify:toplist")) {
+    return getTopListAlbums(items);
+  } else {
+    return getAllAlbums(items, artistName);
+  }
   return true;
 }
 
@@ -193,23 +191,18 @@ bool Addon_music_spotify::GetTracks(CFileItemList& items, CStdString& path, CStd
 
   if (uri.Left(13).Equals("spotify:album")) {
     return getAlbumTracks(items, uri);
-  } else
-    if (artist.Left(14).Equals("spotify:artist")) {
-      return getArtistTracks(items, artist);
-    } else
-      if (uri.Left(16).Equals("spotify:playlist")) {
-        uri.Delete(0, 17);
-        return getPlaylistTracks(items, atoi(uri));
-      } else
-        if (artist.Left(15).Equals("spotify:toplist")) {
-          return g_spotify->getTopListTracks(items);
-        } else
-          if (uri.Left(13).Equals("spotify:radio")) {
-            return getRadioTracks(items, atoi(uri.Right(1)));
-          } else
-            if (albumId == -1) {
-              return getAllTracks(items, artistName);
-            }
+  } else if (artist.Left(14).Equals("spotify:artist")) {
+    return getArtistTracks(items, artist);
+  } else if (uri.Left(16).Equals("spotify:playlist")) {
+    uri.Delete(0, 17);
+    return getPlaylistTracks(items, atoi(uri));
+  } else if (artist.Left(15).Equals("spotify:toplist")) {
+    return g_spotify->getTopListTracks(items);
+  } else if (uri.Left(13).Equals("spotify:radio")) {
+    return getRadioTracks(items, atoi(uri.Right(1)));
+  } else if (albumId == -1) {
+    return getAllTracks(items, artistName);
+  }
   return true;
 }
 
@@ -304,12 +297,11 @@ bool Addon_music_spotify::GetArtists(CFileItemList& items, CStdString& path) {
   CStdString uri = url.GetFileNameWithoutPath();
   if (uri.Left(15).Equals("spotify:toplist")) {
     getTopListArtists(items);
-  } else
-    if (uri.Left(14).Equals("spotify:artist")) {
-      getArtistSimilarArtists(items, uri);
-    } else {
-      getAllArtists(items);
-    }
+  } else if (uri.Left(14).Equals("spotify:artist")) {
+    getArtistSimilarArtists(items, uri);
+  } else {
+    getAllArtists(items);
+  }
   return true;
 }
 
@@ -370,10 +362,7 @@ bool Addon_music_spotify::GetTopLists(CFileItemList& items) {
     Logger::printOut("get the toplist entry list");
     TopLists* topLists = Session::getInstance()->getTopLists();
 
-    if (topLists == NULL )
-    return true;
-
-    if (!topLists->isLoaded()) return true;
+    if (topLists == NULL || !topLists->isLoaded()) return true;
 
     //add the tracks entry
     CFileItemPtr pItem(new CFileItem(Settings::getTopListTrackString()));
