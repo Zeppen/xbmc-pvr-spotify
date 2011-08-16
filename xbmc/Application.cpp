@@ -4496,6 +4496,9 @@ bool CApplication::OnMessage(CGUIMessage& message)
 
         delete m_pPlayer;
         m_pPlayer = 0;
+
+        // Reset playspeed
+        m_iPlaySpeed = 1;
       }
 
       if (!IsPlaying())
