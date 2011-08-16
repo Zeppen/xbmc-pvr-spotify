@@ -57,7 +57,6 @@ namespace addon_music_spotify {
     while (!m_tracks.empty()) {
       TrackStore::getInstance()->removeTrack(m_tracks.back());
       m_tracks.pop_back();
-
     }
 
     if (m_thumb) ThumbStore::getInstance()->removeThumb(m_thumb);

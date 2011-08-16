@@ -38,7 +38,7 @@ namespace addon_music_spotify {
     m_thumb = NULL;
 
     if (!isFolder) {
-      if (sp_playlist_is_loaded(spPlaylist)) init();
+      if (sp_playlist_is_loaded(spPlaylist)) reLoad();
       m_plCallbacks.description_changed = 0;
       m_plCallbacks.image_changed = 0;
       m_plCallbacks.playlist_metadata_updated = &cb_playlist_metadata_updated;
@@ -54,29 +54,6 @@ namespace addon_music_spotify {
       m_plCallbacks.tracks_removed = &cb_tracks_removed;
 
       sp_playlist_add_callbacks(spPlaylist, &m_plCallbacks, this);
-    }
-  }
-
-  void SxPlaylist::init() {
-    Logger::printOut("Playlistinit");
-    //TODO fix a thumb, why is it never returning any images?
-    byte image[20];
-    if (sp_playlist_get_image(m_spPlaylist, image)) {
-      m_thumb = ThumbStore::getInstance()->getThumb(image);
-    }
-
-    //Logger::printOut(sp_playlist_name(m_spSxPlaylist));
-    for (int index = 0; index < sp_playlist_num_tracks(m_spPlaylist); index++) {
-      SxTrack* track = TrackStore::getInstance()->getTrack(sp_playlist_track(m_spPlaylist, index));
-      if (track) {
-        m_tracks.push_back(track);
-        //no thumb, lets pick one from the track list
-        if (m_thumb == NULL
-        ) if (track->getThumb() != NULL
-        )
-        //no need to add ref to the thumb, when the track disappears the playlist will switch thumb
-          m_thumb = track->getThumb();
-      }
     }
   }
 
@@ -169,9 +146,8 @@ namespace addon_music_spotify {
     Logger::printOut("playlists cb_playlist_metadata_updated");
 
     //skip the updating, the metadata we have will do for now :)
-    //SxPlaylist* plist = (SxPlaylist*) userdata;
-    //if (plist->isLoaded())
-    //  plist->reLoad();
+    SxPlaylist* plist = (SxPlaylist*) userdata;
+    if (plist->isLoaded()) plist->reLoad();
   }
 
   void SxPlaylist::cb_tracks_moved(sp_playlist *pl, const int *tracks, int num_tracks, int new_position, void *userdata) {
@@ -182,6 +158,8 @@ namespace addon_music_spotify {
 
   void SxPlaylist::cb_state_change(sp_playlist *pl, void *userdata) {
     Logger::printOut("playlists cb_state_change");
+    SxPlaylist* plist = (SxPlaylist*) userdata;
+    if (plist->isLoaded()) plist->reLoad();
   }
 
   void SxPlaylist::cb_tracks_added(sp_playlist *pl, sp_track * const *tracks, int num_tracks, int position, void *userdata) {

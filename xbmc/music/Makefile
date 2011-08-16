@@ -18,13 +18,16 @@ SRCS=Album.cpp \
      spotyXBMC/artist/ArtistStore.cpp \
      spotyXBMC/search/Search.cpp \
      spotyXBMC/search/SearchHandler.cpp \
+     spotyXBMC/search/SearchResultBackgroundLoader.cpp \
      spotyXBMC/player/Codec.cpp \
      spotyXBMC/player/PlayerHandler.cpp \
      spotyXBMC/playlist/TopLists.cpp \
      spotyXBMC/playlist/SxPlaylist.cpp \
      spotyXBMC/playlist/StarredList.cpp \
      spotyXBMC/playlist/PlaylistStore.cpp \
+     spotyXBMC/playlist/StarredBackgroundLoader.cpp \
      spotyXBMC/session/Session.cpp \
+     spotyXBMC/session/BackgroundThread.cpp \
      spotyXBMC/session/SessionCallbacks.cpp \
      spotyXBMC/thumb/SxThumb.cpp \
      spotyXBMC/thumb/ThumbStore.cpp \

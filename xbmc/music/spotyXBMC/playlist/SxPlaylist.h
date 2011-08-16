@@ -47,7 +47,7 @@ namespace addon_music_spotify {
     static void SP_CALLCONV cb_playlist_metadata_updated(sp_playlist *pl, void *userdata);
     static void SP_CALLCONV cb_tracks_moved(sp_playlist *pl, const int *tracks, int num_tracks, int new_position, void *userdata);
 
-    bool isLoaded();
+    virtual bool isLoaded();
     const char* getName();
     const char* getOwnerName();
     int getNumberOfTracks() {

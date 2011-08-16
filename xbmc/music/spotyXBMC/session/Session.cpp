@@ -40,7 +40,8 @@ namespace addon_music_spotify {
     m_isLoggedOut = false;
     m_session = NULL;
     m_playlists = NULL;
-    m_nextEvent.SetExpired();
+    m_nextEvent = 0;
+    m_lock = false;
 
   }
 
@@ -57,7 +58,13 @@ namespace addon_music_spotify {
     if (isEnabled()) return true;
 
     m_isEnabled = true;
-    return connect();
+
+    lock();
+    m_bgThread = new BackgroundThread();
+    m_bgThread->Create(true);
+    unlock();
+
+    //return connect();
   }
 
   bool Session::disable() {
@@ -70,11 +77,7 @@ namespace addon_music_spotify {
 
   bool Session::processEvents() {
     if (m_isEnabled) {
-      if (m_nextEvent.IsTimePast()) {
-        int waitMillis;
-        sp_session_process_events(m_session, &waitMillis);
-        m_nextEvent.Set(waitMillis);
-      }
+      sp_session_process_events(m_session, &m_nextEvent);
     }
     return true;
   }
@@ -186,6 +189,19 @@ namespace addon_music_spotify {
   void Session::loggedOut() {
     Logger::printOut("logged out session");
     m_isLoggedOut = true;
+  }
+
+  bool Session::lock() {
+    if (m_lock)
+      return false;
+    else
+      m_lock = true;
+    return true;
+  }
+
+  bool Session::unlock() {
+    m_lock = false;
+    return true;
   }
 
 } /* namespace addon_music_spotify */

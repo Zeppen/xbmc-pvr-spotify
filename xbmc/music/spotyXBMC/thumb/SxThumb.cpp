@@ -43,7 +43,7 @@ namespace addon_music_spotify {
     CStdString pathS(m_file);
     CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
     if (!cached.IsEmpty()) {
-      Logger::printOut("Thumb already in XBMC cache, no need to download again");
+      //Logger::printOut("Thumb already in XBMC cache, no need to download again");
       m_file = cached;
       m_isLoaded = true;
     } else

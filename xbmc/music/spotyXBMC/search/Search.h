@@ -53,6 +53,10 @@ namespace addon_music_spotify {
 
     static void SP_CALLCONV cb_searchComplete(sp_search *search, void *userdata);
 
+    bool isLoaded();
+
+    friend class SearchResultBackgroundLoader;
+
   private:
     void newResults(sp_search *search);
 

@@ -22,12 +22,13 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
+
 namespace spotify {
 #include <libspotify/api.h>
 }
 
 using namespace spotify;
-
+#include "BackgroundThread.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "../../../threads/SystemClock.h"
@@ -35,6 +36,7 @@ using namespace spotify;
 #include "../playlist/PlaylistStore.h"
 #include "../Settings.h"
 #include "../Logger.h"
+
 
 namespace addon_music_spotify {
 
@@ -51,7 +53,7 @@ namespace addon_music_spotify {
     bool processEvents();
 
     void notifyMainThread() {
-      m_nextEvent.SetExpired();
+      m_nextEvent = 0;
     }
 
     void loggedIn();
@@ -78,6 +80,11 @@ namespace addon_music_spotify {
       return m_playlists->getTopLists();
     }
 
+    bool lock();
+    bool unlock();
+    bool isLocked(){ return m_lock; }
+    void SleepThread(int ms){ m_bgThread->Sleep(ms); }
+
   private:
     Session();
     virtual ~Session();
@@ -85,7 +92,10 @@ namespace addon_music_spotify {
     static Session *m_instance;
     sp_session *m_session;
     SessionCallbacks *m_sessionCallbacks;
-    XbmcThreads::EndTime m_nextEvent;
+
+    int m_nextEvent;
+    BackgroundThread *m_bgThread;
+    bool m_lock;
 
     bool m_isEnabled;
     bool m_isLoggedOut;
@@ -94,6 +104,8 @@ namespace addon_music_spotify {
 
     bool connect();
     bool disConnect();
+
+    friend class BackgroundThread;
   };
 
 } /* namespace addon_music_spotify */

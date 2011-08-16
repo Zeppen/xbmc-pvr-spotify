@@ -24,11 +24,14 @@
 #include "../Logger.h"
 #include "../XBMCUpdater.h"
 #include "../Settings.h"
+#include "SearchResultBackgroundLoader.h"
+#include "../album/SxAlbum.h"
+#include "../track/SxTrack.h"
+#include "../artist/SxArtist.h"
 
 namespace addon_music_spotify {
 
   Search::Search(string query) {
-    //hardcoded, move out to settings later
     m_maxArtistResults = Settings::getSearchNumberArtists();
     m_maxAlbumResults = Settings::getSearchNumberAlbums();
     m_maxTrackResults = Settings::getSearchNumberTracks();
@@ -72,43 +75,25 @@ namespace addon_music_spotify {
 
   }
 
-  void Search::newResults(sp_search *search) {
-    m_currentSearch = NULL;
-    if (m_cancelSearch) {
-      Logger::printOut("search results arived, aborting due to request");
-      sp_search_release(search);
-      return;
+  bool Search::isLoaded() {
+    for (int i = 0; i < m_albums.size(); i++) {
+      if (!m_albums[i]->isLoaded()) return false;
     }
-    Logger::printOut("search results arived");
-
-    //add the albums
-    for (int index = 0; index < sp_search_num_albums(search); index++) {
-      if (sp_album_is_available(sp_search_album(search, index))) {
-        m_albums.push_back(AlbumStore::getInstance()->getAlbum(sp_search_album(search, index), true));
-      }
+    for (int i = 0; i < m_tracks.size(); i++) {
+      if (!m_tracks[i]->isLoaded()) return false;
+    }
+    for (int i = 0; i < m_artists.size(); i++) {
+      if (!m_artists[i]->isLoaded()) return false;
     }
 
-//add the tracks
-    for (int index = 0; index < sp_search_num_tracks(search); index++) {
-      if (sp_track_is_available(Session::getInstance()->getSpSession(), sp_search_track(search, index))) {
-        m_tracks.push_back(TrackStore::getInstance()->getTrack(sp_search_track(search, index)));
-      }
-    }
-
-    //add the artists
-    for (int index = 0; index < sp_search_num_artists(search); index++) {
-      //dont load the albums and tracks for all artists here, it takes forever
-      m_artists.push_back(ArtistStore::getInstance()->getArtist(sp_search_artist(search, index), false));
-    }
-
-    XBMCUpdater::updateSearchResults(m_query);
-    sp_search_release(search);
-    Logger::printOut("search results done");
+    return true;
   }
 
   void Search::SP_CALLCONV cb_searchComplete(sp_search *search, void *userdata) {
     Search* searchObj = (Search*) userdata;
-    searchObj->newResults(search);
+    searchObj->m_currentSearch = search;
+    SearchResultBackgroundLoader* loader = new SearchResultBackgroundLoader(searchObj);
+    loader->Create(true);
   }
 
 } /* namespace addon_music_spotify */

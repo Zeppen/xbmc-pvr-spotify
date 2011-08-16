@@ -23,6 +23,7 @@
 #define STARREDLISTS_H_
 
 #include "SxPlaylist.h"
+#include "StarredBackgroundLoader.h"
 
 namespace addon_music_spotify {
 
@@ -48,10 +49,15 @@ namespace addon_music_spotify {
     }
     SxArtist* getArtist(int index);
 
+    friend class StarredBackgroundLoader;
+
   private:
-    static void *populateAlbumsAndArtistsThread(void *s);
     vector<SxAlbum*> m_albums;
     vector<SxArtist*> m_artists;
+
+    bool m_isBackgroundLoading;
+    bool m_reload;
+    StarredBackgroundLoader* m_backgroundLoader;
   };
 
 } /* namespace addon_music_spotify */

@@ -69,7 +69,8 @@ bool Addon_music_spotify::isReady() {
 }
 
 bool Addon_music_spotify::processAddonThread() {
-  return Session::getInstance()->processEvents();
+  //return Session::getInstance()->processEvents();
+  return true;
 }
 
 bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
@@ -87,7 +88,7 @@ bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
           playlistShare.strName.Format("%s", ps->getPlaylist(i)->getName());
         CFileItemPtr pItem(new CFileItem(playlistShare));
         SxThumb* thumb = ps->getPlaylist(i)->getThumb();
-        if (thumb != NULL) pItem->SetThumbnailImage(thumb->getPath());
+        if (thumb != NULL ) pItem->SetThumbnailImage(thumb->getPath());
         pItem->SetProperty("fanart_image", Settings::getFanart());
         items.Add(pItem);
       }
@@ -122,7 +123,7 @@ bool Addon_music_spotify::getArtistAlbums(CFileItemList& items, CStdString& arti
     artist->doLoadTracksAndAlbums();
     Logger::printOut("get artist albums, done browsing, waiting for all albums to load");
     while (!artist->isAlbumsLoaded()) {
-      Session::getInstance()->processEvents();
+      // Session::getInstance()->processEvents();
     }
 
     //add the similar artists item
@@ -427,7 +428,7 @@ bool Addon_music_spotify::getTopListArtists(CFileItemList& items) {
     if (!tl->isArtistsLoaded()) tl->reLoadArtists();
 
     while (!tl->isArtistsLoaded()) {
-      Session::getInstance()->processEvents();
+      //Session::getInstance()->processEvents();
     }
 
     vector<SxArtist*> artists = tl->getArtists();
@@ -448,7 +449,7 @@ bool Addon_music_spotify::getTopListAlbums(CFileItemList& items) {
     if (!tl->isAlbumsLoaded()) tl->reLoadAlbums();
 
     while (!tl->isAlbumsLoaded()) {
-      Session::getInstance()->processEvents();
+      // Session::getInstance()->processEvents();
     }
 
     vector<SxAlbum*> albums = tl->getAlbums();
@@ -468,7 +469,7 @@ bool Addon_music_spotify::getTopListTracks(CFileItemList& items) {
     if (!tl->isTracksLoaded()) tl->reLoadTracks();
 
     while (!tl->isTracksLoaded()) {
-      Session::getInstance()->processEvents();
+      //Session::getInstance()->processEvents();
     }
 
     vector<SxTrack*> tracks = tl->getTracks();
@@ -486,18 +487,18 @@ bool Addon_music_spotify::Search(CStdString query, CFileItemList& items) {
     if (!SearchHandler::getInstance()->search(query)) {
       CStdString albumPrefix;
       albumPrefix.Format("[%s] ", g_localizeStrings.Get(558).c_str());
-      Logger::printOut("search fetch albums");
       vector<SxAlbum*> albums = SearchHandler::getInstance()->getAlbumResults();
       for (int i = 0; i < albums.size(); i++) {
         //if its a multidisc we need to add them all
         int discNumber = albums[i]->getNumberOfDiscs();
-        if (discNumber == 1)
+        if (discNumber == 1) {
           items.Add(SxAlbumToItem(albums[i], albumPrefix));
-        else
+        } else {
           while (discNumber > 0) {
             items.Add(SxAlbumToItem(albums[i], albumPrefix, discNumber));
             discNumber--;
           }
+        }
       }
       Logger::printOut("search fetch tracks");
       vector<SxTrack*> tracks = SearchHandler::getInstance()->getTrackResults();
@@ -523,7 +524,6 @@ ICodec* Addon_music_spotify::GetCodec() {
 const CFileItemPtr Addon_music_spotify::SxAlbumToItem(SxAlbum *album, string prefix, int discNumber) {
 //wait for it to finish loading
   while (!album->isLoaded()) {
-    Session::getInstance()->processEvents();
   }
 
   CAlbum outAlbum;
@@ -548,7 +548,6 @@ const CFileItemPtr Addon_music_spotify::SxAlbumToItem(SxAlbum *album, string pre
 const CFileItemPtr Addon_music_spotify::SxTrackToItem(SxTrack* track, string prefix, int trackNumber) {
 //wait for it to finish loading
   while (!track->isLoaded()) {
-    Session::getInstance()->processEvents();
   }
 
   CSong outSong;
@@ -579,7 +578,6 @@ const CFileItemPtr Addon_music_spotify::SxTrackToItem(SxTrack* track, string pre
 const CFileItemPtr Addon_music_spotify::SxArtistToItem(SxArtist* artist, string prefix) {
   //wait for it to finish loading
   while (!artist->isLoaded()) {
-    Session::getInstance()->processEvents();
   }
 
   CStdString path;

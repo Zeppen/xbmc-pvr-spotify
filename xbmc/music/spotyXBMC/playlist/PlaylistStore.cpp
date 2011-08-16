@@ -35,6 +35,7 @@
 namespace addon_music_spotify {
 
   PlaylistStore::PlaylistStore() {
+    Logger::printOut("init playliststore");
     m_isLoaded = false;
     m_starredList = NULL;
     m_topLists = NULL;
@@ -154,10 +155,43 @@ namespace addon_music_spotify {
 
   void PlaylistStore::pc_loaded(sp_playlistcontainer *pc, void *userdata) {
     Logger::printOut("pc loaded");
-    pthread_t initThread;
-    if ((pthread_create(&initThread, NULL, &loadPlaylists, userdata))) {
-      Logger::printOut("Failed to create playlist load thread");
+    //pthread_t initThread;
+
+    PlaylistStore *store = (PlaylistStore*) userdata;
+
+    vector<SxPlaylist*> newPlaylists;
+    int playlistNumber = 0;
+    for (int i = 0; i < sp_playlistcontainer_num_playlists(store->getContainer()); i++) {
+      sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
+      if (spType == SP_PLAYLIST_TYPE_PLAYLIST) {
+        newPlaylists.push_back(new SxPlaylist(sp_playlistcontainer_playlist(store->getContainer(), i), playlistNumber, false));
+        playlistNumber++;
+      }
     }
+
+    XBMCUpdater::updatePlaylists();
+
+    store->m_starredList = new StarredList(store->m_spStarredList);
+    Logger::printOut("m_starredList created");
+
+    Logger::printOut("All playlists loaded");
+
+    //empty the old one if we are updating
+    while (!store->m_playlists.empty()) {
+      delete store->m_playlists.back();
+      store->m_playlists.pop_back();
+    }
+    store->m_playlists = newPlaylists;
+
+    if (store->m_topLists == NULL
+    ) store->m_topLists = new TopLists();
+
+    store->m_isLoaded = true;
+    XBMCUpdater::updateToplistMenu();
+
+//if ((pthread_create(&initThread, NULL, &loadPlaylists, userdata))) {
+//  Logger::printOut("Failed to create playlist load thread");
+// }
   }
 
   void PlaylistStore::pc_playlist_added(sp_playlistcontainer *pc, sp_playlist *playlist, int position, void *userdata) {

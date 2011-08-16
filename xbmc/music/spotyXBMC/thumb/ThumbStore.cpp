@@ -57,7 +57,7 @@ namespace addon_music_spotify {
     SxThumb *thumb;
     if (it == m_thumbs.end()) {
       //we need to create it
-      Logger::printOut("create thumb");
+      //Logger::printOut("create thumb");
       sp_image* spImage = sp_image_create(Session::getInstance()->getSpSession(), (byte*) image);
 
       if (!spImage) {
@@ -69,7 +69,7 @@ namespace addon_music_spotify {
       thumb = new SxThumb(spImage, path);
       m_thumbs.insert(thumbMap::value_type(image, thumb));
     } else {
-      Logger::printOut("loading thumb from store");
+      //Logger::printOut("loading thumb from store");
       thumb = it->second;
       thumb->addRef();
     }
