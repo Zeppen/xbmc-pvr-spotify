@@ -54,23 +54,18 @@ Addon_music_spotify::Addon_music_spotify() {
 Addon_music_spotify::~Addon_music_spotify() {
   Session::getInstance()->deInit();
   Logger::printOut("removing spotify addon");
-
 }
 
 bool Addon_music_spotify::enable(bool enable) {
   if (enable)
     return Session::getInstance()->enable();
   else
-    return Session::getInstance()->disable();
+    //return Session::getInstance()->disable();
+    Session::getInstance()->deInit();
 }
 
 bool Addon_music_spotify::isReady() {
   return Session::getInstance()->isReady();
-}
-
-bool Addon_music_spotify::processAddonThread() {
-  //return Session::getInstance()->processEvents();
-  return true;
 }
 
 bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
@@ -487,6 +482,7 @@ bool Addon_music_spotify::Search(CStdString query, CFileItemList& items) {
     if (!SearchHandler::getInstance()->search(query)) {
       CStdString albumPrefix;
       albumPrefix.Format("[%s] ", g_localizeStrings.Get(558).c_str());
+      Logger::printOut("search fetch albums");
       vector<SxAlbum*> albums = SearchHandler::getInstance()->getAlbumResults();
       for (int i = 0; i < albums.size(); i++) {
         //if its a multidisc we need to add them all

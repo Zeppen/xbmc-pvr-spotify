@@ -3014,7 +3014,8 @@ bool CApplication::Cleanup()
   {
     //spotify
     if (g_spotify)
-      delete g_spotify;
+      g_spotify->enable(false);
+      //delete g_spotify;
     g_windowManager.Delete(WINDOW_MUSIC_PLAYLIST);
     g_windowManager.Delete(WINDOW_MUSIC_PLAYLIST_EDITOR);
     g_windowManager.Delete(WINDOW_MUSIC_FILES);

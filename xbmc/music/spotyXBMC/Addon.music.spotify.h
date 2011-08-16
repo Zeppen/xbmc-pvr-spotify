@@ -38,8 +38,6 @@ public:
   Addon_music_spotify();
   virtual ~Addon_music_spotify();
 
-  bool processAddonThread();
-
   bool enable(bool enable);
   bool isEnabled() {
     return m_isEnabled;
@@ -57,7 +55,6 @@ public:
 
 private:
   bool m_isEnabled;
-  Session *m_session;
 
   bool getAlbumTracks(CFileItemList& items, CStdString& path);
   bool getArtistTracks(CFileItemList& items, CStdString& path);

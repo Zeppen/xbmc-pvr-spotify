@@ -17,8 +17,6 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-//spotify
-#include "music/spotyXBMC/Addon.music.spotify.h"
 
 #include "system.h"
 #include "XBApplicationEx.h"
@@ -95,9 +93,6 @@ INT CXBApplicationEx::Run()
     try
     {
 #endif
-
-      //spotify, advance the spotifyAPI
-      g_spotify->processAddonThread();
 
       Process();
       //reset exception count

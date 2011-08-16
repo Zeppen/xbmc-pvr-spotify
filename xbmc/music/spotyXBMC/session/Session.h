@@ -49,7 +49,7 @@ namespace addon_music_spotify {
   public:
 
     static Session *getInstance();
-    static void deInit();
+    void deInit();
     bool processEvents();
 
     void notifyMainThread() {
@@ -62,7 +62,6 @@ namespace addon_music_spotify {
       return m_isLoggedOut;
     }
     bool enable();
-    bool disable();
     bool isEnabled() {
       return m_isEnabled;
     }

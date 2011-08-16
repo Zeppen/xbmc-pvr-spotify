@@ -46,11 +46,10 @@ namespace addon_music_spotify {
   }
 
   void Session::deInit() {
-    delete m_instance;
+    m_isEnabled = false;
   }
 
   Session::~Session() {
-    if (isEnabled()) disable();
     delete m_sessionCallbacks;
   }
 
@@ -64,21 +63,11 @@ namespace addon_music_spotify {
     m_bgThread->Create(true);
     unlock();
 
-    //return connect();
-  }
-
-  bool Session::disable() {
-    if (!isEnabled()) return true;
-
-    m_isEnabled = !disConnect();
-    Logger::printOut("spotify disabled");
-    return m_isEnabled;
+    return true;
   }
 
   bool Session::processEvents() {
-    if (m_isEnabled) {
-      sp_session_process_events(m_session, &m_nextEvent);
-    }
+    sp_session_process_events(m_session, &m_nextEvent);
     return true;
   }
 
@@ -126,57 +115,46 @@ namespace addon_music_spotify {
   }
 
   bool Session::isReady() {
-    if (!m_isEnabled) return false;
-
-    //if (!m_playlists)
-    //  return false;
-
-    //if (!m_playlists->isLoaded())
-    //  return false;
-
-    return true;
-
+    return m_isEnabled;
   }
 
   bool Session::disConnect() {
-    if (m_isEnabled) {
-      Logger::printOut("Logging out");
+    Logger::printOut("Logging out");
 
-      /* delete m_playlists;
-       m_playlists = NULL;
-       Logger::printOut("cleaned playlists");
+    delete m_playlists;
+    m_playlists = NULL;
+    Logger::printOut("cleaned playlists");
 
-       SearchHandler::deInit();
-       Logger::printOut("cleaned search");
+    SearchHandler::deInit();
+    Logger::printOut("cleaned search");
 
-       RadioHandler::deInit();
-       Logger::printOut("cleaned radios");
+    RadioHandler::deInit();
+    Logger::printOut("cleaned radios");
 
-       ArtistStore::deInit();
-       Logger::printOut("cleaned artists");
+    ArtistStore::deInit();
+    Logger::printOut("cleaned artists");
 
-       AlbumStore::deInit();
-       Logger::printOut("cleaned albums");
+    AlbumStore::deInit();
+    Logger::printOut("cleaned albums");
 
-       TrackStore::deInit();
-       Logger::printOut("cleaned tracks");
+    TrackStore::deInit();
+    Logger::printOut("cleaned tracks");
 
-       ThumbStore::deInit();
-       Logger::printOut("cleaned thumbs");*/
+    ThumbStore::deInit();
+    Logger::printOut("cleaned thumbs");
 
-      //TODO FIX THE LOGOUT... Why is it crashing on logout?
-      m_isLoggedOut = false;
-      sp_session_logout(m_session);
+    //TODO FIX THE LOGOUT... Why is it crashing on logout?
+    m_isLoggedOut = false;
+    sp_session_logout(m_session);
 
-      Logger::printOut("logged out waiting for callback");
-      while (!m_isLoggedOut) {
-        processEvents();
-      }
-      Logger::printOut("logged out");
-      //sp_session_release(m_session);
-      Logger::printOut("cleaned session");
-      m_isEnabled = false;
+    Logger::printOut("logged out waiting for callback");
+    while (!m_isLoggedOut) {
+      processEvents();
     }
+    Logger::printOut("logged out");
+    sp_session_release(m_session);
+    Logger::printOut("cleaned session");
+
     return true;
   }
 

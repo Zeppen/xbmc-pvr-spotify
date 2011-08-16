@@ -1,8 +1,22 @@
 /*
- * BackgroundThread.cpp
- *
- *  Created on: Aug 15, 2011
- *      Author: david
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ For contact with the author:
+ david.erenger@gmail.com
  */
 
 #include "Session.h"
@@ -12,12 +26,9 @@
 namespace addon_music_spotify {
 
   BackgroundThread::BackgroundThread() {
-    // TODO Auto-generated constructor stub
-
   }
 
   BackgroundThread::~BackgroundThread() {
-    // TODO Auto-generated destructor stub
   }
 
   void BackgroundThread::OnStartup() {
@@ -40,15 +51,18 @@ namespace addon_music_spotify {
     while (Session::getInstance()->isEnabled()) {
       //Logger::printOut("bgthread Process");
       //if the session is locked, sleep for awhile and try later again
-     if (Session::getInstance()->m_nextEvent <= 0 && !Session::getInstance()->isLocked()){
+      if (Session::getInstance()->m_nextEvent <= 0 && !Session::getInstance()->isLocked()) {
         Session::getInstance()->lock();
         Session::getInstance()->processEvents();
         Session::getInstance()->unlock();
       }
-      Session::getInstance()->m_nextEvent-= 10;
+      Session::getInstance()->m_nextEvent -= 10;
       Sleep(10);
     }
     Logger::printOut("exiting process thread");
+    Session::getInstance()->disConnect();
+    delete Session::getInstance();
+    Logger::printOut("exiting process thread done");
   }
 
 } /* namespace addon_music_spotify */
