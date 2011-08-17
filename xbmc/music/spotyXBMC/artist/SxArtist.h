@@ -33,6 +33,7 @@
 #include <libspotify/api.h>
 #include <vector>
 #include <string>
+#include "../track/TrackContainer.h"
 #include "../thumb/SxThumb.h"
 
 using namespace std;
@@ -42,7 +43,7 @@ namespace addon_music_spotify {
   class SxAlbum;
   class SxArtist;
   class ArtistStore;
-  class SxArtist {
+  class SxArtist: private TrackContainer  {
   public:
 
     static void SP_CALLCONV cb_artistBrowseComplete(sp_artistbrowse *result, void *userdata);
@@ -84,6 +85,8 @@ namespace addon_music_spotify {
     vector<SxTrack*> getTracks() {
       return m_tracks;
     }
+
+    bool getTrackItems(CFileItemList& items);
 
     vector<SxAlbum*> getAlbums() {
       return m_albums;
@@ -132,7 +135,6 @@ namespace addon_music_spotify {
 
     char *m_uri;
     sp_artist *m_spArtist;
-    vector<SxTrack*> m_tracks;
     vector<SxAlbum*> m_albums;
     vector<SxArtist*> m_artists;
     SxThumb *m_thumb;

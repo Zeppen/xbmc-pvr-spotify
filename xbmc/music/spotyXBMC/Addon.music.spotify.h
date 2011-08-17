@@ -70,10 +70,6 @@ private:
   bool getAllArtists(CFileItemList& items);
   bool getArtistSimilarArtists(CFileItemList& items, CStdString uri);
   bool getTopListArtists(CFileItemList& items);
-
-  const CFileItemPtr SxAlbumToItem(SxAlbum* album, string prefix = "", int discNumber = 0);
-  const CFileItemPtr SxTrackToItem(SxTrack* track, string prefix = "", int trackNumber = -1);
-  const CFileItemPtr SxArtistToItem(SxArtist* artist, string prefix = "");
 };
 extern Addon_music_spotify* g_spotify;
 #endif /* ADDONMUSICSPOTIFY_H_ */

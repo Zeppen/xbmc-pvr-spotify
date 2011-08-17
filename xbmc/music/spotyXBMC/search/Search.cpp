@@ -56,10 +56,7 @@ namespace addon_music_spotify {
     //while (m_currentSearch != NULL)
     //  ;
     Logger::printOut("cleaning after search");
-    while (!m_tracks.empty()) {
-      TrackStore::getInstance()->removeTrack(m_tracks.back());
-      m_tracks.pop_back();
-    }
+    removeAllTracks();
 
     while (!m_albums.empty()) {
       AlbumStore::getInstance()->removeAlbum(m_albums.back());
@@ -75,13 +72,15 @@ namespace addon_music_spotify {
 
   }
 
+  bool Search::getTrackItems(CFileItemList& items) {
+    return true;
+  }
+
   bool Search::isLoaded() {
     for (int i = 0; i < m_albums.size(); i++) {
       if (!m_albums[i]->isLoaded()) return false;
     }
-    for (int i = 0; i < m_tracks.size(); i++) {
-      if (!m_tracks[i]->isLoaded()) return false;
-    }
+    if (!isTracksLoaded()) return false;
     for (int i = 0; i < m_artists.size(); i++) {
       if (!m_artists[i]->isLoaded()) return false;
     }

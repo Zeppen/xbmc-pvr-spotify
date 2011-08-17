@@ -23,6 +23,7 @@
 #define SXRADIO_H_
 
 #include <libspotify/api.h>
+#include "../track/TrackContainer.h"
 #include <vector>
 
 using namespace std;
@@ -30,7 +31,7 @@ using namespace std;
 namespace addon_music_spotify {
 
   class SxTrack;
-  class SxRadio {
+  class SxRadio: private TrackContainer {
   public:
 
     static void SP_CALLCONV cb_searchComplete(sp_search *search, void *userdata);
@@ -38,6 +39,8 @@ namespace addon_music_spotify {
 
     //this is called from the player when it is advancing to next track
     void pushToTrack(int trackNumber);
+
+    bool getTrackItems(CFileItemList& items);
 
     friend class RadioHandler;
 
@@ -60,8 +63,6 @@ namespace addon_music_spotify {
     int m_toYear;
     int m_currentPlayingPos;
     int m_currentResultPos;
-
-    vector<SxTrack*> m_tracks;
   };
 
 } /* namespace addon_music_spotify */

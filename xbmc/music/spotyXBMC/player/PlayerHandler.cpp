@@ -37,7 +37,8 @@ namespace addon_music_spotify {
 
   void PlayerHandler::deInit() {
     //The codec is deleted by xbmc on exit
-    //if (m_currentCodec != NULL)
+    if (m_instance->m_currentCodec != NULL)
+      m_instance->m_currentCodec->unloadPlayer();
     //  delete m_currentCodec();
   }
 

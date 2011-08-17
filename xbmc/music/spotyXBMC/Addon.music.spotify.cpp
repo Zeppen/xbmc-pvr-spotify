@@ -21,6 +21,7 @@
 
 #include "Addon.music.spotify.h"
 #include <stdint.h>
+#include "Utils.h"
 #include "Logger.h"
 #include "session/Session.h"
 #include "playlist/StarredList.h"
@@ -30,8 +31,8 @@
 #include "artist/SxArtist.h"
 #include "artist/ArtistStore.h"
 #include "track/TrackStore.h"
-#include "track/SxTrack.h"
 #include "album/SxAlbum.h"
+#include "track/SxTrack.h"
 #include "album/AlbumStore.h"
 #include "../tags/MusicInfoTag.h"
 #include "../Album.h"
@@ -60,7 +61,6 @@ bool Addon_music_spotify::enable(bool enable) {
   if (enable)
     return Session::getInstance()->enable();
   else
-    //return Session::getInstance()->disable();
     Session::getInstance()->deInit();
 }
 
@@ -136,7 +136,7 @@ bool Addon_music_spotify::getArtistAlbums(CFileItemList& items, CStdString& arti
     //add the albums
     vector<SxAlbum*> albums = artist->getAlbums();
     for (int i = 0; i < albums.size(); i++) {
-      items.Add(SxAlbumToItem(albums[i]));
+      items.Add(Utils::SxAlbumToItem(albums[i]));
 
     }
   }
@@ -159,10 +159,10 @@ bool Addon_music_spotify::getAllAlbums(CFileItemList& items, CStdString& artistS
         //if its a multidisc we need to add them all
         int discNumber = album->getNumberOfDiscs();
         if (discNumber == 1)
-          items.Add(SxAlbumToItem(sl->getAlbum(i)));
+          items.Add(Utils::SxAlbumToItem(sl->getAlbum(i)));
         else {
           while (discNumber > 0) {
-            items.Add(SxAlbumToItem(sl->getAlbum(i), "", discNumber));
+            items.Add(Utils::SxAlbumToItem(sl->getAlbum(i), "", discNumber));
             discNumber--;
           }
         }
@@ -220,7 +220,7 @@ bool Addon_music_spotify::getAlbumTracks(CFileItemList& items, CStdString& path)
 
     vector<SxTrack*> tracks = salbum->getTracks();
     for (int i = 0; i < tracks.size(); i++) {
-      if (disc == tracks[i]->getDisc()) items.Add(SxTrackToItem(tracks[i]));
+      if (disc == tracks[i]->getDisc()) items.Add(Utils::SxTrackToItem(tracks[i]));
     }
   }
   return true;
@@ -242,7 +242,7 @@ bool Addon_music_spotify::getArtistTracks(CFileItemList& items, CStdString& path
       ;
     vector<SxTrack*> tracks = artist->getTracks();
     for (int i = 0; i < tracks.size(); i++) {
-      items.Add(SxTrackToItem(tracks[i]));
+      items.Add(Utils::SxTrackToItem(tracks[i]));
     }
   }
   return true;
@@ -262,7 +262,7 @@ bool Addon_music_spotify::getAllTracks(CFileItemList& items, CStdString& path) {
       if (!sl->isLoaded()) return true;
 
       for (int i = 0; i < sl->getNumberOfTracks(); i++) {
-        items.Add(SxTrackToItem(sl->getTrack(i)));
+        items.Add(Utils::SxTrackToItem(sl->getTrack(i)));
       }
     }
   }
@@ -276,7 +276,7 @@ bool Addon_music_spotify::getRadioTracks(CFileItemList& items, int radio) {
     if (radio == 1 || radio == 2) {
       vector<SxTrack*> tracks = RadioHandler::getInstance()->getTracks(radio);
       for (int i = 0; i < tracks.size(); i++) {
-        const CFileItemPtr pItem = SxTrackToItem(tracks[i], "", i + lowestTrackNumber + 1);
+        const CFileItemPtr pItem = Utils::SxTrackToItem(tracks[i], "", i + lowestTrackNumber + 1);
         CStdString path;
         path.Format("%s%s%i%s%i", pItem->GetPath(), "radio#", radio, "#", i + lowestTrackNumber);
         pItem->SetPath(path);
@@ -312,7 +312,7 @@ bool Addon_music_spotify::getAllArtists(CFileItemList& items) {
     if (!sl->isLoaded()) return true;
 
     for (int i = 0; i < sl->getNumberOfArtists(); i++) {
-      items.Add(SxArtistToItem(sl->getArtist(i)));
+      items.Add(Utils::SxArtistToItem(sl->getArtist(i)));
     }
   }
   return true;
@@ -334,7 +334,7 @@ bool Addon_music_spotify::getArtistSimilarArtists(CFileItemList& items, CStdStri
       ;
     vector<SxArtist*> artists = artist->getArtists();
     for (int i = 0; i < artists.size(); i++) {
-      items.Add(SxArtistToItem(artists[i]));
+      items.Add(Utils::SxArtistToItem(artists[i]));
     }
   }
   return true;
@@ -347,7 +347,7 @@ bool Addon_music_spotify::getPlaylistTracks(CFileItemList& items, int index) {
     SxPlaylist* pl = ps->getPlaylist(index);
 
     for (int i = 0; i < pl->getNumberOfTracks(); i++) {
-      items.Add(SxTrackToItem(pl->getTrack(i), "", i + 1));
+      items.Add(Utils::SxTrackToItem(pl->getTrack(i), "", i + 1));
     }
   }
   return true;
@@ -428,7 +428,7 @@ bool Addon_music_spotify::getTopListArtists(CFileItemList& items) {
 
     vector<SxArtist*> artists = tl->getArtists();
     for (int i = 0; i < artists.size(); i++) {
-      items.Add(SxArtistToItem(artists[i]));
+      items.Add(Utils::SxArtistToItem(artists[i]));
     }
 
   }
@@ -449,7 +449,7 @@ bool Addon_music_spotify::getTopListAlbums(CFileItemList& items) {
 
     vector<SxAlbum*> albums = tl->getAlbums();
     for (int i = 0; i < albums.size(); i++) {
-      items.Add(SxAlbumToItem(albums[i]));
+      items.Add(Utils::SxAlbumToItem(albums[i]));
     }
   }
   return true;
@@ -469,7 +469,7 @@ bool Addon_music_spotify::getTopListTracks(CFileItemList& items) {
 
     vector<SxTrack*> tracks = tl->getTracks();
     for (int i = 0; i < tracks.size(); i++) {
-      items.Add(SxTrackToItem(tracks[i], "", i + 1));
+      items.Add(Utils::SxTrackToItem(tracks[i], "", i + 1));
     }
   }
   return true;
@@ -488,10 +488,10 @@ bool Addon_music_spotify::Search(CStdString query, CFileItemList& items) {
         //if its a multidisc we need to add them all
         int discNumber = albums[i]->getNumberOfDiscs();
         if (discNumber == 1) {
-          items.Add(SxAlbumToItem(albums[i], albumPrefix));
+          items.Add(Utils::SxAlbumToItem(albums[i], albumPrefix));
         } else {
           while (discNumber > 0) {
-            items.Add(SxAlbumToItem(albums[i], albumPrefix, discNumber));
+            items.Add(Utils::SxAlbumToItem(albums[i], albumPrefix, discNumber));
             discNumber--;
           }
         }
@@ -499,7 +499,7 @@ bool Addon_music_spotify::Search(CStdString query, CFileItemList& items) {
       Logger::printOut("search fetch tracks");
       vector<SxTrack*> tracks = SearchHandler::getInstance()->getTrackResults();
       for (int i = 0; i < tracks.size(); i++)
-        items.Add(SxTrackToItem(tracks[i]));
+        items.Add(Utils::SxTrackToItem(tracks[i]));
 
       CStdString artistPrefix;
       artistPrefix.Format("[%s] ", g_localizeStrings.Get(557).c_str());
@@ -507,7 +507,7 @@ bool Addon_music_spotify::Search(CStdString query, CFileItemList& items) {
       Logger::printOut("search fetch artists");
       vector<SxArtist*> artists = SearchHandler::getInstance()->getArtistResults();
       for (int i = 0; i < artists.size(); i++)
-        items.Add(SxArtistToItem(artists[i], artistPrefix));
+        items.Add(Utils::SxArtistToItem(artists[i], artistPrefix));
     }
   }
   return true;
@@ -515,82 +515,5 @@ bool Addon_music_spotify::Search(CStdString query, CFileItemList& items) {
 
 ICodec* Addon_music_spotify::GetCodec() {
   return (ICodec*) PlayerHandler::getInstance()->getCodec();
-}
-
-const CFileItemPtr Addon_music_spotify::SxAlbumToItem(SxAlbum *album, string prefix, int discNumber) {
-//wait for it to finish loading
-  while (!album->isLoaded()) {
-  }
-
-  CAlbum outAlbum;
-  outAlbum.strArtist = album->getAlbumArtistName();
-  CStdString title;
-  if (discNumber != 0)
-    title.Format("%s%s %s %i", prefix, album->getAlbumName(), "disc", discNumber);
-  else
-    title.Format("%s%s", prefix, album->getAlbumName());
-  outAlbum.strAlbum = title;
-  outAlbum.iYear = album->getAlbumYear();
-  outAlbum.strReview = album->getReview();
-  outAlbum.iRating = album->getAlbumRating();
-  CStdString path;
-  path.Format("musicdb://3/%s#%i", album->getUri(), discNumber);
-  const CFileItemPtr pItem(new CFileItem(path, outAlbum));
-  if (album->hasThumb()) pItem->SetThumbnailImage(album->getThumb()->getPath());
-  pItem->SetProperty("fanart_image", Settings::getFanart());
-  return pItem;
-}
-
-const CFileItemPtr Addon_music_spotify::SxTrackToItem(SxTrack* track, string prefix, int trackNumber) {
-//wait for it to finish loading
-  while (!track->isLoaded()) {
-  }
-
-  CSong outSong;
-  CStdString path;
-  path.Format("%s.spotify", track->getUri());
-  outSong.strFileName = path;
-  CStdString title;
-  title.Format("%s%s", prefix, track->getName());
-  outSong.strTitle = title;
-  outSong.iTrack = trackNumber == -1 ? track->getTrackNumber() : trackNumber;
-  outSong.iDuration = track->getDuration();
-  outSong.rating = track->getRating();
-  char* ratingChar = new char();
-  CStdString ratingStr = itoa(1 + (track->getRating() / 2), ratingChar, 10);
-  delete ratingChar;
-  outSong.rating = ratingStr[0];
-  outSong.strArtist = track->getArtistName();
-  outSong.iYear = track->getYear();
-  outSong.strAlbum = track->getAlbumName();
-  outSong.strAlbumArtist = track->getAlbumArtistName();
-
-  const CFileItemPtr pItem(new CFileItem(outSong));
-  if (track->hasThumb()) pItem->SetThumbnailImage(track->getThumb()->getPath());
-  pItem->SetProperty("fanart_image", Settings::getFanart());
-  return pItem;
-}
-
-const CFileItemPtr Addon_music_spotify::SxArtistToItem(SxArtist* artist, string prefix) {
-  //wait for it to finish loading
-  while (!artist->isLoaded()) {
-  }
-
-  CStdString path;
-  path.Format("musicdb://2/%s/", artist->getUri());
-
-  CFileItemPtr pItem(new CFileItem(path, true));
-  CStdString label;
-  label.Format("%s%s", prefix, artist->getArtistName());
-  pItem->SetLabel(label);
-  label.Format("A %s", artist->getArtistName());
-
-  pItem->GetMusicInfoTag()->SetTitle(label);
-  if (artist->hasThumb()) pItem->SetThumbnailImage(artist->getThumb()->getPath());
-  pItem->SetIconImage("DefaultArtist.png");
-  pItem->SetProperty("fanart_image", Settings::getFanart());
-  pItem->SetProperty("artist_description", artist->getBio());
-
-  return pItem;
 }
 

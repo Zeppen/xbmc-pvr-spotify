@@ -8,6 +8,7 @@ SRCS=Album.cpp \
      spotyXBMC/Addon.music.spotify.cpp \
      spotyXBMC/FileSystemHelper.cpp \
      spotyXBMC/Logger.cpp \
+     spotyXBMC/Utils.cpp \
      spotyXBMC/Settings.cpp \
      spotyXBMC/XBMCUpdater.cpp \
      spotyXBMC/radio/SxRadio.cpp \
@@ -32,7 +33,8 @@ SRCS=Album.cpp \
      spotyXBMC/thumb/SxThumb.cpp \
      spotyXBMC/thumb/ThumbStore.cpp \
      spotyXBMC/track/SxTrack.cpp \
-     spotyXBMC/track/TrackStore.cpp 
+     spotyXBMC/track/TrackStore.cpp \
+     spotyXBMC/track/TrackContainer.cpp
      
      
 LIB=music.a

@@ -26,14 +26,14 @@
 #include <string>
 #include <vector>
 #include "../album/AlbumStore.h"
-#include "../track/TrackStore.h"
 #include "../artist/ArtistStore.h"
+#include "../track/TrackContainer.h"
 
 using namespace std;
 
 namespace addon_music_spotify {
 
-  class Search {
+  class Search: private TrackContainer  {
   public:
     Search(string query);
     virtual ~Search();
@@ -44,6 +44,10 @@ namespace addon_music_spotify {
     vector<SxTrack*> getTracks() {
       return m_tracks;
     }
+
+
+    bool getTrackItems(CFileItemList& items);
+
     vector<SxAlbum*> getAlbums() {
       return m_albums;
     }
@@ -74,7 +78,6 @@ namespace addon_music_spotify {
 
     bool m_cancelSearch;
 
-    vector<SxTrack*> m_tracks;
     vector<SxAlbum*> m_albums;
     vector<SxArtist*> m_artists;
   };

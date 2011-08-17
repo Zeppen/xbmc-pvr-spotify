@@ -23,6 +23,7 @@
 #define SXPLAYLIST_H_
 
 #include <libspotify/api.h>
+#include "../track/TrackContainer.h"
 #include <vector>
 
 namespace addon_music_spotify {
@@ -33,7 +34,7 @@ namespace addon_music_spotify {
   class SxThumb;
   class SxTrack;
 
-  class SxPlaylist {
+  class SxPlaylist: protected TrackContainer {
   public:
     SxPlaylist(sp_playlist* spSxPlaylist, int index, bool isFolder);
     virtual ~SxPlaylist();
@@ -60,6 +61,9 @@ namespace addon_music_spotify {
       return m_isFolder;
     }
     SxTrack* getTrack(int index);
+
+    bool getTrackItems(CFileItemList& items);
+
     SxThumb* getThumb() {
       return m_thumb;
     }
@@ -70,7 +74,6 @@ namespace addon_music_spotify {
     }
 
   protected:
-    vector<SxTrack*> m_tracks;
     bool m_isValid;
     sp_playlist* m_spPlaylist;
 

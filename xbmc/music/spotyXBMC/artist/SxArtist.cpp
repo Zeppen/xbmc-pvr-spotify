@@ -24,6 +24,7 @@
 #include "SxArtist.h"
 #include "../session/Session.h"
 #include "../Logger.h"
+#include "../Utils.h"
 
 #include "../album/SxAlbum.h"
 #include "../album/AlbumStore.h"
@@ -65,10 +66,7 @@ namespace addon_music_spotify {
       Logger::printOut("waiting for artist to die");
     }
 
-    while (!m_tracks.empty()) {
-      TrackStore::getInstance()->removeTrack(m_tracks.back());
-      m_tracks.pop_back();
-    }
+    removeAllTracks();
 
     while (!m_albums.empty()) {
       AlbumStore::getInstance()->removeAlbum(m_albums.back());
@@ -82,7 +80,7 @@ namespace addon_music_spotify {
 
     if (m_thumb) ThumbStore::getInstance()->removeThumb(m_thumb);
     delete m_uri;
-    if (hasDetails() && m_browse != NULL ) sp_artistbrowse_release(m_browse);
+    if (hasDetails() && m_browse != NULL) sp_artistbrowse_release(m_browse);
     sp_artist_release(m_spArtist);
   }
 
@@ -97,12 +95,7 @@ namespace addon_music_spotify {
 
   bool SxArtist::isTracksLoaded() {
     if (!m_hasTracksAndAlbums) return false;
-
-    for (int i = 0; i < m_tracks.size(); i++) {
-      if (!m_tracks[i]->isLoaded()) return false;
-    }
-
-    return true;
+    return TrackContainer::isTracksLoaded();
   }
 
   bool SxArtist::isArtistsLoaded() {
@@ -127,7 +120,7 @@ namespace addon_music_spotify {
       return;
     }
 
-    if (m_browse == NULL ) return;
+    if (m_browse == NULL) return;
 
     //add the albums
     int maxAlbums = Settings::getArtistNumberAlbums() == -1 ? sp_artistbrowse_num_albums(m_browse) : Settings::getArtistNumberAlbums();
@@ -180,25 +173,11 @@ namespace addon_music_spotify {
           m_thumb = ThumbStore::getInstance()->getThumb(image);
         }
       }
-      if (m_thumb != NULL ) m_hasThumb = true;
+      if (m_thumb != NULL) m_hasThumb = true;
 
       m_bio = sp_artistbrowse_biography(result);
       //remove the links from the bio text (it contains spotify uris so maybe we can do something fun with it later)
-      bool done = false;
-      while (!done) {
-        // Look for start of tag:
-        size_t leftPos = m_bio.find('<');
-        if (leftPos != string::npos) {
-          // See if tag close is in this line:
-          size_t rightPos = m_bio.find('>');
-          if (rightPos == string::npos) {
-            done = true;
-            m_bio.erase(leftPos);
-          } else
-            m_bio.erase(leftPos, rightPos - leftPos + 1);
-        } else
-          done = true;
-      }
+      Utils::cleanTags(m_bio);
 
       if (m_loadTrackAndAlbums) {
         //add the albums
@@ -246,5 +225,10 @@ namespace addon_music_spotify {
     Logger::printOut(artist->getArtistName());
     artist->detailsLoaded(result);
   }
+
+  bool SxArtist::getTrackItems(CFileItemList& items) {
+    return true;
+  }
+
 } /* namespace addon_music_spotify */
 

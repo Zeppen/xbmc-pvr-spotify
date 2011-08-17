@@ -60,10 +60,7 @@ namespace addon_music_spotify {
   SxPlaylist::~SxPlaylist() {
     sp_playlist_remove_callbacks(m_spPlaylist, &m_plCallbacks, this);
     if (!isFolder()) {
-      while (!m_tracks.empty()) {
-        TrackStore::getInstance()->removeTrack(m_tracks.back()->getSpTrack());
-        m_tracks.pop_back();
-      }
+      removeAllTracks();
     }
     //let it bleed a little, not sure if the reference actualy goes up or if it is linked to the container
     // if (m_isValid)
@@ -84,9 +81,7 @@ namespace addon_music_spotify {
 
   bool SxPlaylist::isLoaded() {
     if (!isFolder()) {
-      for (int i = 0; i < m_tracks.size(); i++) {
-        if (!m_tracks[i]->isLoaded()) return false;
-      }
+      return isTracksLoaded();
     }
     return true;
   }
@@ -94,6 +89,10 @@ namespace addon_music_spotify {
   SxTrack* SxPlaylist::getTrack(int index) {
     if (index < getNumberOfTracks() && m_isValid && isLoaded() && !isFolder()) return m_tracks[index];
     return NULL;
+  }
+
+  bool SxPlaylist::getTrackItems(CFileItemList& items) {
+    return true;
   }
 
   void SxPlaylist::reLoad() {
@@ -121,10 +120,9 @@ namespace addon_music_spotify {
             m_thumb = track->getThumb();
         }
       }
-      while (!m_tracks.empty()) {
-        TrackStore::getInstance()->removeTrack(m_tracks.back()->getSpTrack());
-        m_tracks.pop_back();
-      }
+
+      removeAllTracks();
+
       Logger::printOut("reload play done");
       m_tracks = newTracks;
     }

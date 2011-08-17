@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "SxAlbum.h"
+#include "../Utils.h"
 #include "../session/Session.h"
 #include "../Logger.h"
 #include "../track/SxTrack.h"
@@ -54,10 +55,11 @@ namespace addon_music_spotify {
   }
 
   SxAlbum::~SxAlbum() {
-    while (!m_tracks.empty()) {
-      TrackStore::getInstance()->removeTrack(m_tracks.back());
-      m_tracks.pop_back();
-    }
+    //while (!m_tracks.empty()) {
+    //  TrackStore::getInstance()->removeTrack(m_tracks.back());
+    //  m_tracks.pop_back();
+    //}
+    removeAllTracks();
 
     if (m_thumb) ThumbStore::getInstance()->removeThumb(m_thumb);
     sp_album_release(m_spAlbum);
@@ -85,21 +87,7 @@ namespace addon_music_spotify {
     if (sp_albumbrowse_error(result) == SP_ERROR_OK) {
       m_review = sp_albumbrowse_review(result);
       //remove the links from the review text (it contains spotify uris so maybe we can do something fun with it later)
-      bool done = false;
-      while (!done) {
-        // Look for start of tag:
-        size_t leftPos = m_review.find('<');
-        if (leftPos != string::npos) {
-          // See if tag close is in this line:
-          size_t rightPos = m_review.find('>');
-          if (rightPos == string::npos) {
-            done = true;
-            m_review.erase(leftPos);
-          } else
-            m_review.erase(leftPos, rightPos - leftPos + 1);
-        } else
-          done = true;
-      }
+      Utils::cleanTags(m_review);
 
       //get some ratings, the album dont have rating so iterate through the tracks and calculate a mean value for the album
       float rating = 0;
@@ -129,5 +117,10 @@ namespace addon_music_spotify {
     //Logger::printOut(album->getAlbumName());
     album->tracksLoaded(result);
   }
+
+  bool SxAlbum::getTrackItems(CFileItemList& items){
+    return true;
+  }
+
 } /* namespace addon_music_spotify */
 

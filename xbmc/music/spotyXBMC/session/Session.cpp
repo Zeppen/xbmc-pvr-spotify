@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <string>
 
+#include "../player/PlayerHandler.h"
 #include "../artist/ArtistStore.h"
 #include "../track/TrackStore.h"
 #include "../album/AlbumStore.h"
@@ -120,6 +121,9 @@ namespace addon_music_spotify {
 
   bool Session::disConnect() {
     Logger::printOut("Logging out");
+
+    PlayerHandler::deInit();
+    Logger::printOut("cleaned player");
 
     delete m_playlists;
     m_playlists = NULL;

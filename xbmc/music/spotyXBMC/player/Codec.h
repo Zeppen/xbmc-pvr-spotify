@@ -42,6 +42,8 @@ namespace addon_music_spotify {
     int musicDelivery(int channels, int sample_rate, const void *frames, int num_frames);
     void endOfTrack();
 
+    friend class PlayerHandler;
+
   private:
 
     bool loadPlayer();

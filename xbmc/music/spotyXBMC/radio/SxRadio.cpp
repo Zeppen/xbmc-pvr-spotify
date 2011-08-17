@@ -43,17 +43,15 @@ namespace addon_music_spotify {
   }
 
   SxRadio::~SxRadio() {
-    while (!m_tracks.empty()) {
-      TrackStore::getInstance()->removeTrack(m_tracks.back());
-      m_tracks.pop_back();
-    }
+    removeAllTracks();
   }
 
   bool SxRadio::isLoaded() {
     if (m_isWaitingForResults) return false;
-    for (int i = 0; i < m_tracks.size(); i++) {
-      if (!m_tracks[i]->isLoaded()) return false;
-    }
+    return isTracksLoaded();
+  }
+
+  bool SxRadio::getTrackItems(CFileItemList& items) {
     return true;
   }
 
