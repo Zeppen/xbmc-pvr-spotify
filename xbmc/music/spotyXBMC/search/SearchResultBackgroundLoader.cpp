@@ -47,7 +47,7 @@ namespace addon_music_spotify {
 
   void SearchResultBackgroundLoader::Process() {
     while (!Session::getInstance()->lock()) {
-      SleepMs(10);
+      SleepMs(1);
     }
 
     if (m_search->m_cancelSearch) {
@@ -82,7 +82,7 @@ namespace addon_music_spotify {
     //wait for all albums, tracks and artists to load before calling out
     Session::getInstance()->unlock();
     while (!m_search->isLoaded()) {
-      SleepMs(10);
+      SleepMs(1);
     }
 
     XBMCUpdater::updateSearchResults(m_search->m_query);

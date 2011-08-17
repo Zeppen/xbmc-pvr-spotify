@@ -33,7 +33,6 @@
 #include <libspotify/api.h>
 #include <vector>
 #include "../../../threads/SystemClock.h"
-
 #include "../track/TrackStore.h"
 #include "../album/AlbumStore.h"
 #include "../artist/ArtistStore.h"

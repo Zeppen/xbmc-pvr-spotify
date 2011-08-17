@@ -51,13 +51,12 @@ namespace addon_music_spotify {
     while (Session::getInstance()->isEnabled()) {
       //Logger::printOut("bgthread Process");
       //if the session is locked, sleep for awhile and try later again
-      if (Session::getInstance()->m_nextEvent <= 0 && !Session::getInstance()->isLocked()) {
-        Session::getInstance()->lock();
+      if (Session::getInstance()->m_nextEvent <= 0 && Session::getInstance()->lock()) {
         Session::getInstance()->processEvents();
         Session::getInstance()->unlock();
       }
-      Session::getInstance()->m_nextEvent -= 10;
-      Sleep(10);
+      Session::getInstance()->m_nextEvent -= 5;
+      Sleep(5);
     }
     Logger::printOut("exiting process thread");
     Session::getInstance()->disConnect();

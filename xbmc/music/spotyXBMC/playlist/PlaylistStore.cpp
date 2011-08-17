@@ -85,11 +85,6 @@ namespace addon_music_spotify {
         store->m_starredList = new StarredList(store->m_spStarredList);
         Logger::printOut("m_starredList created");
       }
-
-      //TODO sleep thread
-      clock_t goal = 100 + clock();
-      while (goal > clock())
-        ;
     }
 
     Logger::printOut("All playlists loaded");

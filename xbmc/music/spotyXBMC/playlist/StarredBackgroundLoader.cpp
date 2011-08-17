@@ -56,7 +56,7 @@ namespace addon_music_spotify {
       Logger::printOut("Populate starred albums and artists thread start");
       //we need the session lock so that we can run processevents and wait for albums etc
       while (!Session::getInstance()->lock()) {
-        SleepMs(10);
+        SleepMs(1);
       }
       ls->m_reload = false;
 
@@ -96,17 +96,17 @@ namespace addon_music_spotify {
         if (tempalbum == NULL
         ) continue;
         while (!sp_album_is_loaded(tempalbum))
-          SleepMs(10);
+          SleepMs(1);
 
         SxAlbum* album = AlbumStore::getInstance()->getAlbum(tempalbum, true);
         Logger::printOut(album->getAlbumName());
 
         Session::getInstance()->unlock();
         while (!album->isLoaded()) {
-          SleepMs(10);
+          SleepMs(1);
         }
         while (!Session::getInstance()->lock()) {
-          SleepMs(10);
+          SleepMs(1);
         }
 
         if (!album->hasTracksAndDetails() || album->getTracks().size() == 0 || !sp_album_is_available(album->getSpAlbum())) {
@@ -137,7 +137,7 @@ namespace addon_music_spotify {
         if (tempartist == NULL
         ) continue;
         while (!sp_artist_is_loaded(tempartist))
-          SleepMs(10);
+          SleepMs(1);
 
         SxArtist* artist = ArtistStore::getInstance()->getArtist(tempartist, false);
 
@@ -156,7 +156,7 @@ namespace addon_music_spotify {
       //wait for all info to finish loading before updating the lists (or reloading it all)
       Session::getInstance()->unlock();
       while (!ls->isLoaded()) {
-        SleepMs(10);
+        SleepMs(1);
       }
     }
 
