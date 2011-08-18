@@ -13,10 +13,13 @@ SRCS=Album.cpp \
      spotyXBMC/XBMCUpdater.cpp \
      spotyXBMC/radio/SxRadio.cpp \
      spotyXBMC/radio/RadioHandler.cpp \
+     spotyXBMC/radio/RadioBackgroundLoader.cpp \
      spotyXBMC/album/SxAlbum.cpp \
      spotyXBMC/album/AlbumStore.cpp \
+     spotyXBMC/album/AlbumContainer.cpp \
      spotyXBMC/artist/SxArtist.cpp \
      spotyXBMC/artist/ArtistStore.cpp \
+     spotyXBMC/artist/ArtistContainer.cpp \
      spotyXBMC/search/Search.cpp \
      spotyXBMC/search/SearchHandler.cpp \
      spotyXBMC/search/SearchResultBackgroundLoader.cpp \

@@ -25,6 +25,7 @@
 #include "../track/TrackStore.h"
 #include "../session/Session.h"
 #include "RadioHandler.h"
+#include "RadioBackgroundLoader.h"
 
 namespace addon_music_spotify {
 
@@ -68,29 +69,8 @@ namespace addon_music_spotify {
   }
 
   void SxRadio::fetchNewTracks() {
-    if (m_isWaitingForResults) return;
-
-    //add the tracks
-    if (m_currentSearch != NULL) {
-      //if there are no tracks, return and break
-      if (sp_search_num_tracks(m_currentSearch) == 0) return;
-
-      for (int index = m_currentResultPos; index < sp_search_num_tracks(m_currentSearch) && m_tracks.size() < m_numberOfTracksToDisplay; index++) {
-        if (sp_track_is_available(Session::getInstance()->getSpSession(), sp_search_track(m_currentSearch, index))) {
-          m_tracks.push_back(TrackStore::getInstance()->getTrack(sp_search_track(m_currentSearch, index)));
-        }
-        m_currentResultPos++;
-      }
-    }
-
-    //are we still missing tracks? Do a new search
-    if (m_tracks.size() < m_numberOfTracksToDisplay) {
-      m_isWaitingForResults = true;
-      m_currentSearch = sp_radio_search_create(Session::getInstance()->getSpSession(), m_fromYear, m_toYear, m_genres, &cb_searchComplete, this);
-    }
-    //the list is full or we are waiting for a new search, update the view
-    if (m_tracks.size() > 0) RadioHandler::getInstance()->allTracksLoaded(m_radioNumber);
-    Logger::printOut("radio fetch tracks done");
+    RadioBackgroundLoader* loader = new RadioBackgroundLoader(this);
+    loader->Create(true);
   }
 
   void SxRadio::newResults(sp_search* search) {

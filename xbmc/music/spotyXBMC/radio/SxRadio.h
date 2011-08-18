@@ -43,6 +43,8 @@ namespace addon_music_spotify {
     bool getTrackItems(CFileItemList& items);
 
     friend class RadioHandler;
+    friend class RadioBackgroundLoader;
+
 
   private:
     SxRadio(int radioNumber, int fromYear, int toYear, sp_radio_genre genres);
