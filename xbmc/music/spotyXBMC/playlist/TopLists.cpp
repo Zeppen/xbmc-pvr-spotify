@@ -53,21 +53,9 @@ namespace addon_music_spotify {
     m_artistsLoaded = false;
     m_tracksLoaded = false;
 
-    while (!m_tracks.empty()) {
-      TrackStore::getInstance()->removeTrack(m_tracks.back());
-      m_tracks.pop_back();
-    }
-
-    while (!m_albums.empty()) {
-      AlbumStore::getInstance()->removeAlbum(m_albums.back());
-      m_albums.pop_back();
-    }
-
-    while (!m_artists.empty()) {
-      ArtistStore::getInstance()->removeArtist(m_artists.back());
-      m_artists.pop_back();
-    }
-
+    removeAllTracks();
+    removeAllAlbums();
+    removeAllArtists();
   }
 
   void TopLists::reLoadArtists() {
@@ -93,30 +81,28 @@ namespace addon_music_spotify {
 
   bool TopLists::isArtistsLoaded() {
     if (!m_artistsLoaded || m_artistsNextReload.IsTimePast()) return false;
-
-    for (int i = 0; i < m_artists.size(); i++) {
-      if (!m_artists[i]->isLoaded()) return false;
-    }
-
-    return true;
+    return artistsLoaded();
   }
 
   bool TopLists::isAlbumsLoaded() {
     if (!m_albumsLoaded || m_albumsNextReload.IsTimePast()) return false;
-
-    for (int i = 0; i < m_albums.size(); i++) {
-      if (!m_albums[i]->isLoaded()) return false;
-    }
-    return true;
+    return albumsLoaded();
   }
 
   bool TopLists::isTracksLoaded() {
     if (!m_tracksLoaded || m_tracksNextReload.IsTimePast()) return false;
+    return tracksLoaded();
+  }
 
-    for (int i = 0; i < m_tracks.size(); i++) {
-      if (!m_tracks[i]->isLoaded()) return false;
-    }
+  bool TopLists::getArtistItems(CFileItemList& items) {
+    return true;
+  }
 
+  bool TopLists::getAlbumItems(CFileItemList& items) {
+    return true;
+  }
+
+  bool TopLists::getTrackItems(CFileItemList& items) {
     return true;
   }
 
@@ -132,12 +118,9 @@ namespace addon_music_spotify {
       if (artist != NULL) newArtists.push_back(artist);
     }
 
-    while (!lists->m_artists.empty()) {
-      ArtistStore::getInstance()->removeArtist(lists->m_artists.back());
-      lists->m_artists.pop_back();
-    }
-
+    lists->removeAllArtists();
     lists->m_artists = newArtists;
+
     struct timeb tmb;
     ftime(&tmb);
     lists->m_artistsNextReload.Set(1000 * 60 * 60 * 24);
@@ -164,12 +147,9 @@ namespace addon_music_spotify {
       }
     }
 
-    while (!lists->m_albums.empty()) {
-      AlbumStore::getInstance()->removeAlbum(lists->m_albums.back());
-      lists->m_albums.pop_back();
-    }
-
+    lists->removeAllAlbums();
     lists->m_albums = newAlbums;
+
     struct timeb tmb;
     ftime(&tmb);
     lists->m_albumsNextReload.Set(1000 * 60 * 60 * 24);
@@ -192,12 +172,9 @@ namespace addon_music_spotify {
       }
     }
 
-    while (!lists->m_tracks.empty()) {
-      TrackStore::getInstance()->removeTrack(lists->m_tracks.back());
-      lists->m_tracks.pop_back();
-    }
-
+    lists->removeAllTracks();
     lists->m_tracks = newTracks;
+
     struct timeb tmb;
     ftime(&tmb);
     lists->m_tracksNextReload.Set(1000 * 60 * 60 * 24);

@@ -25,15 +25,15 @@
 #include <libspotify/api.h>
 #include <string>
 #include <vector>
-#include "../album/AlbumStore.h"
-#include "../artist/ArtistStore.h"
+#include "../album/AlbumContainer.h"
+#include "../artist/ArtistContainer.h"
 #include "../track/TrackContainer.h"
 
 using namespace std;
 
 namespace addon_music_spotify {
 
-  class Search: private TrackContainer  {
+  class Search: private TrackContainer, private AlbumContainer, private ArtistContainer  {
   public:
     Search(string query);
     virtual ~Search();
@@ -51,9 +51,14 @@ namespace addon_music_spotify {
     vector<SxAlbum*> getAlbums() {
       return m_albums;
     }
+
+    bool getAlbumItems(CFileItemList& items);
+
     vector<SxArtist*> getArtists() {
       return m_artists;
     }
+
+    bool getArtistItems(CFileItemList& items);
 
     static void SP_CALLCONV cb_searchComplete(sp_search *search, void *userdata);
 
@@ -77,9 +82,6 @@ namespace addon_music_spotify {
     sp_search* m_currentSearch;
 
     bool m_cancelSearch;
-
-    vector<SxAlbum*> m_albums;
-    vector<SxArtist*> m_artists;
   };
 
 } /* namespace addon_music_spotify */

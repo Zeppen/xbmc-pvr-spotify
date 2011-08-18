@@ -48,7 +48,7 @@ namespace addon_music_spotify {
 
   bool SxRadio::isLoaded() {
     if (m_isWaitingForResults) return false;
-    return isTracksLoaded();
+    return tracksLoaded();
   }
 
   bool SxRadio::getTrackItems(CFileItemList& items) {

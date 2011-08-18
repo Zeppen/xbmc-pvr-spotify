@@ -41,10 +41,8 @@ namespace addon_music_spotify {
   }
 
   StarredList::~StarredList() {
-    while (!m_albums.empty()) {
-      AlbumStore::getInstance()->removeAlbum(m_albums.back());
-      m_albums.pop_back();
-    }
+    removeAllTracks();
+    removeAllAlbums();
 
     while (!m_artists.empty()) {
       ArtistStore::getInstance()->removeArtist(m_artists.back());
@@ -77,18 +75,18 @@ namespace addon_music_spotify {
     return NULL;
   }
 
+  bool StarredList::getAlbumItems(CFileItemList& items) {
+    return true;
+  }
+
   SxArtist *StarredList::getArtist(int index) {
     if (index < getNumberOfArtists()) return m_artists[index];
     return NULL;
   }
 
   bool StarredList::isLoaded() {
-    for (int i = 0; i < m_albums.size(); i++) {
-      if (!m_albums[i]->isLoaded()) return false;
-    }
-    for (int i = 0; i < m_tracks.size(); i++) {
-      if (!m_tracks[i]->isLoaded()) return false;
-    }
+    if (!tracksLoaded() || !albumsLoaded()) return false;
+
     for (int i = 0; i < m_artists.size(); i++) {
       if (!m_artists[i]->isLoaded()) return false;
     }

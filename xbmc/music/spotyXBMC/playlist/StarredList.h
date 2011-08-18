@@ -23,6 +23,7 @@
 #define STARREDLISTS_H_
 
 #include "SxPlaylist.h"
+#include "../album/AlbumContainer.h"
 #include "StarredBackgroundLoader.h"
 
 namespace addon_music_spotify {
@@ -30,7 +31,7 @@ namespace addon_music_spotify {
   class SxAlbum;
   class SxArtist;
 
-  class StarredList: public SxPlaylist {
+  class StarredList: public SxPlaylist, private AlbumContainer {
   public:
     StarredList(sp_playlist* spPlaylist);
     virtual ~StarredList();
@@ -44,6 +45,8 @@ namespace addon_music_spotify {
     }
     SxAlbum* getAlbum(int index);
 
+    bool getAlbumItems(CFileItemList& items);
+
     int getNumberOfArtists() {
       return m_artists.size();
     }
@@ -52,7 +55,6 @@ namespace addon_music_spotify {
     friend class StarredBackgroundLoader;
 
   private:
-    vector<SxAlbum*> m_albums;
     vector<SxArtist*> m_artists;
 
     bool m_isBackgroundLoading;

@@ -36,15 +36,15 @@
 #include "../track/TrackStore.h"
 #include "../album/AlbumStore.h"
 #include "../artist/ArtistStore.h"
-#include "../artist/SxArtist.h"
-#include "../album/SxAlbum.h"
-#include "../track/SxTrack.h"
+#include "../artist/ArtistContainer.h"
+#include "../album/AlbumContainer.h"
+#include "../track/TrackContainer.h"
 
 using namespace std;
 
 namespace addon_music_spotify {
 
-  class TopLists {
+  class TopLists: private AlbumContainer, private TrackContainer, private ArtistContainer {
   public:
     TopLists();
     virtual ~TopLists();
@@ -77,18 +77,22 @@ namespace addon_music_spotify {
     vector<SxArtist*> getArtists() {
       return m_artists;
     }
+
+    bool getArtistItems(CFileItemList& items);
+
     vector<SxAlbum*> getAlbums() {
       return m_albums;
     }
+
+    bool getAlbumItems(CFileItemList& items);
+
     vector<SxTrack*> getTracks() {
       return m_tracks;
     }
 
-  private:
-    vector<SxArtist*> m_artists;
-    vector<SxAlbum*> m_albums;
-    vector<SxTrack*> m_tracks;
+    bool getTrackItems(CFileItemList& items);
 
+  private:
     bool m_albumsLoaded;
     bool m_artistsLoaded;
     bool m_tracksLoaded;

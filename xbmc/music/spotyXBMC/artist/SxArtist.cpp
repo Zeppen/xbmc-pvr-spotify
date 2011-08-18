@@ -67,45 +67,28 @@ namespace addon_music_spotify {
     }
 
     removeAllTracks();
-
-    while (!m_albums.empty()) {
-      AlbumStore::getInstance()->removeAlbum(m_albums.back());
-      m_albums.pop_back();
-    }
-
-    while (!m_artists.empty()) {
-      ArtistStore::getInstance()->removeArtist(m_artists.back());
-      m_artists.pop_back();
-    }
+    removeAllAlbums();
+    removeAllArtists();
 
     if (m_thumb) ThumbStore::getInstance()->removeThumb(m_thumb);
     delete m_uri;
-    if (hasDetails() && m_browse != NULL) sp_artistbrowse_release(m_browse);
+    if (hasDetails() && m_browse != NULL ) sp_artistbrowse_release(m_browse);
     sp_artist_release(m_spArtist);
   }
 
   bool SxArtist::isAlbumsLoaded() {
     if (!m_hasTracksAndAlbums) return false;
-
-    for (int i = 0; i < m_albums.size(); i++) {
-      if (!m_albums[i]->isLoaded()) return false;
-    }
-    return true;
+    return albumsLoaded();
   }
 
   bool SxArtist::isTracksLoaded() {
     if (!m_hasTracksAndAlbums) return false;
-    return TrackContainer::isTracksLoaded();
+    return tracksLoaded();
   }
 
   bool SxArtist::isArtistsLoaded() {
     if (!m_hasTracksAndAlbums) return false;
-
-    for (int i = 0; i < m_artists.size(); i++) {
-      if (!m_artists[i]->isLoaded()) return false;
-    }
-
-    return true;
+    return artistsLoaded();
   }
 
   void SxArtist::doLoadTracksAndAlbums() {
@@ -120,7 +103,7 @@ namespace addon_music_spotify {
       return;
     }
 
-    if (m_browse == NULL) return;
+    if (m_browse == NULL ) return;
 
     //add the albums
     int maxAlbums = Settings::getArtistNumberAlbums() == -1 ? sp_artistbrowse_num_albums(m_browse) : Settings::getArtistNumberAlbums();
@@ -173,7 +156,7 @@ namespace addon_music_spotify {
           m_thumb = ThumbStore::getInstance()->getThumb(image);
         }
       }
-      if (m_thumb != NULL) m_hasThumb = true;
+      if (m_thumb != NULL ) m_hasThumb = true;
 
       m_bio = sp_artistbrowse_biography(result);
       //remove the links from the bio text (it contains spotify uris so maybe we can do something fun with it later)
@@ -227,6 +210,14 @@ namespace addon_music_spotify {
   }
 
   bool SxArtist::getTrackItems(CFileItemList& items) {
+    return true;
+  }
+
+  bool SxArtist::getAlbumItems(CFileItemList& items) {
+    return true;
+  }
+
+  bool SxArtist::getArtistItems(CFileItemList& items) {
     return true;
   }
 

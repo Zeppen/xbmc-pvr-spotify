@@ -68,10 +68,9 @@ namespace addon_music_spotify {
           newTracks.push_back(track);
         }
       }
-      while (!ls->m_tracks.empty()) {
-        TrackStore::getInstance()->removeTrack(ls->m_tracks.back()->getSpTrack());
-        ls->m_tracks.pop_back();
-      }
+
+      ls->removeAllTracks();
+
       ls->m_tracks = newTracks;
 
       set<sp_album*> tempAlbums;
@@ -124,10 +123,8 @@ namespace addon_music_spotify {
 
         if (albumIsStarred) newAlbums.push_back(AlbumStore::getInstance()->getAlbum(album->getSpAlbum(), true));
       }
-      while (!ls->m_albums.empty()) {
-        AlbumStore::getInstance()->removeAlbum(ls->m_albums.back()->getSpAlbum());
-        ls->m_albums.pop_back();
-      }
+
+      ls->removeAllAlbums();
 
       //add all artists that we have collected
 

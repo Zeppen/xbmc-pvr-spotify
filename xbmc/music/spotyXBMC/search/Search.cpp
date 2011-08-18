@@ -57,17 +57,8 @@ namespace addon_music_spotify {
     //  ;
     Logger::printOut("cleaning after search");
     removeAllTracks();
-
-    while (!m_albums.empty()) {
-      AlbumStore::getInstance()->removeAlbum(m_albums.back());
-      m_albums.pop_back();
-    }
-
-    while (!m_artists.empty()) {
-      ArtistStore::getInstance()->removeArtist(m_artists.back());
-      m_artists.pop_back();
-    }
-
+    removeAllAlbums();
+    removeAllArtists();
     Logger::printOut("cleaning after search done");
 
   }
@@ -76,16 +67,16 @@ namespace addon_music_spotify {
     return true;
   }
 
-  bool Search::isLoaded() {
-    for (int i = 0; i < m_albums.size(); i++) {
-      if (!m_albums[i]->isLoaded()) return false;
-    }
-    if (!isTracksLoaded()) return false;
-    for (int i = 0; i < m_artists.size(); i++) {
-      if (!m_artists[i]->isLoaded()) return false;
-    }
-
+  bool Search::getAlbumItems(CFileItemList& items) {
     return true;
+  }
+
+  bool Search::getArtistItems(CFileItemList& items) {
+    return true;
+  }
+
+  bool Search::isLoaded() {
+    return (tracksLoaded() && albumsLoaded() && artistsLoaded());
   }
 
   void Search::SP_CALLCONV cb_searchComplete(sp_search *search, void *userdata) {

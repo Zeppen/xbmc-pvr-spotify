@@ -81,7 +81,7 @@ namespace addon_music_spotify {
 
   bool SxPlaylist::isLoaded() {
     if (!isFolder()) {
-      return isTracksLoaded();
+      return tracksLoaded();
     }
     return true;
   }
