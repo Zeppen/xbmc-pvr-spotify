@@ -19,6 +19,7 @@
  david.erenger@gmail.com
  */
 
+
 #include "XBMCUpdater.h"
 #include "Logger.h"
 #include "guilib/GUIWindowManager.h"

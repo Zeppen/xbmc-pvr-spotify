@@ -55,9 +55,10 @@ namespace addon_music_spotify {
     if (error == SP_ERROR_OK) {
       Session::getInstance()->loggedIn();
       Logger::printOut("Logged in!");
-    } else
-      Logger::printOut("error while logging in!");
-
+    } else {
+      Logger::printOut("Error while logging in!");
+      Logger::printOut(sp_error_message(error));
+    }
   }
 
   void SessionCallbacks::cb_loggedOut(sp_session *session) {
