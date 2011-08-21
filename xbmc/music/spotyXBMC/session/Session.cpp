@@ -36,7 +36,6 @@
 namespace addon_music_spotify {
 
   Session::Session() {
-    m_sessionCallbacks = new SessionCallbacks();
     m_isEnabled = false;
     m_isLoggedOut = false;
     m_session = NULL;
@@ -51,7 +50,6 @@ namespace addon_music_spotify {
   }
 
   Session::~Session() {
-    delete m_sessionCallbacks;
   }
 
   bool Session::enable() {
@@ -83,7 +81,9 @@ namespace addon_music_spotify {
       config.application_key = g_appkey;
       config.application_key_size = g_appkey_size;
       config.user_agent = "spotify-for-XBMC2000";
-      config.callbacks = &m_sessionCallbacks->getCallbacks();
+
+      sp_session_callbacks cb = m_sessionCallbacks.getCallbacks();
+      config.callbacks = &cb;
       config.compress_playlists = true;
       config.dont_save_metadata_for_playlists = false;
       config.initially_unload_playlists = false;

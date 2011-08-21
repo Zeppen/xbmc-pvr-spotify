@@ -90,7 +90,7 @@ namespace addon_music_spotify {
 
     static Session *m_instance;
     sp_session *m_session;
-    SessionCallbacks *m_sessionCallbacks;
+    SessionCallbacks m_sessionCallbacks;
 
     int m_nextEvent;
     BackgroundThread *m_bgThread;
