@@ -36,18 +36,22 @@ namespace addon_music_spotify {
   }
 
   void PlayerHandler::deInit() {
-    if (m_instance == NULL ) return;
-    if (m_instance->m_currentCodec != NULL ) m_instance->m_currentCodec->unloadPlayer();
+    if (m_instance == NULL)
+      return;
+    if (m_instance->m_currentCodec != NULL)
+      m_instance->m_currentCodec->unloadPlayer();
     //The codec is probably deleted by xbmc on exit
     //  delete m_currentCodec();
   }
 
   Codec *PlayerHandler::getCodec() {
     //do some checks if it is a spotify track and if its loaded and so on
-    //if (!m_currentCodec) {
-    //start with a init flag
-    m_currentCodec = new Codec();
-    return m_currentCodec;
+    if (m_currentCodec == NULL) {
+      //start with a init flag
+      m_currentCodec = new Codec();
+      return m_currentCodec;
+    }
+    return NULL;
     //}
     //if there is an other preloading track, remove it
     //if (m_preloadingCodec)
@@ -60,8 +64,14 @@ namespace addon_music_spotify {
   PlayerHandler::~PlayerHandler() {
   }
 
-  int PlayerHandler::cb_musicDelivery(sp_session *session, const sp_audioformat *format, const void *frames, int num_frames) {
-    return m_instance->getCurrentCodec()->musicDelivery(format->channels, format->sample_rate, frames, num_frames);
+  void PlayerHandler::removeCodec() {
+    m_currentCodec = NULL;
+  }
+
+  int PlayerHandler::cb_musicDelivery(sp_session *session,
+      const sp_audioformat *format, const void *frames, int num_frames) {
+    return m_instance->getCurrentCodec()->musicDelivery(format->channels,
+        format->sample_rate, frames, num_frames);
   }
 
   void PlayerHandler::cb_endOfTrack(sp_session *session) {

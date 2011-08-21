@@ -24,6 +24,7 @@
 #include "Util.h"
 #include "utils/URIUtils.h"
 #include <stdint.h>
+#include "PlayerHandler.h"
 #include "../radio/RadioHandler.h"
 
 using namespace std;
@@ -54,13 +55,16 @@ namespace addon_music_spotify {
     CStdString extension = uri.Right(uri.GetLength() - uri.Find('.') - 1);
     if (extension.Left(12) == "spotifyradio") {
       //if its a readiotrack the radionumber and tracknumber is secretly encoded at the end of the extension
-      CStdString trackStr = extension.Right(extension.GetLength() - extension.ReverseFind('#') - 1);
+      CStdString trackStr = extension.Right(
+          extension.GetLength() - extension.ReverseFind('#') - 1);
       Logger::printOut(extension);
       CStdString radioNumber = extension.Left(uri.Find('#'));
       Logger::printOut(radioNumber);
-      radioNumber = radioNumber.Right(radioNumber.GetLength() - radioNumber.Find('#') - 1);
+      radioNumber = radioNumber.Right(
+          radioNumber.GetLength() - radioNumber.Find('#') - 1);
       Logger::printOut("loading codec radio");
-      RadioHandler::getInstance()->pushToTrack(atoi(radioNumber), atoi(trackStr));
+      RadioHandler::getInstance()->pushToTrack(atoi(radioNumber),
+          atoi(trackStr));
     }
     //we have a non legit extension so remove it manually
     uri = uri.Left(uri.Find('.'));
@@ -81,6 +85,7 @@ namespace addon_music_spotify {
 
   void Codec::DeInit() {
     unloadPlayer();
+    PlayerHandler::getInstance()->removeCodec();
   }
 
   __int64 Codec::Seek(__int64 iSeekTime) {
@@ -91,14 +96,16 @@ namespace addon_music_spotify {
 
   int Codec::ReadPCM(BYTE *pBuffer, int size, int *actualsize) {
     *actualsize = 0;
-    if (!m_isPlayerLoaded) loadPlayer();
+    if (!m_isPlayerLoaded)
+      loadPlayer();
 
     if (m_startStream) {
       if (m_endOfTrack && m_bufferPos == 0) {
         return READ_EOF;
       } else if (m_bufferPos > 0) {
         int amountToMove = m_bufferPos;
-        if (m_bufferPos > size) amountToMove = size;
+        if (m_bufferPos > size)
+          amountToMove = size;
         memcpy(pBuffer, m_buffer, amountToMove);
         memmove(m_buffer, m_buffer + amountToMove, m_bufferSize - amountToMove);
         m_bufferPos -= amountToMove;
@@ -144,22 +151,26 @@ namespace addon_music_spotify {
   }
 
   bool Codec::unloadPlayer() {
+    //make sure there is no music_delivery while we are removing the codec
+    while (!Session::getInstance()->lock()) {
+    }
     if (m_isPlayerLoaded) {
       sp_session_player_play(getSession(), false);
       sp_session_player_unload(getSession());
+      if (m_currentTrack != NULL) {
+        sp_track_release(m_currentTrack);
+      }
     }
 
-    if (m_currentTrack) {
-      sp_track_release(m_currentTrack);
-    }
-
-    m_currentTrack = 0;
+    m_currentTrack = NULL;
     m_isPlayerLoaded = false;
     m_endOfTrack = true;
+    Session::getInstance()->unlock();
     return true;
   }
 
-  int Codec::musicDelivery(int channels, int sample_rate, const void *frames, int num_frames) {
+  int Codec::musicDelivery(int channels, int sample_rate, const void *frames,
+      int num_frames) {
     //Logger::printOut("music delivery");
     int amountToMove = num_frames * (int) sizeof(int16_t) * channels;
 

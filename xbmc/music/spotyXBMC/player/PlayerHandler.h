@@ -36,6 +36,8 @@ namespace addon_music_spotify {
     static PlayerHandler *getInstance();
     static void deInit();
 
+    void removeCodec();
+
     Codec* getCodec();
     Codec* getCurrentCodec() {
       return m_currentCodec;
