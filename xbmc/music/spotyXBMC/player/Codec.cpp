@@ -35,7 +35,7 @@ namespace addon_music_spotify {
     m_SampleRate = 44100;
     m_Channels = 2;
     m_BitsPerSample = 16;
-    m_Bitrate = 320;
+    m_Bitrate = 320000;
     m_CodecName = "spotify";
     m_TotalTime = 0;
     m_currentTrack = 0;
@@ -75,11 +75,13 @@ namespace addon_music_spotify {
     m_currentTrack = sp_link_as_track(spLink);
     sp_track_add_ref(m_currentTrack);
     sp_link_release(spLink);
-    m_totalTime = 0.001 * sp_track_duration(m_currentTrack);
     m_endOfTrack = false;
     m_bufferPos = 0;
     m_startStream = false;
     m_isPlayerLoaded = false;
+    m_TotalTime = sp_track_duration(m_currentTrack);
+    m_Bitrate   = 320000;
+
     return true;
   }
 
@@ -90,7 +92,8 @@ namespace addon_music_spotify {
 
   __int64 Codec::Seek(__int64 iSeekTime) {
     Logger::printOut("trying to seek");
-    sp_session_player_seek(getSession(), iSeekTime / 1000);
+    sp_session_player_seek(getSession(), iSeekTime);
+    m_bufferPos = 0;
     return iSeekTime;
   }
 
@@ -179,9 +182,7 @@ namespace addon_music_spotify {
       //now the buffer is full, start playing
       m_startStream = true;
     }
-    m_channels = channels;
-    m_sampleRate = sample_rate;
-    m_bitrate = 320;
+
     memcpy(m_buffer + m_bufferPos, frames, amountToMove);
     m_bufferPos += amountToMove;
 

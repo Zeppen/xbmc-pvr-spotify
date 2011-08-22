@@ -50,11 +50,11 @@ namespace addon_music_spotify {
     bool unloadPlayer();
     sp_session * getSession();
     sp_track *m_currentTrack;
-    int m_sampleRate;
-    int m_channels;
-    int m_bitsPerSample;
-    int m_bitrate;
-    int64_t m_totalTime;
+    //int m_sampleRate;
+    //int m_channels;
+    //int m_bitsPerSample;
+    //int m_bitrate;
+   // int64_t m_totalTime;
     bool m_startStream;
     bool m_isPlayerLoaded;
     bool m_endOfTrack;
