@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include "PlayerHandler.h"
 #include "../radio/RadioHandler.h"
+#include "../Settings.h"
 
 using namespace std;
 
@@ -35,7 +36,8 @@ namespace addon_music_spotify {
     m_SampleRate = 44100;
     m_Channels = 2;
     m_BitsPerSample = 16;
-    m_Bitrate = 320000;
+    //the bitrate is hardcoded, we dont no it before first music delivery and then its to late, the skin has already printed it out
+    m_Bitrate = Settings::useHighBitrate() ? 320000 : 160000;
     m_CodecName = "spotify";
     m_TotalTime = 0;
     m_currentTrack = 0;
@@ -80,7 +82,6 @@ namespace addon_music_spotify {
     m_startStream = false;
     m_isPlayerLoaded = false;
     m_TotalTime = sp_track_duration(m_currentTrack);
-    m_Bitrate   = 320000;
 
     return true;
   }
