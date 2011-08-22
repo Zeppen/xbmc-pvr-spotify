@@ -22,7 +22,7 @@
 #include "Search.h"
 #include "../session/Session.h"
 #include "../Logger.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 #include "../Settings.h"
 #include "SearchResultBackgroundLoader.h"
 #include "../album/SxAlbum.h"

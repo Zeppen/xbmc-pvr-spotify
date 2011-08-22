@@ -27,7 +27,7 @@
 #include "../album/AlbumStore.h"
 #include "../track/TrackStore.h"
 #include "../artist/ArtistStore.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 
 namespace addon_music_spotify {
 

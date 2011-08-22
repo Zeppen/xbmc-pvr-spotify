@@ -114,8 +114,8 @@ Added files:
 * xbmc/music/spotyXBMC/Logger.h
 * xbmc/music/spotyXBMC/Settings.cpp 
 * xbmc/music/spotyXBMC/Settings.h
-* xbmc/music/spotyXBMC/XBMCUpdater.cpp
-* xbmc/music/spotyXBMC/XBMCUpdater.h
+* xbmc/music/spotyXBMC/Utils.cpp
+* xbmc/music/spotyXBMC/Utils.h
 * xbmc/music/spotyXBMC/radio/SxRadio.cpp
 * xbmc/music/spotyXBMC/radio/SxRadio.h
 * xbmc/music/spotyXBMC/radio/RadioHandler.cpp

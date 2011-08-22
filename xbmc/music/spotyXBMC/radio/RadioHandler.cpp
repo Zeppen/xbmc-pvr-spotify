@@ -21,7 +21,7 @@
 
 #include "RadioHandler.h"
 #include "../Settings.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 #include "../Logger.h"
 #include "../../PlayListPlayer.h"
 #include "../../../playlists/PlayList.h"
@@ -60,7 +60,7 @@ namespace addon_music_spotify {
   }
 
   void RadioHandler::allTracksLoaded(int radioNumber) {
-    XBMCUpdater::updateRadio(radioNumber);
+    Utils::updateRadio(radioNumber);
 
     CStdString path;
     path.Format("musicdb://3/spotify:radio:%i/", radioNumber);

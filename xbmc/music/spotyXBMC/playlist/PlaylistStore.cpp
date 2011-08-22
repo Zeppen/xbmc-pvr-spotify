@@ -30,7 +30,7 @@
 #include "../thumb/ThumbStore.h"
 #include "../track/SxTrack.h"
 #include "../thumb/SxThumb.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 
 namespace addon_music_spotify {
 
@@ -79,7 +79,7 @@ namespace addon_music_spotify {
           spPlaylists.erase(spPlaylists.begin() + i);
         }
       }
-      XBMCUpdater::updatePlaylists();
+      Utils::updatePlaylists();
 
       if (!store->m_starredList && sp_playlist_is_loaded(store->getStarredSpList())) {
         store->m_starredList = new StarredList(store->m_spStarredList);
@@ -100,7 +100,7 @@ namespace addon_music_spotify {
     ) store->m_topLists = new TopLists();
 
     store->m_isLoaded = true;
-    XBMCUpdater::updateToplistMenu();
+    Utils::updateToplistMenu();
   }
 
   PlaylistStore::~PlaylistStore() {
@@ -164,7 +164,7 @@ namespace addon_music_spotify {
       }
     }
 
-    XBMCUpdater::updatePlaylists();
+    Utils::updatePlaylists();
 
     store->m_starredList = new StarredList(store->m_spStarredList);
     Logger::printOut("m_starredList created");
@@ -182,7 +182,7 @@ namespace addon_music_spotify {
     ) store->m_topLists = new TopLists();
 
     store->m_isLoaded = true;
-    XBMCUpdater::updateToplistMenu();
+    Utils::updateToplistMenu();
 
 //if ((pthread_create(&initThread, NULL, &loadPlaylists, userdata))) {
 //  Logger::printOut("Failed to create playlist load thread");

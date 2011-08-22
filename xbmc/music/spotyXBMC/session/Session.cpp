@@ -31,7 +31,7 @@
 #include "../thumb/ThumbStore.h"
 #include "../radio/RadioHandler.h"
 #include "../search/SearchHandler.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 
 namespace addon_music_spotify {
 
@@ -165,7 +165,7 @@ namespace addon_music_spotify {
   void Session::loggedIn() {
     m_playlists = new PlaylistStore();
     //update the menu so the radio appears
-    XBMCUpdater::updateMenu();
+    Utils::updateMenu();
   }
 
   void Session::loggedOut() {

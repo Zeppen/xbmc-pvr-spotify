@@ -6,11 +6,9 @@ SRCS=Album.cpp \
      MusicInfoLoader.cpp \
      Song.cpp \
      spotyXBMC/Addon.music.spotify.cpp \
-     spotyXBMC/FileSystemHelper.cpp \
      spotyXBMC/Logger.cpp \
      spotyXBMC/Utils.cpp \
      spotyXBMC/Settings.cpp \
-     spotyXBMC/XBMCUpdater.cpp \
      spotyXBMC/radio/SxRadio.cpp \
      spotyXBMC/radio/RadioHandler.cpp \
      spotyXBMC/radio/RadioBackgroundLoader.cpp \

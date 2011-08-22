@@ -63,6 +63,7 @@ namespace addon_music_spotify {
 
     sp_image *m_image;
     bool m_isLoaded;
+    bool m_imageIsFromCache;
     string m_file;
     int m_references;
   };

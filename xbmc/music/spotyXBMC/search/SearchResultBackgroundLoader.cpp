@@ -24,7 +24,7 @@
 #include "../artist/ArtistStore.h"
 #include "../session/Session.h"
 #include "SearchResultBackgroundLoader.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 
 namespace addon_music_spotify {
 
@@ -85,7 +85,7 @@ namespace addon_music_spotify {
       SleepMs(1);
     }
 
-    XBMCUpdater::updateSearchResults(m_search->m_query);
+    Utils::updateSearchResults(m_search->m_query);
     Logger::printOut("search results done");
   }
 

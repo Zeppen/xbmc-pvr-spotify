@@ -24,7 +24,7 @@
 #include "../Settings.h"
 #include "../Logger.h"
 #include "../session/Session.h"
-#include "../FileSystemHelper.h"
+#include "../Utils.h"
 #include <string.h>
 
 namespace addon_music_spotify {
@@ -32,12 +32,13 @@ namespace addon_music_spotify {
   using namespace std;
 
   ThumbStore::ThumbStore() {
-    FileSystemHelper::removeDir(Settings::getThumbPath());
-    FileSystemHelper::createDir(Settings::getThumbPath());
+    Utils::removeDir(Settings::getThumbPath());
+    Utils::createDir(Settings::getThumbPath());
   }
 
   void ThumbStore::deInit() {
     delete m_instance;
+    Utils::removeDir(Settings::getThumbPath());
   }
 
   ThumbStore::~ThumbStore() {

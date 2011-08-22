@@ -7,10 +7,16 @@
 
 #include "Utils.h"
 #include "Settings.h"
+#include "Logger.h"
 #include "../tags/MusicInfoTag.h"
 #include "../Album.h"
 #include "../Artist.h"
 #include "../../MediaSource.h"
+#include "Util.h"
+#include "filesystem/File.h"
+#include "filesystem/Directory.h"
+#include "guilib/GUIWindowManager.h"
+#include "GUIUserMessages.h"
 
 namespace addon_music_spotify {
 
@@ -38,7 +44,8 @@ namespace addon_music_spotify {
     }
   }
 
-  const CFileItemPtr Utils::SxAlbumToItem(SxAlbum *album, string prefix, int discNumber) {
+  const CFileItemPtr Utils::SxAlbumToItem(SxAlbum *album, string prefix,
+      int discNumber) {
     //wait for it to finish loading
     while (!album->isLoaded()) {
     }
@@ -47,7 +54,8 @@ namespace addon_music_spotify {
     outAlbum.strArtist = album->getAlbumArtistName();
     CStdString title;
     if (discNumber != 0)
-      title.Format("%s%s %s %i", prefix, album->getAlbumName(), "disc", discNumber);
+      title.Format("%s%s %s %i", prefix, album->getAlbumName(), "disc",
+          discNumber);
     else
       title.Format("%s%s", prefix, album->getAlbumName());
     outAlbum.strAlbum = title;
@@ -57,12 +65,14 @@ namespace addon_music_spotify {
     CStdString path;
     path.Format("musicdb://3/%s#%i", album->getUri(), discNumber);
     const CFileItemPtr pItem(new CFileItem(path, outAlbum));
-    if (album->hasThumb()) pItem->SetThumbnailImage(album->getThumb()->getPath());
+    if (album->hasThumb())
+      pItem->SetThumbnailImage(album->getThumb()->getPath());
     pItem->SetProperty("fanart_image", Settings::getFanart());
     return pItem;
   }
 
-  const CFileItemPtr Utils::SxTrackToItem(SxTrack* track, string prefix, int trackNumber) {
+  const CFileItemPtr Utils::SxTrackToItem(SxTrack* track, string prefix,
+      int trackNumber) {
     //wait for it to finish loading
     while (!track->isLoaded()) {
     }
@@ -87,7 +97,8 @@ namespace addon_music_spotify {
     outSong.strAlbumArtist = track->getAlbumArtistName();
 
     const CFileItemPtr pItem(new CFileItem(outSong));
-    if (track->hasThumb()) pItem->SetThumbnailImage(track->getThumb()->getPath());
+    if (track->hasThumb())
+      pItem->SetThumbnailImage(track->getThumb()->getPath());
     pItem->SetProperty("fanart_image", Settings::getFanart());
     return pItem;
   }
@@ -107,11 +118,105 @@ namespace addon_music_spotify {
     label.Format("A %s", artist->getArtistName());
 
     pItem->GetMusicInfoTag()->SetTitle(label);
-    if (artist->hasThumb()) pItem->SetThumbnailImage(artist->getThumb()->getPath());
+    if (artist->hasThumb())
+      pItem->SetThumbnailImage(artist->getThumb()->getPath());
     pItem->SetIconImage("DefaultArtist.png");
     pItem->SetProperty("fanart_image", Settings::getFanart());
     pItem->SetProperty("artist_description", artist->getBio());
 
     return pItem;
   }
+
+  void Utils::createDir(string path) {
+    XFILE::CDirectory::Create(CStdString(path));
+
+  }
+
+  void Utils::removeDir(string path) {
+    XFILE::CDirectory::Remove(CStdString(path));
+  }
+
+  void Utils::removeFile(string path) {
+    XFILE::CFile::Delete(CStdString(path));
+  }
+
+  void Utils::updatePlaylists() {
+     CStdString path;
+     path.Format("special://musicplaylists/");
+     updatePath(path);
+   }
+
+   void Utils::updateMenu() {
+     Logger::printOut("updating main music menu");
+     CStdString path;
+     path.Format("");
+     updatePath(path);
+   }
+
+   void Utils::updatePlaylist(int index) {
+     //TODO FIX!
+     Logger::printOut("updating playlist view");
+     CStdString path;
+     path.Format("musicdb://3/spotify:playlist:%i/", index);
+     updatePath(path);
+   }
+
+   void Utils::updateAllArtists() {
+     Logger::printOut("updating all artists");
+     CStdString path;
+     path.Format("musicdb://2/");
+     updatePath(path);
+   }
+
+   void Utils::updateAllAlbums() {
+     Logger::printOut("updating all albums");
+     CStdString path;
+     path.Format("musicdb://3/");
+     updatePath(path);
+   }
+
+   void Utils::updateAllTracks() {
+     Logger::printOut("updating all tracks");
+     CStdString path;
+     path.Format("musicdb://4/");
+     updatePath(path);
+   }
+
+   void Utils::updateRadio(int radio) {
+     Logger::printOut("updating radio results");
+     CStdString path;
+     path.Format("musicdb://3/spotify:radio:%i/", radio);
+     updatePath(path);
+   }
+
+   void Utils::updateToplistMenu() {
+     Logger::printOut("updating toplistmenu");
+     CStdString path;
+     path.Format("musicdb://5/");
+     updatePath(path);
+   }
+
+   void Utils::updateSearchResults(string query) {
+     //we need to replace the whitespaces with %20
+
+     int pos = 0;
+     while (pos != string::npos) {
+       pos = query.find(' ');
+       if (pos != string::npos) {
+         query.replace(pos, 1, "%20");
+       }
+     }
+
+     Logger::printOut("updating search results");
+     CStdString path;
+     path.Format("musicsearch://%s/", query);
+     updatePath(path);
+   }
+
+   void Utils::updatePath(CStdString& path) {
+     CGUIMessage message(GUI_MSG_NOTIFY_ALL, 0, 0, GUI_MSG_UPDATE_PATH);
+     message.SetStringParam(path);
+     g_windowManager.SendThreadMessage(message);
+   }
+
 } /* namespace addon_music_spotify */

@@ -25,7 +25,7 @@
 #include "../artist/ArtistStore.h"
 #include "../session/Session.h"
 #include "RadioBackgroundLoader.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 
 namespace addon_music_spotify {
 

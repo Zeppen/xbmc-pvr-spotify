@@ -25,9 +25,24 @@ namespace addon_music_spotify {
     static const CFileItemPtr SxTrackToItem(SxTrack* track, string prefix = "", int trackNumber = -1);
     static const CFileItemPtr SxArtistToItem(SxArtist* artist, string prefix = "");
 
+    static void createDir(string path);
+    static void removeDir(string path);
+    static void removeFile(string file);
+
+    static void updateMenu();
+    static void updatePlaylists();
+    static void updatePlaylist(int index);
+    static void updateAllArtists();
+    static void updateAllAlbums();
+    static void updateAllTracks();
+    static void updateRadio(int radio);
+    static void updateToplistMenu();
+    static void updateSearchResults(string query);
+
   private:
     Utils();
     virtual ~Utils();
+    static void updatePath(CStdString& path);
   };
 
 } /* namespace addon_music_spotify */

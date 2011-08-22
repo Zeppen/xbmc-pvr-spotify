@@ -28,7 +28,7 @@
 #include "../artist/SxArtist.h"
 #include "../track/TrackStore.h"
 #include "../artist/ArtistStore.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 #include <set>
 
 namespace addon_music_spotify {
@@ -159,9 +159,9 @@ namespace addon_music_spotify {
 
     ls->m_isBackgroundLoading = false;
 
-    XBMCUpdater::updateAllTracks();
-    XBMCUpdater::updateAllAlbums();
-    XBMCUpdater::updateAllArtists();
+    Utils::updateAllTracks();
+    Utils::updateAllAlbums();
+    Utils::updateAllArtists();
     Logger::printOut("Populate starred albums and artists thread done");
   }
 } /* namespace addon_music_spotify */

@@ -25,7 +25,7 @@
 #include "../session/Session.h"
 #include "../Logger.h"
 #include <fstream>
-#include "../FileSystemHelper.h"
+#include "../Utils.h"
 #include "../../../TextureCache.h"
 
 namespace addon_music_spotify {
@@ -43,11 +43,14 @@ namespace addon_music_spotify {
     CStdString pathS(m_file);
     CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
     if (!cached.IsEmpty()) {
-      //Logger::printOut("Thumb already in XBMC cache, no need to download again");
+      Logger::printOut("Thumb already in XBMC cache, no need to download again");
       m_file = cached;
+      m_imageIsFromCache = true;
       m_isLoaded = true;
-    } else
+    } else{
+      m_imageIsFromCache = false;
       sp_image_add_load_callback(m_image, &cb_imageLoaded, this);
+    }
 
     m_references = 1;
 
@@ -56,7 +59,8 @@ namespace addon_music_spotify {
   SxThumb::~SxThumb() {
     if (!m_isLoaded) sp_image_remove_load_callback(m_image, &cb_imageLoaded, this);
     sp_image_release(m_image);
-    FileSystemHelper::removeFile(m_file.c_str());
+    //dont delete it from the cache
+    if (!m_imageIsFromCache) Utils::removeFile(m_file.c_str());
 
   }
 

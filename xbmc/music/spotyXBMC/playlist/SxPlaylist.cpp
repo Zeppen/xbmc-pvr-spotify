@@ -26,7 +26,7 @@
 #include "../track/SxTrack.h"
 #include "../album/SxAlbum.h"
 #include "../thumb/SxThumb.h"
-#include "../XBMCUpdater.h"
+#include "../Utils.h"
 
 namespace addon_music_spotify {
 
@@ -126,7 +126,7 @@ namespace addon_music_spotify {
       Logger::printOut("reload play done");
       m_tracks = newTracks;
     }
-    XBMCUpdater::updatePlaylist(m_index);
+    Utils::updatePlaylist(m_index);
   }
 
   void SxPlaylist::cb_tracks_removed(sp_playlist *pl, const int *tracks, int num_tracks, void *userdata) {
