@@ -1,5 +1,6 @@
 # global patterns
 testMain
+appkey.h
 
 # commonly used editors
 # vim
