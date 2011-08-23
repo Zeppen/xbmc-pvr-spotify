@@ -24,9 +24,9 @@
 #include "SxThumb.h"
 #include "../session/Session.h"
 #include "../Logger.h"
-#include <fstream>
 #include "../Utils.h"
 #include "../../../TextureCache.h"
+#include "../../../filesystem/File.h"
 
 namespace addon_music_spotify {
 
@@ -38,8 +38,10 @@ namespace addon_music_spotify {
     sp_link *link = sp_link_create_from_image(image);
     char linkString[256];
     sp_link_as_string(link, linkString, 256);
+	CStdString linkStringClean = linkString;
+	linkStringClean.Remove(':');
     sp_link_release(link);
-    m_file = path + linkString + ".jpg";
+	m_file = path + linkStringClean.c_str() + ".jpg";
     CStdString pathS(m_file);
     CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
     if (!cached.IsEmpty()) {
@@ -72,12 +74,16 @@ namespace addon_music_spotify {
       m_isLoaded = true;
       return;
     }
-    fstream file(m_file.c_str(), ios::out | ios::binary);
-    const void *buffer;
-    size_t len;
-    buffer = sp_image_data(image, &len);
-    file.write((const char*) buffer, len);
-    file.close();
+
+	XFILE::CFile file;
+    if (file.OpenForWrite(m_file,true)){
+      const void *buffer;
+      size_t len;
+      buffer = sp_image_data(image, &len);
+      file.Write((const char*) buffer, len);
+      file.Close();
+	}
+
     m_isLoaded = true;
     //Logger::printOut("thumb downloaded");
   }

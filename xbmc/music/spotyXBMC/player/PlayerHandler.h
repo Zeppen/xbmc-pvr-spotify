@@ -43,7 +43,7 @@ namespace addon_music_spotify {
       return m_currentCodec;
     }
 
-    static int cb_musicDelivery(sp_session *session, const sp_audioformat *format, const void *frames, int num_frames);
+    static int SP_CALLCONV cb_musicDelivery(sp_session *session, const sp_audioformat *format, const void *frames, int num_frames);
     static void SP_CALLCONV cb_endOfTrack(sp_session *session);
 
   private:

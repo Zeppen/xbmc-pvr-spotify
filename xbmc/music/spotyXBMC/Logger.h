@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <string>
+#include "../../utils/log.h"
 
 namespace addon_music_spotify {
 
@@ -34,15 +35,19 @@ namespace addon_music_spotify {
     Logger();
     virtual ~Logger();
     static void printOut(char* text) {
+	  CLog::Log(LOGDEBUG, "spotifylog: %s", text);
       cout << text << "\n";
     }
     static void printOut(const char* text) {
+      CLog::Log(LOGDEBUG, "spotifylog: %s", text);
       cout << text << "\n";
     }
     static void printOut(char text) {
+      CLog::Log(LOGDEBUG, "spotifylog: %c", text);
       cout << text << "\n";
     }
     static void printOut(string text) {
+	  CLog::Log(LOGDEBUG, "spotifylog: %s", text);
       cout << text << "\n";
     }
   };

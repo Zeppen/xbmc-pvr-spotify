@@ -23,7 +23,7 @@
 #include "../session/Session.h"
 #include "../Logger.h"
 #include "../Utils.h"
-#include "../Settings.h"
+#include "../SxSettings.h"
 #include "SearchResultBackgroundLoader.h"
 #include "../album/SxAlbum.h"
 #include "../track/SxTrack.h"
@@ -79,7 +79,7 @@ namespace addon_music_spotify {
     return (tracksLoaded() && albumsLoaded() && artistsLoaded());
   }
 
-  void Search::SP_CALLCONV cb_searchComplete(sp_search *search, void *userdata) {
+  void Search::cb_searchComplete(sp_search *search, void *userdata) {
     Search* searchObj = (Search*) userdata;
     searchObj->m_currentSearch = search;
     SearchResultBackgroundLoader* loader = new SearchResultBackgroundLoader(searchObj);

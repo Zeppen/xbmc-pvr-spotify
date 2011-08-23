@@ -41,7 +41,7 @@
 #include "player/PlayerHandler.h"
 #include "search/SearchHandler.h"
 #include "radio/RadioHandler.h"
-#include "Settings.h"
+#include "SxSettings.h"
 
 using namespace addon_music_spotify;
 using namespace std;
@@ -207,17 +207,14 @@ bool Addon_music_spotify::getAlbumTracks(CFileItemList& items, CStdString& path)
     //lets split the string to get the album uri and the disc number
     CStdString uri = path.Left(path.Find('#'));
     CStdString discStr = path.Right(path.GetLength() - path.Find('#') - 1);
-    Logger::printOut(discStr);
-    int disc = atoi(discStr);
+	//Logger::printOut(discStr.c_str());
+	int disc = atoi(discStr.c_str());
 
     //0 means its not a multidisc, so we need to change it to 1
     if (disc == 0) disc = 1;
-
     sp_link *spLink = sp_link_create_from_string(uri);
     sp_album *spAlbum = sp_link_as_album(spLink);
-
     SxAlbum* salbum = AlbumStore::getInstance()->getAlbum(spAlbum, true);
-
     vector<SxTrack*> tracks = salbum->getTracks();
     for (int i = 0; i < tracks.size(); i++) {
       if (disc == tracks[i]->getDisc()) items.Add(Utils::SxTrackToItem(tracks[i]));

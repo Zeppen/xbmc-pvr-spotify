@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include "PlayerHandler.h"
 #include "../radio/RadioHandler.h"
-#include "../Settings.h"
+#include "../SxSettings.h"
 
 using namespace std;
 

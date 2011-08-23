@@ -22,7 +22,11 @@
 #ifndef THUMBSTORE_H_
 #define THUMBSTORE_H_
 
+#ifdef _WIN32
+#include <unordered_map>
+#else
 #include <tr1/unordered_map>
+#endif
 #include <libspotify/api.h>
 
 namespace addon_music_spotify {

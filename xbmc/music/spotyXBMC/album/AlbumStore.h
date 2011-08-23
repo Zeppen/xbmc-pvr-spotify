@@ -23,7 +23,12 @@
 #define ALBUMSTORE_H_
 
 #include <libspotify/api.h>
+#ifdef _WIN32
+#include <unordered_map>
+#else
 #include <tr1/unordered_map>
+#endif
+
 
 namespace addon_music_spotify {
   class SxAlbum;

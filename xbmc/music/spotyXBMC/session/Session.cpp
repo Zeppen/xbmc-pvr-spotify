@@ -21,7 +21,6 @@
 
 #include "Session.h"
 #include "../../../../appkey.h"
-#include <pthread.h>
 #include <string>
 
 #include "../player/PlayerHandler.h"
@@ -74,10 +73,17 @@ namespace addon_music_spotify {
     if (!m_session) {
       sp_session_config config;
       Logger::printOut("Creating session");
-
+	 
       config.api_version = SPOTIFY_API_VERSION;
-      config.cache_location = Settings::getCachePath().c_str();
-      config.settings_location = Settings::getCachePath().c_str();
+	  
+	  //the api is not copying the string so create a new c string
+	  CStdString location = Settings::getCachePath();
+	  char * cstr;
+      cstr = new char [location.size()+1];
+      strcpy (cstr, location.c_str());
+      config.cache_location = cstr;
+      config.settings_location = cstr;
+
       config.application_key = g_appkey;
       config.application_key_size = g_appkey_size;
       config.user_agent = "spotify-for-XBMC2000";

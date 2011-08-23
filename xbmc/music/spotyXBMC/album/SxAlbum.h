@@ -36,7 +36,7 @@ namespace addon_music_spotify {
   class SxAlbum: private TrackContainer {
   public:
 
-    static void cb_albumBrowseComplete(sp_albumbrowse *result, void *userdata);
+    static void SP_CALLCONV cb_albumBrowseComplete(sp_albumbrowse *result, void *userdata);
     void doLoadTracksAndDetails();
     void doLoadThumb();
     void tracksLoaded(sp_albumbrowse *result);

@@ -19,13 +19,12 @@
  david.erenger@gmail.com
  */
 
-#ifndef SETTINGS_H_
-#define SETTINGS_H_
+#ifndef SXSETTINGS_H_
+#define SXSETTINGS_H_
 
 #include <libspotify/api.h>
 #include "addons/Addon.h"
 #include "addons/AddonManager.h"
-#include <string>
 #include "filesystem/Directory.h"
 #include "filesystem/SpecialProtocol.h"
 
@@ -47,12 +46,8 @@ namespace addon_music_spotify {
     static CStdString getPassword() {
       return getAddonSetting("password");
     }
-    static CStdString getCachePath() {
-      return CSpecialProtocol::TranslatePath("special://temp/spotify/cache/");
-    }
-    static CStdString getThumbPath() {
-      return CSpecialProtocol::TranslatePath("special://temp/spotify/thumbs/");
-    }
+    static CStdString getCachePath();
+    static CStdString getThumbPath();
     static bool useHighBitrate() {
       return getAddonSetting("highBitrate") == "true";
     }
@@ -60,13 +55,13 @@ namespace addon_music_spotify {
     static CStdString getFanart();
 
     static int getSearchNumberArtists() {
-      return 10 * atoi(getAddonSetting("searchNoArtists") + 1);
+      return 10 * atoi(getAddonSetting("searchNoArtists")) + 1;
     }
     static int getSearchNumberAlbums() {
-      return 10 * atoi(getAddonSetting("searchNoAlbums") + 1);
+      return 10 * atoi(getAddonSetting("searchNoAlbums")) + 1;
     }
     static int getSearchNumberTracks() {
-      return 10 * atoi(getAddonSetting("searchNoTracks") + 1);
+      return 10 * atoi(getAddonSetting("searchNoTracks")) + 1;
     }
 
     static bool getPreloadArtistDetails() {
@@ -134,4 +129,4 @@ namespace addon_music_spotify {
   };
 
 } /* namespace addon_music_spotify */
-#endif /* SETTINGS_H_ */
+#endif /* SXSETTINGS_H_ */

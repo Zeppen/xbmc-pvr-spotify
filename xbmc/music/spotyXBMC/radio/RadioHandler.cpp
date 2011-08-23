@@ -20,7 +20,7 @@
  */
 
 #include "RadioHandler.h"
-#include "../Settings.h"
+#include "../SxSettings.h"
 #include "../Utils.h"
 #include "../Logger.h"
 #include "../../PlayListPlayer.h"

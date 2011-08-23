@@ -81,7 +81,7 @@ namespace addon_music_spotify {
     fetchNewTracks();
   }
 
-  void SxRadio::SP_CALLCONV cb_searchComplete(sp_search *search, void *userdata) {
+  void SxRadio::cb_searchComplete(sp_search *search, void *userdata) {
     SxRadio* searchObj = (SxRadio*) userdata;
     searchObj->newResults(search);
   }

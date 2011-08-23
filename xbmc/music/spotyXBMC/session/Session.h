@@ -34,7 +34,7 @@ using namespace spotify;
 #include "../../../threads/SystemClock.h"
 #include "SessionCallbacks.h"
 #include "../playlist/PlaylistStore.h"
-#include "../Settings.h"
+#include "../SxSettings.h"
 #include "../Logger.h"
 
 

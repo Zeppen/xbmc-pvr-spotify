@@ -42,7 +42,7 @@ namespace addon_music_spotify {
     m_spTrack = spTrack;
     m_name = sp_track_name(spTrack);
 
-    m_rating = ceil(sp_track_popularity(spTrack) / 10);
+    m_rating = ceil((float)sp_track_popularity(spTrack) / 10);
 
     m_duration = 0.001 * sp_track_duration(spTrack);
     m_trackNumber = sp_track_index(spTrack);

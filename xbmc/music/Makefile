@@ -8,7 +8,7 @@ SRCS=Album.cpp \
      spotyXBMC/Addon.music.spotify.cpp \
      spotyXBMC/Logger.cpp \
      spotyXBMC/Utils.cpp \
-     spotyXBMC/Settings.cpp \
+     spotyXBMC/SxSettings.cpp \
      spotyXBMC/radio/SxRadio.cpp \
      spotyXBMC/radio/RadioHandler.cpp \
      spotyXBMC/radio/RadioBackgroundLoader.cpp \

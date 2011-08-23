@@ -19,7 +19,8 @@
  david.erenger@gmail.com
  */
 
-#include "Settings.h"
+#include "SxSettings.h"
+#include "URL.h"
 
 namespace addon_music_spotify {
 
@@ -29,20 +30,28 @@ namespace addon_music_spotify {
   Settings::~Settings() {
   }
 
+  CStdString Settings::getCachePath() {
+    return CSpecialProtocol::TranslatePath("special://temp/spotify/cache/");
+  }
+
+  CStdString Settings::getThumbPath() {
+	return CSpecialProtocol::TranslatePath("special://temp/spotify/thumbs/");
+  }
+
   int Settings::getArtistNumberArtists() {
-    int i = atoi(getAddonSetting("artistNoArtists") + 1);
+    int i = atoi(getAddonSetting("artistNoArtists")) + 1;
     if (i == 11) return -1;
     return 10 * i;
   }
 
   int Settings::getArtistNumberAlbums() {
-    int i = atoi(getAddonSetting("artistNoAlbums") + 1);
+    int i = atoi(getAddonSetting("artistNoAlbums")) + 1;
     if (i == 11) return -1;
     return 10 * i;
   }
 
   int Settings::getArtistNumberTracks() {
-    int i = atoi(getAddonSetting("artistNoTracks") + 1);
+    int i = atoi(getAddonSetting("artistNoTracks")) + 1;
     if (i == 11) return -1;
     return 10 * i;
   }

@@ -31,7 +31,7 @@
 #endif
 
 #include <libspotify/api.h>
-#include "../Settings.h"
+#include "../SxSettings.h"
 #include "../Logger.h"
 
 namespace addon_music_spotify {

@@ -56,53 +56,6 @@ namespace addon_music_spotify {
     sp_playlistcontainer_add_callbacks(m_spContainer, &m_pcCallbacks, this);
   }
 
-  void *PlaylistStore::loadPlaylists(void *s) {
-    Logger::printOut("starting load playlist thread");
-    PlaylistStore *store = (PlaylistStore*) s;
-
-    //add all playlists to container and loop through until all are loaded
-    vector<sp_playlist*> spPlaylists;
-
-    for (int i = 0; i < sp_playlistcontainer_num_playlists(store->getContainer()); i++) {
-      sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
-      if (spType == SP_PLAYLIST_TYPE_PLAYLIST) spPlaylists.push_back(sp_playlistcontainer_playlist(store->getContainer(), i));
-    }
-
-    vector<SxPlaylist*> newPlaylists;
-    int playlistNumber = 0;
-    while (!spPlaylists.empty() || !store->getStarredList()) {
-      for (int i = 0; i < spPlaylists.size(); i++) {
-        if (sp_playlist_is_loaded(spPlaylists[i])) {
-          //sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
-          newPlaylists.push_back(new SxPlaylist(spPlaylists[i], playlistNumber, false));
-          playlistNumber++;
-          spPlaylists.erase(spPlaylists.begin() + i);
-        }
-      }
-      Utils::updatePlaylists();
-
-      if (!store->m_starredList && sp_playlist_is_loaded(store->getStarredSpList())) {
-        store->m_starredList = new StarredList(store->m_spStarredList);
-        Logger::printOut("m_starredList created");
-      }
-    }
-
-    Logger::printOut("All playlists loaded");
-
-    //empty the old one if we are updating
-    while (!store->m_playlists.empty()) {
-      delete store->m_playlists.back();
-      store->m_playlists.pop_back();
-    }
-    store->m_playlists = newPlaylists;
-
-    if (store->m_topLists == NULL
-    ) store->m_topLists = new TopLists();
-
-    store->m_isLoaded = true;
-    Utils::updateToplistMenu();
-  }
-
   PlaylistStore::~PlaylistStore() {
     sp_playlistcontainer_remove_callbacks(m_spContainer, &m_pcCallbacks, this);
     Logger::printOut("delete PlaylistStore");
@@ -150,8 +103,6 @@ namespace addon_music_spotify {
 
   void PlaylistStore::pc_loaded(sp_playlistcontainer *pc, void *userdata) {
     Logger::printOut("pc loaded");
-    //pthread_t initThread;
-
     PlaylistStore *store = (PlaylistStore*) userdata;
 
     vector<SxPlaylist*> newPlaylists;
@@ -184,9 +135,6 @@ namespace addon_music_spotify {
     store->m_isLoaded = true;
     Utils::updateToplistMenu();
 
-//if ((pthread_create(&initThread, NULL, &loadPlaylists, userdata))) {
-//  Logger::printOut("Failed to create playlist load thread");
-// }
   }
 
   void PlaylistStore::pc_playlist_added(sp_playlistcontainer *pc, sp_playlist *playlist, int position, void *userdata) {

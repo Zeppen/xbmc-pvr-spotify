@@ -1,12 +1,26 @@
 /*
- * Utils.cpp
- *
- *  Created on: Aug 17, 2011
- *      Author: david
+ spotyxbmc2 - A project to integrate Spotify into XBMC
+ Copyright (C) 2011  David Erenger
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ For contact with the author:
+ david.erenger@gmail.com
  */
 
 #include "Utils.h"
-#include "Settings.h"
+#include "SxSettings.h"
 #include "Logger.h"
 #include "../tags/MusicInfoTag.h"
 #include "../Album.h"
@@ -76,7 +90,6 @@ namespace addon_music_spotify {
     //wait for it to finish loading
     while (!track->isLoaded()) {
     }
-
     CSong outSong;
     CStdString path;
     path.Format("%s.spotify", track->getUri());
@@ -87,15 +100,14 @@ namespace addon_music_spotify {
     outSong.iTrack = trackNumber == -1 ? track->getTrackNumber() : trackNumber;
     outSong.iDuration = track->getDuration();
     outSong.rating = track->getRating();
-    char* ratingChar = new char();
+    char ratingChar[3];
     CStdString ratingStr = itoa(1 + (track->getRating() / 2), ratingChar, 10);
-    delete ratingChar;
+    //delete ratingChar;
     outSong.rating = ratingStr[0];
     outSong.strArtist = track->getArtistName();
     outSong.iYear = track->getYear();
     outSong.strAlbum = track->getAlbumName();
     outSong.strAlbumArtist = track->getAlbumArtistName();
-
     const CFileItemPtr pItem(new CFileItem(outSong));
     if (track->hasThumb())
       pItem->SetThumbnailImage(track->getThumb()->getPath());

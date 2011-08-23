@@ -21,7 +21,7 @@
 
 #include "TopLists.h"
 #include "../session/Session.h"
-#include "../Settings.h"
+#include "../SxSettings.h"
 #include <sys/timeb.h>
 
 namespace addon_music_spotify {

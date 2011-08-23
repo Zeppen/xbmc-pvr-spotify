@@ -21,7 +21,7 @@
 
 #include "ThumbStore.h"
 #include "SxThumb.h"
-#include "../Settings.h"
+#include "../SxSettings.h"
 #include "../Logger.h"
 #include "../session/Session.h"
 #include "../Utils.h"
