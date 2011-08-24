@@ -33,9 +33,10 @@ Missing features
 
 Platforms
 ---------
-Linux - supported
-Windows - supported
-OSX - Not supported
+
+* Linux - supported
+* Windows - supported
+* OSX - Not supported
 
 Known issues
 ------------
@@ -134,6 +135,7 @@ Source
 The spotify related code lives all in xbmc/music/spotyXBMC/ and can (fairly) easely be extracted and used in other applications.
 
 Added files:
+
 * xbmc/music/spotyXBMC/Addon.music.spotify.cpp
 * xbmc/music/spotyXBMC/Addon.music.spotify.h
 * xbmc/music/spotyXBMC/Logger.cpp
@@ -205,6 +207,7 @@ Added files:
 * addons/skin.confluence/media/flagging/audio/spotify.png
 
 Modified files:
+
 * xbmc/cores/paplayer/CodecFactory.cpp
 * xbmc/filesystem/MusicSearchDirectory.cpp
 * xbmc/MusicDatabaseDirectory/DirectoryNodeAlbum.cpp
