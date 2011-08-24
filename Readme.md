@@ -34,8 +34,8 @@ Missing features
 Platforms
 ---------
 Linux - supported
-Windows - Not yet, will be supported soon
-OSX - Not supported, if you want to help please contact me
+Windows - supported
+OSX - Not supported
 
 Known issues
 ------------
