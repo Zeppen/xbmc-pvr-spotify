@@ -6,8 +6,12 @@ The code is not heavely tested and has known issues, dont install if you dont kn
 The main discussion for spotyxbmc is [here](http://forum.xbmc.org/showthread.php?t=67012)
 A discusion concerning a unified music addon frontend can be read [here](http://forum.xbmc.org/showthread.php?t=105147).
 
+You must have a valid spotify premium account to be able to use spotyXBMC.
+
 Features and usage
 ------------------
+This implementation adds spotify content to the regular music categories under the music section, do not try to run the addon, its only there for settings!
+
 A video showing most of the features can be seen [here](http://www.youtube.com/watch?v=xFSdxKyWXpU).
 
 * Starred tracks, albums and artists will show up in the songs, albums and artists sections alongside the local music.
@@ -49,29 +53,52 @@ Right now the there is a lot of trace prints, they are printed out straight to t
 
 Please submit a report to the github issues and provide all relevant data like logs, OS info, what track, playlist or album you have problems with. Or even better, fix it yourself and send me a pull request or an e-mail. 
 
+Installation instructions for Microsoft Windows
+-----------------------------------------------
+1. Obtain spotyXBMC2 source 
+   Use your favorite git tool to clone the repo: `git://github.com/akezeke/spotyxbmc2.git`
 
-Installation instructions Ubuntu Linux 32/64
---------------------------------------------
-. Download libSpotify
+2. Spotify API key
+   Get your own spotify API key from http://developer.spotify.com/en/libspotify/application-key/
+   Click on c-code and copy the content to a new file called appkey.h placed in the xbmc source root folder. (where this readme is located).
+   
+3. Build
+   Follow a guide from XBMC.org and build it yourself, if you are not using the Win32BuildSetup util make sure that you copy libspotify.dll to your XBMC install location.
+   
+4. Start xbmc
+   From the start menu.
 
-For 32 bit:
-`$ wget http://developer.spotify.com/download/libspotify/libspotify-0.0.8-linux6-i686.tar.gz`
+9. Start spotyXBMC
+   start the preinstalled music addon spotyXBMC and set the settings
 
-64 bit OS:
-`$ wget http://developer.spotify.com/download/libspotify/libspotify-0.0.8-linux6-x86_64.tar.gz`
+10. Restart XBMC
+
+11. Enable the music library and enjoy spotify music inside xbmc
+	The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
+
+
+Installation instructions for Ubuntu Linux 32/64
+------------------------------------------------
+1. Download libSpotify
+
+   For 32 bit:
+   `$ wget http://developer.spotify.com/download/libspotify/libspotify-0.0.8-linux6-i686.tar.gz`
+
+   64 bit OS:
+   `$ wget http://developer.spotify.com/download/libspotify/libspotify-0.0.8-linux6-x86_64.tar.gz`
 
 2. Untar:
-`$ tar xzf libspotify-*.tar.gz`
+   `$ tar xzf libspotify-*.tar.gz`
 
 3. Install libspotify
-`$ cd libspotify-0.0.8...`
-`$ sudo make install`
+   `$ cd libspotify-0.0.8...`
+   `$ sudo make install`
 
-4. Obtain spotyXBMC source 
+4. Obtain spotyXBMC2 source 
    Make sure you have git installed, if not and in ubuntu install with `sudo apt-get install git-core`
-`$ cd ..`
-`$ git clone git://github.com/akezeke/spotyxbmc2.git`
-`$ cd xbmc`
+   `$ cd ..`
+   `$ git clone git://github.com/akezeke/spotyxbmc2.git`
+   `$ cd xbmc`
 
 5. Spotify API key
    Get your own spotify API key from http://developer.spotify.com/en/libspotify/application-key/
@@ -80,40 +107,39 @@ For 32 bit:
 6. Install all XBMC dependencies listed in the corresponding readme file.
    For ubuntu 11.04 run:
 
-`$ sudo apt-get install git-core make g++ gcc gawk pmount libtool nasm yasm automake cmake gperf zip unzip bison libsdl-dev libsdl-image1.2-dev libsdl-gfx1.2-dev libsdl-mixer1.2-dev libfribidi-dev liblzo2-dev libfreetype6-dev libsqlite3-dev libogg-dev libasound-dev python-sqlite libglew-dev libcurl3 libcurl4-gnutls-dev libxrandr-dev libxrender-dev libmad0-dev libogg-dev libvorbisenc2 libsmbclient-dev libmysqlclient-dev libpcre3-dev libdbus-1-dev libhal-dev libhal-storage-dev libjasper-dev libfontconfig-dev libbz2-dev libboost-dev libenca-dev libxt-dev libxmu-dev libpng-dev libjpeg-dev libpulse-dev mesa-utils libcdio-dev libsamplerate-dev libmpeg3-dev libflac-dev libiso9660-dev libass-dev libssl-dev fp-compiler gdc libmpeg2-4-dev libmicrohttpd-dev libmodplug-dev libssh-dev gettext cvs python-dev libyajl-dev libboost-thread-dev autopoint`
+`$ sudo apt-get install git-core make g++ gcc gawk pmount libtool nasm yasm automake cmake gperf zip unzip bison libsdl-dev libsdl-image1.2-dev libsdl-gfx1.2-dev libsdl-mixer1.2-dev libfribidi-dev liblzo2-dev libfreetype6-dev libsqlite3-dev libogg-dev libasound-dev python-sqlite libglew-dev libcurl3 libcurl4-gnutls-dev libxrandr-dev libxrender-dev libmad0-dev libogg-dev libvorbisenc2 libsmbclient-dev libmysqlclient-dev libpcre3-dev libdbus-1-dev libhal-dev libhal-storage-dev libjasper-dev libfontconfig-dev libbz2-dev libboost-dev libenca-dev libxt-dev libxmu-dev libpng-dev libjpeg-dev libpulse-dev mesa-utils libcdio-dev libsamplerate-dev libmpeg3-dev libflac-dev libiso9660-dev libass-dev libssl-dev fp-compiler gdc libmpeg2-4-dev libmicrohttpd-dev libmodplug-dev libssh-dev gettext cvs python-dev libyajl-dev libboost-thread-dev libplist-dev autopoint`
 
 
 7. Configure, make and install xbmc
-`$ ./bootstrap`
-`$ ./configure`
-`$ make`
-`$ sudo make install`
+   `$ ./bootstrap`
+   `$ ./configure`
+   `$ make`
+   `$ sudo make install`
 
 8. Start xbmc
-`$ xbmc`
+   `$ xbmc`
 
 9. Start spotyXBMC
-start the preinstalled music addon spotyXBMC and set the settings
+   start the preinstalled music addon spotyXBMC and set the settings
 
 10. Restart XBMC
 
 11. Enable the music library and enjoy spotify music inside xbmc
+	The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
 
 Done!
 
 Source
 ------
-The spotify related code lives all in xbmc/music/spotyXBMC/ and can easely be extracted and used in other applications.
+The spotify related code lives all in xbmc/music/spotyXBMC/ and can (fairly) easely be extracted and used in other applications.
 
 Added files:
 * xbmc/music/spotyXBMC/Addon.music.spotify.cpp
 * xbmc/music/spotyXBMC/Addon.music.spotify.h
-* xbmc/music/spotyXBMC/FileSystemHelper.cpp
-* xbmc/music/spotyXBMC/FileSystemHelper.h
 * xbmc/music/spotyXBMC/Logger.cpp
 * xbmc/music/spotyXBMC/Logger.h
-* xbmc/music/spotyXBMC/Settings.cpp 
-* xbmc/music/spotyXBMC/Settings.h
+* xbmc/music/spotyXBMC/SxSettings.cpp 
+* xbmc/music/spotyXBMC/SxSettings.h
 * xbmc/music/spotyXBMC/Utils.cpp
 * xbmc/music/spotyXBMC/Utils.h
 * xbmc/music/spotyXBMC/radio/SxRadio.cpp
@@ -124,14 +150,20 @@ Added files:
 * xbmc/music/spotyXBMC/album/SxAlbum.h
 * xbmc/music/spotyXBMC/album/AlbumStore.cpp
 * xbmc/music/spotyXBMC/album/AlbumStore.h
+* xbmc/music/spotyXBMC/album/AlbumContainer.cpp
+* xbmc/music/spotyXBMC/album/AlbumContainer.h
 * xbmc/music/spotyXBMC/artist/SxArtist.cpp
 * xbmc/music/spotyXBMC/artist/SxArtist.h
 * xbmc/music/spotyXBMC/artist/ArtistStore.cpp
 * xbmc/music/spotyXBMC/artist/ArtistStore.h
+* xbmc/music/spotyXBMC/artist/ArtistContainer.cpp
+* xbmc/music/spotyXBMC/artist/ArtistContainer.h
 * xbmc/music/spotyXBMC/search/Search.cpp
 * xbmc/music/spotyXBMC/search/Search.h
 * xbmc/music/spotyXBMC/search/SearchHandler.cpp
 * xbmc/music/spotyXBMC/search/SearchHandler.h
+* xbmc/music/spotyXBMC/search/SearchBackgroundLoader.cpp
+* xbmc/music/spotyXBMC/search/SearchBackgroundLoader.h
 * xbmc/music/spotyXBMC/player/Codec.cpp
 * xbmc/music/spotyXBMC/player/Codec.h
 * xbmc/music/spotyXBMC/player/PlayerHandler.cpp
@@ -142,12 +174,16 @@ Added files:
 * xbmc/music/spotyXBMC/playlist/SxPlaylist.h
 * xbmc/music/spotyXBMC/playlist/StarredList.cpp
 * xbmc/music/spotyXBMC/playlist/StarredList.h
+* xbmc/music/spotyXBMC/playlist/StarredBackgroundLoader.cpp
+* xbmc/music/spotyXBMC/playlist/StarredBackgroundLoader.h
 * xbmc/music/spotyXBMC/playlist/PlaylistStore.cpp
 * xbmc/music/spotyXBMC/playlist/PlaylistStore.h
 * xbmc/music/spotyXBMC/session/Session.cpp
 * xbmc/music/spotyXBMC/session/Session.h
 * xbmc/music/spotyXBMC/session/SessionCallbacks.cpp
 * xbmc/music/spotyXBMC/session/SessionCallbacks.h
+* xbmc/music/spotyXBMC/session/BackgroundThread.cpp
+* xbmc/music/spotyXBMC/session/BackgroundThread.h
 * xbmc/music/spotyXBMC/thumb/SxThumb.cpp
 * xbmc/music/spotyXBMC/thumb/SxThumb.h
 * xbmc/music/spotyXBMC/thumb/ThumbStore.cpp
@@ -156,6 +192,8 @@ Added files:
 * xbmc/music/spotyXBMC/track/SxTrack.h
 * xbmc/music/spotyXBMC/track/TrackStore.cpp 
 * xbmc/music/spotyXBMC/track/TrackStore.h
+* xbmc/music/spotyXBMC/track/TrackContainer.cpp
+* xbmc/music/spotyXBMC/track/TrackContainer.h
 
 * addons/plugin.music.spotyXBMC/icon.png
 * addons/plugin.music.spotyXBMC/fanart.jpg
@@ -164,6 +202,7 @@ Added files:
 * addons/plugin.music.spotyXBMC/addon.xml
 * addons/plugin.music.spotyXBMC/resources/settings.xml
 * addons/plugin.music.spotyXBMC/resources/language/English/strings.xml
+* addons/skin.confluence/media/flagging/audio/spotify.png
 
 Modified files:
 * xbmc/cores/paplayer/CodecFactory.cpp
@@ -179,7 +218,6 @@ Modified files:
 * xbmc/settings/Settings.cpp
 * xbmc/Application.cpp
 * xbmc/GUIInfoManager.cpp
-* xbmc/XBApplicationEx.cpp
 
 By me a beer?
 -------------
