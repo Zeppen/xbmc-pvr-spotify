@@ -62,8 +62,13 @@ namespace addon_music_spotify {
     CStdString fanart = "";
 
     if (ADDON::CAddonMgr::Get().GetAddon(pluginId, addon)) {
-
-      fanart = addon->FanArt();
+      if (getAddonSetting("enablefanart") == "true"){
+        if (getAddonSetting("customfanart") == "true"){
+          fanart = getAddonSetting("fanart");
+        }else{
+          fanart = addon->FanArt();
+        }
+      }
     }
     return fanart;
   }

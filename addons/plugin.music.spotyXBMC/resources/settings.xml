@@ -10,6 +10,9 @@
     <setting id="password" type="text" enable="eq(-2,true)" option="hidden" label="30402" default="" />
     <setting type="sep" />
     <setting id="highBitrate" type="bool" enable="eq(-4,true)" label="30404" default="true" />
+    <setting id="enablefanart" type="bool" enable="eq(-5,true)"  label="30407" default="true" />
+    <setting id="customfanart" type="bool" enable="eq(-1,true)" visible="eq(-1,true)" label="30408" default="false" />
+    <setting id="fanart" type="file" enable="eq(-1,true)" visible="eq(-1,true)" label="30406" default="" />
   </category>
   <category label="30420">
     <setting id="searchNoArtists" type="enum" label="30421" values="10|20|30|40|50|60|70|80|90|100" default="1" />
