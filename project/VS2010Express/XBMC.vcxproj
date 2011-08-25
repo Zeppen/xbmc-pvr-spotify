@@ -642,7 +642,6 @@
     <ClCompile Include="..\..\xbmc\music\spotyXBMC\session\Session.cpp" />
     <ClCompile Include="..\..\xbmc\music\spotyXBMC\session\SessionCallbacks.cpp" />
     <ClCompile Include="..\..\xbmc\music\spotyXBMC\SxSettings.cpp" />
-    <ClCompile Include="..\..\xbmc\music\spotyXBMC\SxSettings.cpp" />
     <ClCompile Include="..\..\xbmc\music\spotyXBMC\thumb\SxThumb.cpp" />
     <ClCompile Include="..\..\xbmc\music\spotyXBMC\thumb\ThumbStore.cpp" />
     <ClCompile Include="..\..\xbmc\music\spotyXBMC\track\SxTrack.cpp" />
