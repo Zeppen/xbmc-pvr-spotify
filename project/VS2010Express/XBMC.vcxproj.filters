@@ -2618,6 +2618,8 @@
     </ClCompile>
     <ClCompile Include="..\..\xbmc\music\spotyXBMC\Utils.cpp">
       <Filter>music\spotyXBMC</Filter>
+    <ClCompile Include="..\..\xbmc\interfaces\json-rpc\ApplicationOperations.cpp">
+      <Filter>interfaces\json-rpc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -5230,6 +5232,8 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\music\spotyXBMC\Utils.h">
       <Filter>music\spotyXBMC</Filter>
+    <ClInclude Include="..\..\xbmc\interfaces\json-rpc\ApplicationOperations.h">
+      <Filter>interfaces\json-rpc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
