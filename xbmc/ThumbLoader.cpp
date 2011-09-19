@@ -189,11 +189,9 @@ bool CVideoThumbLoader::LoadItem(CFileItem* pItem)
   {
     CVideoDatabase db;
     db.Open();
-    db.GetResumePoint(*pItem->GetVideoInfoTag());
+    if (db.GetResumePoint(*pItem->GetVideoInfoTag()))
+      pItem->SetInvalid();
     db.Close();
-    CFileItemPtr itemcopy(new CFileItem(*pItem));
-    CGUIMessage msg(GUI_MSG_NOTIFY_ALL, 0, 0, GUI_MSG_UPDATE_ITEM, 0, itemcopy);
-    g_windowManager.SendThreadMessage(msg);
   }
 
   CFileItem item(*pItem);

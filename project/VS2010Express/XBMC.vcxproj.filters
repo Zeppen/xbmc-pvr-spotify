@@ -1502,12 +1502,6 @@
     <ClCompile Include="..\..\xbmc\interfaces\json-rpc\AudioLibrary.cpp">
       <Filter>interfaces\json-rpc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xbmc\interfaces\json-rpc\AVPlayerOperations.cpp">
-      <Filter>interfaces\json-rpc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xbmc\interfaces\json-rpc\AVPlaylistOperations.cpp">
-      <Filter>interfaces\json-rpc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xbmc\interfaces\json-rpc\FileItemHandler.cpp">
       <Filter>interfaces\json-rpc</Filter>
     </ClCompile>
@@ -1515,9 +1509,6 @@
       <Filter>interfaces\json-rpc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xbmc\interfaces\json-rpc\JSONRPC.cpp">
-      <Filter>interfaces\json-rpc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xbmc\interfaces\json-rpc\PicturePlayerOperations.cpp">
       <Filter>interfaces\json-rpc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xbmc\interfaces\json-rpc\PlayerOperations.cpp">
@@ -2620,6 +2611,15 @@
       <Filter>music\spotyXBMC</Filter>
     <ClCompile Include="..\..\xbmc\interfaces\json-rpc\ApplicationOperations.cpp">
       <Filter>interfaces\json-rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\guilib\JpegIO.cpp">
+      <Filter>guilib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\filesystem\FileNFS.cpp">
+      <Filter>filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xbmc\filesystem\NFSDirectory.cpp">
+      <Filter>filesystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -4056,12 +4056,6 @@
     <ClInclude Include="..\..\xbmc\interfaces\json-rpc\AudioLibrary.h">
       <Filter>interfaces\json-rpc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xbmc\interfaces\json-rpc\AVPlayerOperations.h">
-      <Filter>interfaces\json-rpc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xbmc\interfaces\json-rpc\AVPlaylistOperations.h">
-      <Filter>interfaces\json-rpc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xbmc\interfaces\json-rpc\FileItemHandler.h">
       <Filter>interfaces\json-rpc</Filter>
     </ClInclude>
@@ -4078,9 +4072,6 @@
       <Filter>interfaces\json-rpc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xbmc\interfaces\json-rpc\JSONUtils.h">
-      <Filter>interfaces\json-rpc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xbmc\interfaces\json-rpc\PicturePlayerOperations.h">
       <Filter>interfaces\json-rpc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xbmc\interfaces\json-rpc\PlayerOperations.h">
@@ -5234,6 +5225,15 @@
       <Filter>music\spotyXBMC</Filter>
     <ClInclude Include="..\..\xbmc\interfaces\json-rpc\ApplicationOperations.h">
       <Filter>interfaces\json-rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\guilib\JpegIO.h">
+      <Filter>guilib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\filesystem\FileNFS.h">
+      <Filter>filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\filesystem\NFSDirectory.h">
+      <Filter>filesystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
