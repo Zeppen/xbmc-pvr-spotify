@@ -37,17 +37,19 @@ public:
   CJpegIO();
   ~CJpegIO();
   bool           Open(const CStdString& m_texturePath,  unsigned int m_minx=0, unsigned int m_miny=0);
-  bool           Decode(const unsigned char *pixels);
+  bool           Decode(const unsigned char *pixels, unsigned int pitch, unsigned int format);
   void           Close();
 
   unsigned int   FileSize()    { return m_imgsize; }
   unsigned int   Width()       { return m_width; }
   unsigned int   Height()      { return m_height; }
-  unsigned int   Pitch()       { return m_pitch; }
   unsigned int   Orientation() { return m_orientation; }
 
 protected:
   bool           GetExif();
+  unsigned int   findExifMarker( unsigned char *jpegData, 
+                                 unsigned int dataSize, 
+                                 unsigned char *&exifPtr);
   unsigned char  *m_inputBuff;
   unsigned int   m_inputBuffSize;
   unsigned int   m_minx;
@@ -59,7 +61,6 @@ protected:
   unsigned int   m_imgsize;
   unsigned int   m_width;
   unsigned int   m_height;
-  unsigned int   m_pitch;
   unsigned int   m_orientation;
 };
 

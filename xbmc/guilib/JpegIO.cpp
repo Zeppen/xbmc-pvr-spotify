@@ -17,16 +17,20 @@
 *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *  http://www.gnu.org/copyleft/gpl.html
 *
+*  Parts of this code taken from Guido Vollbeding <http://sylvana.net/jpegcrop/exif_orientation.html>
+*
 */
 
-#include "pictures/DllImageLib.h"
-#include "pictures/DllLibExif.h"
+#include "lib/libexif/libexif.h"
 #include "windowing/WindowingFactory.h"
 #include "settings/GUISettings.h"
 #include "settings/Settings.h"
 #include "filesystem/File.h"
 #include "utils/log.h"
+#include "XBTF.h"
 #include "JpegIO.h"
+
+#define EXIF_TAG_ORIENTATION    0x0112
 
 /*Override libjpeg's error function to avoid an exit() call.*/
 static void jpeg_error_exit (j_common_ptr cinfo)
@@ -68,7 +72,7 @@ static boolean x_fill_mem_input_buffer (j_decompress_ptr cinfo)
   cinfo->src->next_input_byte = mybuffer;
   cinfo->src->bytes_in_buffer = 2;
 
-  return TRUE;
+  return true;
 }
 
 static void x_skip_input_data (j_decompress_ptr cinfo, long num_bytes)
@@ -128,7 +132,7 @@ CJpegIO::CJpegIO()
   m_minx = 0;
   m_miny = 0;
   m_imgsize = 0;
-  m_width = 0;
+  m_width  = 0;
   m_height = 0;
   m_orientation = 0;
   m_inputBuffSize = 0;
@@ -146,7 +150,7 @@ void CJpegIO::Close()
   delete [] m_inputBuff;
 }
 
-bool CJpegIO::Open(const CStdString& texturePath,  unsigned int minx, unsigned int miny)
+bool CJpegIO::Open(const CStdString &texturePath, unsigned int minx, unsigned int miny)
 {
   m_texturePath = texturePath;
   m_minx = minx;
@@ -178,7 +182,7 @@ bool CJpegIO::Open(const CStdString& texturePath,  unsigned int minx, unsigned i
 
   try
   {
-    jpeg_read_header(&m_cinfo, TRUE);
+    jpeg_read_header(&m_cinfo, true);
 
     /*  libjpeg can scale the image for us if it is too big. It must be in the format
     num/denom, where (for our purposes) that is [1-8]/8 where 8/8 is the unscaled image.
@@ -192,23 +196,22 @@ bool CJpegIO::Open(const CStdString& texturePath,  unsigned int minx, unsigned i
       m_minx = g_settings.m_ResInfo[g_guiSettings.m_LookAndFeelResolution].iWidth;
       m_miny = g_settings.m_ResInfo[g_guiSettings.m_LookAndFeelResolution].iHeight;
     }
-    m_cinfo.scale_denom=8;
+    m_cinfo.scale_denom = 8;
     unsigned int maxtexsize = g_Windowing.GetMaxTextureSize();
-    for (m_cinfo.scale_num = 1;m_cinfo.scale_num <=8 ;m_cinfo.scale_num++)
+    for (m_cinfo.scale_num = 1; m_cinfo.scale_num <= 8; m_cinfo.scale_num++)
     {
-      jpeg_calc_output_dimensions (&m_cinfo);
+      jpeg_calc_output_dimensions(&m_cinfo);
       if ((m_cinfo.output_width * m_cinfo.output_height) > (maxtexsize * maxtexsize))
       {
         m_cinfo.scale_num--;
         break;
       }
-      if ( m_cinfo.output_width >= m_minx && m_cinfo.output_height >= m_miny)
+      if (m_cinfo.output_width >= m_minx && m_cinfo.output_height >= m_miny)
         break;
     }
-    jpeg_calc_output_dimensions (&m_cinfo);
-    m_width = m_cinfo.output_width;
+    jpeg_calc_output_dimensions(&m_cinfo);
+    m_width  = m_cinfo.output_width;
     m_height = m_cinfo.output_height;
-    m_pitch = (((m_cinfo.output_width + 1)* 3 / 4) * 4); //align to 4-bytes
 
     GetExif();
     return true;
@@ -221,37 +224,46 @@ bool CJpegIO::Open(const CStdString& texturePath,  unsigned int minx, unsigned i
   }
 }
 
-bool CJpegIO::GetExif()
+bool CJpegIO::Decode(const unsigned char *pixels, unsigned int pitch, unsigned int format)
 {
-  ExifInfo_t exifInfo;
-  IPTCInfo_t iptcInfo;
-  DllLibExif exifDll;
-  if (!exifDll.Load())
-  {
-    return false;
-  }
-  exifDll.process_jpeg(m_texturePath.c_str(), &exifInfo, &iptcInfo);
-  if (exifInfo.Orientation)
-  {
-    m_orientation = exifInfo.Orientation;
-    return true;
-  }
-  return false;
-}
-
-bool CJpegIO::Decode(const unsigned char *pixels)
-{
-  //requires a pre-allocated buffer of size pitch*3
-  unsigned char *dst = (unsigned char *) pixels;
+  unsigned char *dst = (unsigned char*)pixels;
   try
   {
-    jpeg_start_decompress( &m_cinfo );
-    while( m_cinfo.output_scanline < m_height )
+    jpeg_start_decompress(&m_cinfo);
+
+    if (format == XB_FMT_RGB8)
     {
-      jpeg_read_scanlines( &m_cinfo, &dst, 1 );
-      dst+=m_pitch;
+      while (m_cinfo.output_scanline < m_height)
+      {
+        jpeg_read_scanlines(&m_cinfo, &dst, 1);
+        dst += pitch;
+      }
     }
-    jpeg_finish_decompress( &m_cinfo );
+    else if (format == XB_FMT_A8R8G8B8)
+    {
+      unsigned char* row = new unsigned char[m_width * 3];
+      while (m_cinfo.output_scanline < m_height)
+      {
+        jpeg_read_scanlines(&m_cinfo, &row, 1);
+        unsigned char *src2 = row;
+        unsigned char *dst2 = dst;
+        for (unsigned int x = 0; x < m_width; x++, src2 += 3)
+        {
+          *dst2++ = src2[2];
+          *dst2++ = src2[1];
+          *dst2++ = src2[0];
+          *dst2++ = 0xff;
+        }
+        dst += pitch;
+      }
+      delete[] row;
+    }
+    else
+    {
+      CLog::Log(LOGWARNING, "JpegIO: Incorrect output format specified");
+      return false;
+    }
+    jpeg_finish_decompress(&m_cinfo);
   }
   catch (CStdString &msg)
   {
@@ -259,6 +271,214 @@ bool CJpegIO::Decode(const unsigned char *pixels)
     jpeg_destroy_decompress(&m_cinfo);
     return false;
   }
-  jpeg_destroy_decompress( &m_cinfo );
+  jpeg_destroy_decompress(&m_cinfo);
   return true;
+}
+
+/*helper function
+ * finds the exif tag in the jpegData buffer
+ * and returns the size of the exif section
+ * exifPtr is set to the start of the
+ * "Exif" <- tag
+ * if 0 is returned - no exif tag was found
+ */
+unsigned int CJpegIO::findExifMarker( unsigned char *jpegData, 
+                                      unsigned int dataSize, 
+                                      unsigned char *&exifPtr)
+{
+  unsigned char *buffPtr = jpegData+2;//SKIP 0xFFD8
+  unsigned char *endOfFile = jpegData + dataSize;
+  
+  if(!jpegData || dataSize < 2 || jpegData[0] != 0xFF || jpegData[1] != 0xD8)
+    return 0;
+  
+  for(;;)
+  {
+    BYTE marker = 0;
+    for (int a=0; a<7 && (buffPtr < endOfFile); a++) 
+    {
+      marker = *buffPtr;
+      if (marker != 0xFF)
+        break;
+
+      if (a >= 6)
+        return 0;
+      marker = 0;
+      buffPtr++;
+    }
+
+    // 0xff is legal padding, but if we get that many, something's wrong.
+    if (marker == 0xff)
+      return 0;
+    
+    buffPtr++;//move to start of itemlen field   
+    if((buffPtr + 1) >= endOfFile)
+      return 0;    
+
+    // Read the length of the section.
+    unsigned short itemlen = (*buffPtr++) << 8;
+    itemlen += *buffPtr;
+    
+    if(itemlen < sizeof(itemlen))
+      return 0;
+
+    switch(marker)
+    {
+      case M_EOI:
+      case M_SOS:   // stop before hitting compressed data
+        return 0;
+      case M_EXIF: 
+        /* found exifdata
+           buffPtr was pointing at the second length byte
+           +1 for getting the exif tag */
+        exifPtr = buffPtr + 1;
+        return itemlen;
+      default://skip all other sections
+        buffPtr += itemlen;
+        break;
+    }
+  }
+  
+  return 0;
+}
+
+bool CJpegIO::GetExif()
+{
+  unsigned int length = 0;
+  unsigned int offset = 0;
+  unsigned int numberOfTags = 0;
+  unsigned int tagNumber = 0;
+  bool isMotorola = false;
+  unsigned char *exif_data = NULL;
+  unsigned const char ExifHeader[]     = "Exif\0\0";  
+  
+  length = findExifMarker(m_inputBuff, m_imgsize, exif_data);
+  
+  /* read exif head, check for "Exif"
+     next we want to read to current offset + length
+     check if buffer is big enough*/
+  if (length                              &&
+      memcmp(exif_data, ExifHeader, 6) == 0)
+  {
+    //read exif body
+    exif_data += 6;
+  }
+  else
+  {
+    return false;
+  }
+  
+  //check for broken files
+  if( (m_inputBuff + m_imgsize) < (exif_data + length))
+  {
+    return false;
+  }
+
+  // Discover byte order
+  if (exif_data[0] == 'I' && exif_data[1] == 'I')
+    isMotorola = false;
+  else if (exif_data[0] == 'M' && exif_data[1] == 'M')
+    isMotorola = true;
+  else
+    return false;
+   
+  // Check Tag Mark
+  if (isMotorola) 
+  {
+    if (exif_data[2] != 0 || exif_data[3] != 0x2A)
+      return false;
+  } 
+  else 
+  {
+    if (exif_data[3] != 0 || exif_data[2] != 0x2A) 
+      return false;
+  }
+  
+  // Get first IFD offset (offset to IFD0)
+  if (isMotorola) 
+  {
+    if (exif_data[4] != 0 || exif_data[5] != 0) 
+      return false;
+    offset = exif_data[6];
+    offset <<= 8;
+    offset += exif_data[7];
+  } 
+  else 
+  {
+    if (exif_data[7] != 0 || exif_data[6] != 0) 
+      return false;
+    offset = exif_data[5];
+    offset <<= 8;
+    offset += exif_data[4];
+  }
+  
+  if (offset > length - 2)
+    return false; // check end of data segment
+  
+  // Get the number of directory entries contained in this IFD
+  if (isMotorola) 
+  {
+    numberOfTags = exif_data[offset];
+    numberOfTags <<= 8;
+    numberOfTags += exif_data[offset+1];
+  } 
+  else 
+  {
+    numberOfTags = exif_data[offset+1];
+    numberOfTags <<= 8;
+    numberOfTags += exif_data[offset];
+  }
+  
+  if (numberOfTags == 0) 
+    return false;
+  offset += 2;
+  
+  // Search for Orientation Tag in IFD0 - hey almost there! :D
+  while(1)//hopefully this jpeg has correct exif data...
+  {
+    if (offset > length - 12)
+      return false; // check end of data segment
+    
+    // Get Tag number
+    if (isMotorola) 
+    {
+      tagNumber = exif_data[offset];
+      tagNumber <<= 8;
+      tagNumber += exif_data[offset+1];
+    } 
+    else 
+    {
+      tagNumber = exif_data[offset+1];
+      tagNumber <<= 8;
+      tagNumber += exif_data[offset];
+    }
+    
+    if (tagNumber == EXIF_TAG_ORIENTATION) 
+      break; //found orientation tag
+      
+    if ( --numberOfTags == 0) 
+      return false;//no orientation found
+    offset += 12;//jump to next tag
+  }
+  
+  // Get the Orientation value
+  if (isMotorola) 
+  {
+    if (exif_data[offset+8] != 0) 
+      return false;
+    m_orientation = exif_data[offset+9];
+  } 
+  else 
+  {
+    if (exif_data[offset+9] != 0) 
+      return false;
+    m_orientation = exif_data[offset+8];
+  }
+  if (m_orientation > 8)
+  {
+    m_orientation = 0;
+    return false;
+  }
+  
+  return true;//done
 }
