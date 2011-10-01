@@ -41,6 +41,8 @@
 #endif
 #include "URL.h"
 #include "DVDPlayerCodec.h"
+#include "BXAcodec.h" 
+
 #include "../../music/spotyXBMC/Addon.music.spotify.h"
 
 ICodec* CodecFactory::CreateCodec(const CStdString& strFileType)
@@ -132,6 +134,9 @@ ICodec* CodecFactory::CreateCodecDemux(const CStdString& strFile, const CStdStri
     return new DVDPlayerCodec();
   else if( strContent.Equals("application/ogg") || strContent.Equals("audio/ogg"))
     return CreateOGGCodec(strFile,filecache);
+  else if (strContent.Equals("audio/x-xbmc-pcm"))
+    return (ICodec*)new BXACodec();  
+    
 
   if (urlFile.GetProtocol() == "lastfm" || urlFile.GetProtocol() == "shout")
   {
