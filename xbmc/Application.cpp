@@ -92,6 +92,7 @@
 #include "utils/CPUInfo.h"
 
 #include "input/KeyboardStat.h"
+#include "input/XBMC_vkeys.h"
 #include "input/MouseStat.h"
 
 #if defined(FILESYSTEM) && !defined(_LINUX)
@@ -1284,9 +1285,9 @@ void CApplication::StopWebServer()
     if(! m_WebServer.IsStarted() )
     {
       CLog::Log(LOGNOTICE, "Webserver: Stopped...");
-      CZeroconf::GetInstance()->RemoveService("services.webserver");
+      CZeroconf::GetInstance()->RemoveService("servers.webserver");
       CZeroconf::GetInstance()->RemoveService("servers.webjsonrpc");
-      CZeroconf::GetInstance()->RemoveService("services.webapi");
+      CZeroconf::GetInstance()->RemoveService("servers.webapi");
     } else
       CLog::Log(LOGWARNING, "Webserver: Failed to stop.");
   }
@@ -1703,6 +1704,8 @@ void CApplication::LoadSkin(const SkinPtr& skin)
   URIUtils::AddFileToFolder(skinEnglishPath, "strings.xml", skinEnglishPath);
 
   g_localizeStrings.LoadSkinStrings(langPath, skinEnglishPath);
+
+  g_SkinInfo->LoadIncludes();
 
   int64_t start;
   start = CurrentHostCounter();
@@ -2201,7 +2204,7 @@ bool CApplication::OnKey(const CKey& key)
 
         // If the key pressed is shift-A to shift-Z set usekeyboard to true.
         // This causes the keypress to be used for list navigation.
-        if (control->IsContainer() && key.GetModifiers() == CKey::MODIFIER_SHIFT && key.GetVKey() >= 'a' && key.GetVKey() <= 'z')
+        if (control->IsContainer() && key.GetModifiers() == CKey::MODIFIER_SHIFT && key.GetVKey() >= XBMCVK_A && key.GetVKey() <= XBMCVK_Z)
           useKeyboard = true;
       }
     }

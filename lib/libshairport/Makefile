@@ -41,6 +41,7 @@ $(SOURCE): $(TARBALLS_LOCATION)/$(ARCHIVE)
 	cd $(SOURCE); patch -p0 < ../003_fix_deadlock.patch
 	cd $(SOURCE); patch -p0 < ../004_fix_bad_access.patch
 	cd $(SOURCE); patch -p0 < ../005_fix_shutdown.patch
+	cd $(SOURCE); patch -p0 < ../006_no_printf.patch
 	cd $(SOURCE); autoreconf -vif
 	cd $(SOURCE); $(CONFIGURE)
 
@@ -49,10 +50,11 @@ $(SO_NAME): $(SOURCE)
 
 install:
 	make -C $(SOURCE) install
+	ldconfig
 
 clean:
-	make -C $(SOURCE) clean
+	rm -rf $(SOURCE)
+	#make -C $(SOURCE) clean
 
 distclean::
 	rm -rf $(SOURCE)
-

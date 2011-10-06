@@ -475,11 +475,18 @@ namespace PYXBMC
 
   PyObject* XBMC_GetInfoLabel(PyObject *self, PyObject *args)
   {
+    std::string cret;
+
     char *cLine = NULL;
     if (!PyArg_ParseTuple(args, (char*)"s", &cLine)) return NULL;
 
-    int ret = g_infoManager.TranslateString(cLine);
-    return Py_BuildValue((char*)"s", g_infoManager.GetLabel(ret).c_str());
+    {
+      CPyThreadState gilRelease;
+
+      int ret = g_infoManager.TranslateString(cLine);
+      cret = g_infoManager.GetLabel(ret);
+    }
+    return Py_BuildValue((char*)"s", cret.c_str());
   }
 
   // getInfoImage() method
@@ -496,11 +503,19 @@ namespace PYXBMC
 
   PyObject* XBMC_GetInfoImage(PyObject *self, PyObject *args)
   {
+    std::string cret;
+
     char *cLine = NULL;
     if (!PyArg_ParseTuple(args, (char*)"s", &cLine)) return NULL;
 
-    int ret = g_infoManager.TranslateString(cLine);
-    return Py_BuildValue((char*)"s", g_infoManager.GetImage(ret, WINDOW_INVALID).c_str());
+    {
+      CPyThreadState gilRelease;
+
+      int ret = g_infoManager.TranslateString(cLine);
+      cret = g_infoManager.GetImage(ret, WINDOW_INVALID);
+    }
+
+    return Py_BuildValue((char*)"s", cret.c_str());
   }
 
   // playSFX() method
@@ -518,9 +533,13 @@ namespace PYXBMC
 
     if (!PyArg_ParseTuple(args, (char*)"s", &cFile)) return NULL;
 
-    if (CFile::Exists(cFile))
     {
-      g_audioManager.PlayPythonSound(cFile);
+      CPyThreadState gilRelease;
+
+      if (CFile::Exists(cFile))
+      {
+        g_audioManager.PlayPythonSound(cFile);
+      }
     }
 
     Py_INCREF(Py_None);

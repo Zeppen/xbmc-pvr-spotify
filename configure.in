@@ -1615,6 +1615,8 @@ else
   final_message="$final_message\n  MID Support:\tNo"
 fi
 
+ORIGCC=$CC
+ORIGCXX=$CXX
 if test "x$use_ccache" != "xno"; then
   AC_PATH_PROG(CCACHE,ccache,none)
   if test "$ac_cv_path_CCACHE" = "none"; then
@@ -2074,7 +2076,7 @@ XB_CONFIG_MODULE([lib/libid3tag/libid3tag],[
 
 XB_CONFIG_MODULE([xbmc/visualizations/XBMCProjectM/libprojectM],[
   set -x
-  rm -f CMakeCache.txt && CC="$CC" CXX="$CXX" cmake    \
+  rm -f CMakeCache.txt && CC="$ORIGCC" CXX="$ORIGCXX" cmake    \
     -DCMAKE_BUILD_TYPE=None -DUSE_FTGL:BOOL=OFF        \
     -DCMAKE_C_FLAGS:STRING="${CPPFLAGS} ${CFLAGS}"     \
     -DCMAKE_CXX_FLAGS:STRING="${CPPFLAGS} ${CXXFLAGS}" \
