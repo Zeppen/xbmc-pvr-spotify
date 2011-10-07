@@ -108,7 +108,7 @@ namespace addon_music_spotify {
       sp_session_set_connection_type(m_session, SP_CONNECTION_TYPE_WIRED);
       sp_session_set_connection_rules(m_session, SP_CONNECTION_RULE_NETWORK);
 
-      sp_session_login(m_session, Settings::getUserName().c_str(), Settings::getPassword().c_str());
+      sp_session_login(m_session, Settings::getUserName().c_str(), Settings::getPassword().c_str(), true);
       m_isEnabled = true;
       Logger::printOut("Logged in, returning");
       return true;

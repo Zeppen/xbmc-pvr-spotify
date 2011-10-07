@@ -83,10 +83,10 @@ Installation instructions for Ubuntu Linux 32/64
 1. Download libSpotify
 
    For 32 bit:
-   `$ wget http://developer.spotify.com/download/libspotify/libspotify-0.0.8-linux6-i686.tar.gz`
+   `$ wget https://developer.spotify.com/download/libspotify/libspotify-9.1.32-Linux-i686.tar.gz`
 
    64 bit OS:
-   `$ wget http://developer.spotify.com/download/libspotify/libspotify-0.0.8-linux6-x86_64.tar.gz`
+   `$ wget https://developer.spotify.com/download/libspotify/libspotify-9.1.32-Linux-x86_64.tar.gz`
 
 2. Untar:
    `$ tar xzf libspotify-*.tar.gz`
