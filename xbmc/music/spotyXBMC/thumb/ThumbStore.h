@@ -38,8 +38,8 @@ namespace addon_music_spotify {
     static ThumbStore *getInstance();
     static void deInit();
 
-    SxThumb *getThumb(const byte* image);
-    void removeThumb(const byte* image);
+    SxThumb *getThumb(const unsigned char* image);
+    void removeThumb(const unsigned char* image);
     void removeThumb(SxThumb* thumb);
 
   private:
@@ -48,7 +48,7 @@ namespace addon_music_spotify {
 
     static ThumbStore *m_instance;
 
-    typedef std::tr1::unordered_map<const byte*, SxThumb*> thumbMap;
+    typedef std::tr1::unordered_map<const unsigned char*, SxThumb*> thumbMap;
     thumbMap m_thumbs;
   };
 
