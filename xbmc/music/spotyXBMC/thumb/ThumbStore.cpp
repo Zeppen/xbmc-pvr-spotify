@@ -52,14 +52,14 @@ namespace addon_music_spotify {
     return m_instance ? m_instance : (m_instance = new ThumbStore);
   }
 
-  SxThumb *ThumbStore::getThumb(const byte* image) {
+  SxThumb *ThumbStore::getThumb(const unsigned char* image) {
     //check if we got the thumb
     thumbMap::iterator it = m_thumbs.find(image);
     SxThumb *thumb;
     if (it == m_thumbs.end()) {
       //we need to create it
       //Logger::printOut("create thumb");
-      sp_image* spImage = sp_image_create(Session::getInstance()->getSpSession(), (byte*) image);
+      sp_image* spImage = sp_image_create(Session::getInstance()->getSpSession(), (unsigned char*) image);
 
       if (!spImage) {
         Logger::printOut("no image");
@@ -78,7 +78,7 @@ namespace addon_music_spotify {
     return thumb;
   }
 
-  void ThumbStore::removeThumb(const byte* image) {
+  void ThumbStore::removeThumb(const unsigned char* image) {
     thumbMap::iterator it = m_thumbs.find(image);
     SxThumb *thumb;
     if (it != m_thumbs.end()) {
@@ -92,7 +92,7 @@ namespace addon_music_spotify {
   }
 
   void ThumbStore::removeThumb(SxThumb* thumb) {
-    removeThumb((const byte*) thumb->m_image);
+    removeThumb((const unsigned char*) thumb->m_image);
   }
 
 } /* namespace addon_music_spotify */
