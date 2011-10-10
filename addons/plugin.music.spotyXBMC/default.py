@@ -10,12 +10,11 @@ __language__ = __settings__.getLocalizedString
 
 def startPlugin():
 	if (__settings__.getSetting("enable") == "false"):
-		__settings__.openSettings()
-	else:
-		dialog = xbmcgui.Dialog()
-		dialog.ok("spotyXBMC2", "Running the addon will not lead you to spotify music", "instead check out the regular sections in the", "music library!")
+		__settings__.openSettings()	
+		xbmc.executebuiltin('XBMC.ReplaceWindow(home)')
 
-	#TODO why is this leading to a list without playlists and search? Find a better way to do this
-	xbmc.executebuiltin('XBMC.ActivateWindow(music,musicdb://,Return)')		
+	else:
+        	xbmc.executebuiltin('XBMC.ReplaceWindow(musiclibrary,musicdb://)')
+        	xbmc.executebuiltin('XBMC.Action(parentdir)')	
 
 startPlugin()
