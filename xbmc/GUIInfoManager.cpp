@@ -974,7 +974,10 @@ int CGUIInfoManager::TranslateSingleString(const CStdString &strCondition)
       CStdString platform = info[2].name;
       if (platform == "linux") return SYSTEM_PLATFORM_LINUX;
       else if (platform == "windows") return SYSTEM_PLATFORM_WINDOWS;
-      else if (platform == "osx") return SYSTEM_PLATFORM_OSX;
+      else if (platform == "osx")  return SYSTEM_PLATFORM_OSX;
+      else if (platform == "osx")  return SYSTEM_PLATFORM_DARWIN_OSX;
+      else if (platform == "ios")  return SYSTEM_PLATFORM_DARWIN_IOS;
+      else if (platform == "atv2") return SYSTEM_PLATFORM_DARWIN_ATV2;
     }
     if (info[0].name == "musicplayer")
     { // TODO: these two don't allow duration(foo) and also don't allow more than this number of levels...
@@ -1855,7 +1858,26 @@ bool CGUIInfoManager::GetBool(int condition1, int contextWindow, const CGUIListI
     bReturn = false;
 #endif
   else if (condition == SYSTEM_PLATFORM_OSX)
-#ifdef __APPLE__
+  // TODO: rename SYSTEM_PLATFORM_OSX to SYSTEM_PLATFORM_DARWIN after eden release.
+#ifdef TARGET_OS_DARWIN
+    bReturn = true;
+#else
+    bReturn = false;
+#endif
+  else if (condition == SYSTEM_PLATFORM_DARWIN_OSX)
+#ifdef TARGET_DARWIN_OSX
+    bReturn = true;
+#else
+    bReturn = false;
+#endif
+  else if (condition == SYSTEM_PLATFORM_DARWIN_IOS)
+#ifdef TARGET_DARWIN_IOS
+    bReturn = true;
+#else
+    bReturn = false;
+#endif
+  else if (condition == SYSTEM_PLATFORM_DARWIN_ATV2)
+#ifdef TARGET_DARWIN_IOS_ATV2
     bReturn = true;
 #else
     bReturn = false;
