@@ -374,7 +374,7 @@ MediaLibrary.prototype = {
 			}
 			else if(event.data.album.spotify_albumid != undefined) {
 				s_albumid = event.data.album.spotify_albumid;
-				s_albumid = s_albumid.substr(26,22);
+				s_albumid = s_albumid.substr(s_albumid.indexOf("spotify:album:")+14,22);
 				p_album_id = ', "albumid" : 1, "spotify_albumid" : "' + event.data.album.spotify_albumid+'"';
 			}
 			var albumDetailsContainer = $('#albumDetails' + s_albumid);
@@ -688,7 +688,7 @@ MediaLibrary.prototype = {
 			}
 			else if(event.data.album.spotify_albumid != undefined) {
 				s_albumid = event.data.album.spotify_albumid;
-				s_albumid = s_albumid.substr(26,22);
+				s_albumid = s_albumid.substr(s_albumid.indexOf("spotify:album:")+14,22);
 				p_album_id = '"spotify_albumid" : "' + event.data.album.spotify_albumid+'"';
 			}
 			jQuery.post(JSON_RPC + '?ClearPlaylist', '{"jsonrpc": "2.0", "method": "Playlist.Clear", "params": { "playlistid": ' + this.playlists["audio"] + ' }, "id": 1}', jQuery.proxy(function(data) {
