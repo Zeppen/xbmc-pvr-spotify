@@ -19,6 +19,7 @@
  *
  */
 
+#include <iostream>
 #include "music/spotyXBMC/Addon.music.spotify.h"
 #include "AudioLibrary.h"
 #include "music/MusicDatabase.h"
@@ -98,12 +99,14 @@ JSON_STATUS CAudioLibrary::GetAlbums(const CStdString &method, ITransportLayer *
   int artistID  = (int)parameterObject["artistid"].asInteger();
   int genreID   = (int)parameterObject["genreid"].asInteger();
   
-  CStdString strBaseDir = "";
+  CStdString s_path = "";
+  CStdString s_artistStr = "";
+
   CFileItemList items;
   if (musicdatabase.GetAlbumsNav("", items, genreID, artistID, -1, -1))
     HandleFileItemList("albumid", false, "albums", items, parameterObject, result);
   items.Clear();
-  if(g_spotify->GetAlbums(items, strBaseDir,strBaseDir))
+  if(!(artistID > 0) && g_spotify->GetAlbums(items, s_path,s_artistStr))
   {  
       HandleFileItemList("spotify_albumid", false, "albums", items, parameterObject, result);
   }
