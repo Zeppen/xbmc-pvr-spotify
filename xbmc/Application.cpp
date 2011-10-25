@@ -108,6 +108,9 @@
 #ifdef HAS_FILESYSTEM_NFS
 #include "filesystem/FileNFS.h"
 #endif
+#ifdef HAS_FILESYSTEM_AFP
+#include "filesystem/FileAFP.h"
+#endif
 #ifdef HAS_FILESYSTEM_SFTP
 #include "filesystem/FileSFTP.h"
 #endif
@@ -511,8 +514,10 @@ bool CApplication::Create()
   g_settings.LoadProfiles(PROFILES_FILE);
 
   CLog::Log(LOGNOTICE, "-----------------------------------------------------------------------");
-#if defined(__APPLE__)
-  CLog::Log(LOGNOTICE, "Starting XBMC, Platform: Mac OS X (%s). Built on %s (Git:%s)", g_sysinfo.GetUnameVersion().c_str(), __DATE__, GIT_REV);
+#if defined(TARGET_DARWIN_OSX)
+  CLog::Log(LOGNOTICE, "Starting XBMC, Platform: Darwin OSX (%s). Built on %s (Git:%s)", g_sysinfo.GetUnameVersion().c_str(), __DATE__, GIT_REV);
+#elif defined(TARGET_DARWIN_IOS)
+  CLog::Log(LOGNOTICE, "Starting XBMC, Platform: Darwin iOS (%s). Built on %s (Git:%s)", g_sysinfo.GetUnameVersion().c_str(), __DATE__, GIT_REV);
 #elif defined(__FreeBSD__)
   CLog::Log(LOGNOTICE, "Starting XBMC, Platform: FreeBSD (%s). Built on %s (Git:%s)", g_sysinfo.GetUnameVersion().c_str(), __DATE__, GIT_REV);
 #elif defined(_LINUX)
@@ -2034,6 +2039,7 @@ void CApplication::Render()
   if(!g_Windowing.BeginRender())
     return;
 
+  CDirtyRegionList dirtyRegions = g_windowManager.GetDirty();
   if (RenderNoPresent())
     hasRendered = true;
 
@@ -2073,7 +2079,7 @@ void CApplication::Render()
   m_lastFrameTime = XbmcThreads::SystemClockMillis();
 
   if (flip)
-    g_graphicsContext.Flip(g_windowManager.GetDirty());
+    g_graphicsContext.Flip(dirtyRegions);
   CTimeUtils::UpdateFrameTime(flip);
 
   g_renderManager.UpdateResolution();
@@ -4825,6 +4831,10 @@ void CApplication::ProcessSlow()
   
 #ifdef HAS_FILESYSTEM_NFS
   gNfsConnection.CheckIfIdle();
+#endif
+
+#ifdef HAS_FILESYSTEM_AFP
+  gAfpConnection.CheckIfIdle();
 #endif
 
 #ifdef HAS_FILESYSTEM_SFTP
