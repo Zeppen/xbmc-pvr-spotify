@@ -1,10 +1,10 @@
 SPOTYXBMC2
-========== 
-This is a rewrite of the s potyxbmc project, the code is cleaner and better encapsulated from XBMC. It is now being prepared to be lifted out to a binary addon. 
-The code is not heavely tested and has known issues, dont install if you dont know what you are doing.
+==========
+This is a rewrite of the s potyxbmc project, the code is cleaner and better encapsulated from XBMC. It is now being prepared to be lifted out to a binary addon.
+The code is not heavily tested and has known issues, don´t install if you don´t know what you are doing.
 
 The main discussion for spotyxbmc is [here](http://forum.xbmc.org/showthread.php?t=67012)
-A discusion concerning a unified music addon frontend can be read [here](http://forum.xbmc.org/showthread.php?t=105147).
+A discussion concerning a unified music addon front-end can be read [here](http://forum.xbmc.org/showthread.php?t=105147).
 
 You must have a valid spotify premium account to be able to use spotyXBMC.
 
@@ -17,18 +17,18 @@ A video showing most of the features can be seen [here](http://www.youtube.com/w
 * Starred tracks, albums and artists will show up in the songs, albums and artists sections alongside the local music.
 * Spotify playlists shows up in the playlist section.
 * The normal music search will return local music and spotify search result.
-* Top 100 spotify lists with artists, albums and tracks is available in the top 100 section. 
+* Top 100 spotify lists with artists, albums and tracks is available in the top 100 section.
 * Modifying playlists and star/unstar items in the spotify client will result in that the lists is updated in XBMC.
-* Multidisc albums are split up into seperate albums with suffix "disc #".
+* Multi-disc albums are split up into separate albums with suffix "disc #".
 * Browsing artist albums will provide a "similar artists" folder with spotify similar artists.
-* The settings is changed from within a builtin addon.
+* The settings is changed from within a built-in addon.
 * Two spotify "radios" is provided int the music root, visit the settings to set name, years and genres.
-* Toplists will update once every 24 hour.
+* Top-lists will update once every 24 hour.
 
 Missing features
 ----------------
 * Interaction with spotify items like creating and modify playlists, adding spotify tracks to playlists and so on is not supported yet.
-* The year and genre nodes will not lead to any spotify items yet. 
+* The year and genre nodes will not lead to any spotify items yet.
 * A lot more I guess.
 
 Platforms
@@ -42,30 +42,30 @@ Known issues
 ------------
 Exiting XBMC will result in a crash, will be fixed soon I hope.
 
-Enable preloading of artists together with preloading of top 100 lists and/or a massiv collection of starred tracks will result in a short freeze of XBMC during start (about 5-10 seconds depending on your internet speed, computer...).
+Enable preloading of artists together with preloading of top 100 lists and/or a massive collection of starred tracks will result in a short freeze of XBMC during start (about 5-10 seconds depending on your Internet speed, computer...).
 
-Memmory leaks do exist, beware.
+Memory leaks do exist, beware.
 
-A lot of other bugs, the implementation is not heavely tested.
+A lot of other bugs, the implementation is not heavily tested.
  
 Want to help killing a bug?
 ---------------------------
 Right now the there is a lot of trace prints, they are printed out straight to the console so be sure that you start XBMC from a console in order to fetch the traces and create a bug report.
 
-Please submit a report to the github issues and provide all relevant data like logs, OS info, what track, playlist or album you have problems with. Or even better, fix it yourself and send me a pull request or an e-mail. 
+Please submit a report to the github issues and provide all relevant data like logs, OS info, what track, playlist or album you have problems with. Or even better, fix it yourself and send me a pull request or an e-mail.
 
 Installation instructions for Microsoft Windows
 -----------------------------------------------
-1. Obtain spotyXBMC2 source 
+1. Obtain spotyXBMC2 source
    Use your favorite git tool to clone the repo: `git://github.com/akezeke/spotyxbmc2.git`
 
 2. Spotify API key
    Get your own spotify API key from http://developer.spotify.com/en/libspotify/application-key/
    Click on c-code and copy the content to a new file called appkey.h placed in the xbmc source root folder. (where this readme is located).
-   
+  
 3. Build
-   Follow a guide from XBMC.org and build it yourself, if you are not using the Win32BuildSetup util make sure that you copy libspotify.dll to your XBMC install location.
-   
+   Follow a guide from XBMC.org and build it yourself, if you are not using the Win32BuildSetup utility make sure that you copy libspotify.dll to your XBMC install location.
+  
 4. Start xbmc
    From the start menu.
 
@@ -75,7 +75,7 @@ Installation instructions for Microsoft Windows
 10. Restart XBMC
 
 11. Enable the music library and enjoy spotify music inside xbmc
-	The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
+    The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
 
 
 Installation instructions for Ubuntu Linux 32/64
@@ -95,7 +95,7 @@ Installation instructions for Ubuntu Linux 32/64
    `$ cd libspotify-0.0.8...`
    `$ sudo make install`
 
-4. Obtain spotyXBMC2 source 
+4. Obtain spotyXBMC2 source
    Make sure you have git installed, if not and in ubuntu install with `sudo apt-get install git-core`
    `$ cd ..`
    `$ git clone git://github.com/akezeke/spotyxbmc2.git`
@@ -126,7 +126,7 @@ Installation instructions for Ubuntu Linux 32/64
 10. Restart XBMC
 
 11. Enable the music library and enjoy spotify music inside xbmc
-	The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
+    The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
 
 Done!
 
@@ -140,7 +140,7 @@ Added files:
 * xbmc/music/spotyXBMC/Addon.music.spotify.h
 * xbmc/music/spotyXBMC/Logger.cpp
 * xbmc/music/spotyXBMC/Logger.h
-* xbmc/music/spotyXBMC/SxSettings.cpp 
+* xbmc/music/spotyXBMC/SxSettings.cpp
 * xbmc/music/spotyXBMC/SxSettings.h
 * xbmc/music/spotyXBMC/Utils.cpp
 * xbmc/music/spotyXBMC/Utils.h
@@ -192,7 +192,7 @@ Added files:
 * xbmc/music/spotyXBMC/thumb/ThumbStore.h
 * xbmc/music/spotyXBMC/track/SxTrack.cpp
 * xbmc/music/spotyXBMC/track/SxTrack.h
-* xbmc/music/spotyXBMC/track/TrackStore.cpp 
+* xbmc/music/spotyXBMC/track/TrackStore.cpp
 * xbmc/music/spotyXBMC/track/TrackStore.h
 * xbmc/music/spotyXBMC/track/TrackContainer.cpp
 * xbmc/music/spotyXBMC/track/TrackContainer.h
@@ -222,14 +222,15 @@ Modified files:
 * xbmc/Application.cpp
 * xbmc/GUIInfoManager.cpp
 
-By me a beer?
+Buy me a beer?
 -------------
 <a href='http://www.pledgie.com/campaigns/15827'><img alt='Click here to lend your support to: spotyXBMC2 and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/15827.png' border='0' /></a>
 Contact
 -------
 
-http://github.com/akezeke/spotyxbmc 
+http://github.com/akezeke/spotyxbmc
 david.erenger@gmail.com
 
 /David
+
 
