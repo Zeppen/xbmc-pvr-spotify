@@ -66,7 +66,7 @@ namespace addon_music_spotify {
 
     //add the tracks
     for (int index = 0; index < sp_search_num_tracks(m_search->m_currentSearch); index++) {
-      if (sp_track_is_available(Session::getInstance()->getSpSession(), sp_search_track(m_search->m_currentSearch, index))) {
+      if (sp_track_get_availability(Session::getInstance()->getSpSession(), sp_search_track(m_search->m_currentSearch, index))) {
         m_search->m_tracks.push_back(TrackStore::getInstance()->getTrack(sp_search_track(m_search->m_currentSearch, index)));
       }
     }

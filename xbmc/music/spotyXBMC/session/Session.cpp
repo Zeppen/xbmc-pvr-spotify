@@ -75,6 +75,8 @@ namespace addon_music_spotify {
       Logger::printOut("Creating session");
 	 
       config.api_version = SPOTIFY_API_VERSION;
+      Logger::printOut("API version:");
+      Logger::printOut(SPOTIFY_API_VERSION);
 	  
 	  //the api is not copying the string so create a new c string
 	  CStdString location = Settings::getCachePath();
@@ -86,7 +88,7 @@ namespace addon_music_spotify {
 
       config.application_key = g_appkey;
       config.application_key_size = g_appkey_size;
-      config.user_agent = "spotify-for-XBMC2000";
+      config.user_agent = "spotyXBMC2";
 
       sp_session_callbacks cb = m_sessionCallbacks.getCallbacks();
       config.callbacks = &cb;
@@ -107,6 +109,7 @@ namespace addon_music_spotify {
 
       sp_session_set_connection_type(m_session, SP_CONNECTION_TYPE_WIRED);
       sp_session_set_connection_rules(m_session, SP_CONNECTION_RULE_NETWORK);
+      sp_session_set_volume_normalization(m_session, Settings::useNormalization());
 
       sp_session_login(m_session, Settings::getUserName().c_str(), Settings::getPassword().c_str(), true);
       m_isEnabled = true;

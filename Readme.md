@@ -83,17 +83,17 @@ Installation instructions for Ubuntu Linux 32/64
 1. Download libSpotify
 
    For 32 bit:
-   `$ wget https://developer.spotify.com/download/libspotify/libspotify-9.1.32-Linux-i686.tar.gz`
+   `$ wget http://developer.spotify.com/download/libspotify/libspotify-10.1.16-Linux-i686-release.tar.gz`
 
    64 bit OS:
-   `$ wget https://developer.spotify.com/download/libspotify/libspotify-9.1.32-Linux-x86_64.tar.gz`
+   `$ wget http://developer.spotify.com/download/libspotify/libspotify-10.1.16-Linux-x86_64-release.tar.gz`
 
 2. Untar:
    `$ tar xzf libspotify-*.tar.gz`
 
 3. Install libspotify
-   `$ cd libspotify-0.0.8...`
-   `$ sudo make install`
+   `$ cd libspotify-Linux...`
+   `$ sudo make install prefix=/usr/local`
 
 4. Obtain spotyXBMC2 source
    Make sure you have git installed, if not and in ubuntu install with `sudo apt-get install git-core`

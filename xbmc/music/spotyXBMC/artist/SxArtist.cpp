@@ -55,7 +55,10 @@ namespace addon_music_spotify {
     sp_link_as_string(link, m_uri, 256);
     sp_link_release(link);
     m_loadTrackAndAlbums = loadTracksAndAlbums;
-    if (Settings::getPreloadArtistDetails()) doLoadDetails();
+    if (Settings::getPreloadArtistDetails())
+    	doLoadTracksAndAlbums();
+    else
+    	doLoadDetails();
 
     Logger::printOut("creating artist done");
   }
@@ -97,54 +100,15 @@ namespace addon_music_spotify {
     //if we allready have it all..
     if (m_hasTracksAndAlbums) return;
 
-    //if the details not is preloaded, do a artist browse now
-    if (!m_hasDetails) {
-      if (!m_isLoadingDetails) doLoadDetails();
-      return;
-    }
-
-    if (m_browse == NULL ) return;
-
-    //add the albums
-    int maxAlbums = Settings::getArtistNumberAlbums() == -1 ? sp_artistbrowse_num_albums(m_browse) : Settings::getArtistNumberAlbums();
-
-    int addedAlbums = 0;
-    for (int index = 0; index < sp_artistbrowse_num_albums(m_browse) && addedAlbums < maxAlbums; index++) {
-      if (sp_album_is_available(sp_artistbrowse_album(m_browse, index))) {
-        m_albums.push_back(AlbumStore::getInstance()->getAlbum(sp_artistbrowse_album(m_browse, index), true));
-        addedAlbums++;
-      }
-    }
-
-    //add the tracks
-    int maxTracks = Settings::getArtistNumberTracks() == -1 ? sp_artistbrowse_num_tracks(m_browse) : Settings::getArtistNumberTracks();
-
-    int addedTracks = 0;
-    for (int index = 0; index < sp_artistbrowse_num_tracks(m_browse) && addedTracks < maxTracks; index++) {
-      if (sp_track_is_available(Session::getInstance()->getSpSession(), sp_artistbrowse_track(m_browse, index))) {
-        m_tracks.push_back(TrackStore::getInstance()->getTrack(sp_artistbrowse_track(m_browse, index)));
-        addedTracks++;
-      }
-    }
-
-    //add the artists
-    int maxArtists = Settings::getArtistNumberArtists() == -1 ? sp_artistbrowse_num_similar_artists(m_browse) : Settings::getArtistNumberArtists();
-
-    int addedArtists = 0;
-    for (int index = 0; index < sp_artistbrowse_num_similar_artists(m_browse) && addedArtists < maxArtists; index++) {
-      m_artists.push_back(ArtistStore::getInstance()->getArtist(sp_artistbrowse_similar_artist(m_browse, index), false));
-      addedArtists++;
-    }
-
-    Logger::printOut("loading artist tracks and albums done");
-    m_hasTracksAndAlbums = true;
+    m_isLoadingDetails = true;
+    m_browse = sp_artistbrowse_create(Session::getInstance()->getSpSession(), m_spArtist, SP_ARTISTBROWSE_FULL,&cb_artistBrowseComplete, this);
   }
 
   void SxArtist::doLoadDetails() {
     if (m_hasDetails || m_isLoadingDetails) return;
 
     m_isLoadingDetails = true;
-    m_browse = sp_artistbrowse_create(Session::getInstance()->getSpSession(), m_spArtist, &cb_artistBrowseComplete, this);
+    m_browse = sp_artistbrowse_create(Session::getInstance()->getSpSession(), m_spArtist, SP_ARTISTBROWSE_NO_ALBUMS,&cb_artistBrowseComplete, this);
   }
 
   void SxArtist::detailsLoaded(sp_artistbrowse *result) {
@@ -179,7 +143,7 @@ namespace addon_music_spotify {
 
         int addedTracks = 0;
         for (int index = 0; index < sp_artistbrowse_num_tracks(m_browse) && addedTracks < maxTracks; index++) {
-          if (sp_track_is_available(Session::getInstance()->getSpSession(), sp_artistbrowse_track(m_browse, index))) {
+          if (sp_track_get_availability(Session::getInstance()->getSpSession(), sp_artistbrowse_track(m_browse, index))) {
             m_tracks.push_back(TrackStore::getInstance()->getTrack(sp_artistbrowse_track(m_browse, index)));
             addedTracks++;
           }

@@ -51,6 +51,9 @@ namespace addon_music_spotify {
     static bool useHighBitrate() {
       return getAddonSetting("highBitrate") == "true";
     }
+    static bool useNormalization(){
+    	return getAddonSetting("normalization") == "true";
+    }
 
     static CStdString getFanart();
 

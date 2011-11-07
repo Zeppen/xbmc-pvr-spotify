@@ -108,7 +108,7 @@ namespace addon_music_spotify {
       vector<SxTrack*> newTracks;
       for (int index = 0; index < sp_playlist_num_tracks(m_spPlaylist); index++) {
         sp_track* spTrack = sp_playlist_track(m_spPlaylist, index);
-        if (!sp_track_is_available(Session::getInstance()->getSpSession(), spTrack)) continue;
+        if (!sp_track_get_availability(Session::getInstance()->getSpSession(), spTrack)) continue;
         SxTrack* track = TrackStore::getInstance()->getTrack(spTrack);
         if (track) {
           newTracks.push_back(track);

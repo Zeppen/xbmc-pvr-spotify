@@ -58,7 +58,7 @@ namespace addon_music_spotify {
       if (sp_search_num_tracks(m_radio->m_currentSearch) == 0) return;
 
       for (int index = m_radio->m_currentResultPos; index < sp_search_num_tracks(m_radio->m_currentSearch) && m_radio->m_tracks.size() < m_radio->m_numberOfTracksToDisplay; index++) {
-        if (sp_track_is_available(Session::getInstance()->getSpSession(), sp_search_track(m_radio->m_currentSearch, index))) {
+        if (sp_track_get_availability(Session::getInstance()->getSpSession(), sp_search_track(m_radio->m_currentSearch, index))) {
           m_radio->m_tracks.push_back(TrackStore::getInstance()->getTrack(sp_search_track(m_radio->m_currentSearch, index)));
         }
         m_radio->m_currentResultPos++;

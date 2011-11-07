@@ -14,6 +14,7 @@
     <string id="30406">Fanart</string>
     <string id="30407">Use spotify fanart</string>
     <string id="30408">Use custom fanart image</string>
+    <string id="30409">Use volume normalization</string>
 
     <string id="30420">Performance</string>
     <string id="30421">Search: Max number of artists</string>
@@ -22,7 +23,7 @@
     <string id="30424">Artist browse: Max number of similar artists</string>
     <string id="30425">Artist browse: Max number of albums</string>
     <string id="30426">Artist browse: Max number of tracks</string>
-    <string id="30427">Preload artist details (true  = more metadata but slower search and browse)</string>
+    <string id="30427">Preload artist albums and tracks</string>
 
     <string id="30430">Top lists</string>
     <string id="30431">Show lists for region</string>
