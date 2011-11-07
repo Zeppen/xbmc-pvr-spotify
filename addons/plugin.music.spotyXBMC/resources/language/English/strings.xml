@@ -42,18 +42,20 @@
     <string id="30448">Hard Rock</string>
     <string id="30449">Heavy Metal</string>
     <string id="30450">Rap</string>
-    <string id="30450">House</string>
-    <string id="30451">Jazz</string>
-    <string id="30452">Ner Wave</string>
-    <string id="30453">RNB</string>
-    <string id="30454">Pop</string>
-    <string id="30455">Punk</string>
-    <string id="30456">Reggae</string>
-    <string id="30457">Pop</string>
-    <string id="30458">Soul</string>
-    <string id="30459">Techno</string>
+    <string id="30451">House</string>
+    <string id="30452">Jazz</string>
+    <string id="30453">New Wave</string>
+    <string id="30454">RNB</string>
+    <string id="30455">Pop</string>
+    <string id="30456">Punk</string>
+    <string id="30457">Reggae</string>
+    <string id="30458">Pop Rock</string>
+    <string id="30459">Soul</string>
+    <string id="30462">Techno</string>
     <string id="30460">From decade</string>
     <string id="30461">To decade</string>
+
+
     <string id="30470">Number of radio tracks</string>
 
     <string id="30500">Top 100 Spotify artists</string>
