@@ -35,6 +35,35 @@
     <string id="30441">Spotify radio2</string>
     <string id="30442">Name</string>
     <string id="30443">Alternative</string>
+    <string id="30444">Black Metal</string>
+    <string id="30445">Blues</string>
+    <string id="30446">Classical</string>
+    <string id="30447">Country</string>
+    <string id="30448">Club/House</string>
+    <string id="30449">Death Metal</string>
+    <string id="30450">Electronic</string>
+    <string id="30451">Emo</string>
+    <string id="30452">Folk</string>
+    <string id="30453">Hardcore</string>
+    <string id="30454">Heavy Metal</string>
+    <string id="30455">Hip-hop</string>
+    <string id="30456">Indie</string>
+    <string id="30457">Jazz</string>
+    <string id="30458">Latin</string>
+    <string id="30459">Pop</string>
+    <string id="30462">Punk</string>
+    <string id="30463">Reggea</string>
+    <string id="30464">R&B</string>
+    <string id="30465">Rock</string>
+    <string id="30466">Singer-songwriter</string>
+    <string id="30467">Soul</string>
+    <string id="30468">Trance</string>
+    <string id="30469">60s</string>
+    <string id="30471">70s</string>
+    <string id="30472">80s</string>
+
+    
+  <!--<string id="30443">Alternative</string>
     <string id="30444">Blues</string>
     <string id="30445">Country</string>
     <string id="30446">Disco</string>
@@ -51,7 +80,8 @@
     <string id="30457">Reggae</string>
     <string id="30458">Pop Rock</string>
     <string id="30459">Soul</string>
-    <string id="30462">Techno</string>
+    <string id="30462">Techno</string>-->
+    
     <string id="30460">From decade</string>
     <string id="30461">To decade</string>
 

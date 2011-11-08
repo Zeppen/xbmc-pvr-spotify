@@ -79,24 +79,34 @@ namespace addon_music_spotify {
       bool enable;
       int id;
     } radiogenres[] = {
-    		{ getAddonSetting("radio1genre1") == "true", SP_RADIO_GENRE_ALT_POP_ROCK },
-    		{ getAddonSetting("radio1genre2") == "true", SP_RADIO_GENRE_BLUES },
-    		{ getAddonSetting("radio1genre3") == "true", SP_RADIO_GENRE_COUNTRY },
-    		{ getAddonSetting("radio1genre4") == "true", SP_RADIO_GENRE_DISCO },
-    		{ getAddonSetting("radio1genre5") == "true", SP_RADIO_GENRE_FUNK },
-    		{ getAddonSetting("radio1genre6") == "true", SP_RADIO_GENRE_HARD_ROCK },
-    		{ getAddonSetting("radio1genre7") == "true", SP_RADIO_GENRE_HEAVY_METAL },
-    		{ getAddonSetting("radio1genre8") == "true", SP_RADIO_GENRE_RAP },
-    		{ getAddonSetting("radio1genre9") == "true", SP_RADIO_GENRE_HOUSE },
-    		{ getAddonSetting("radio1genre10") == "true", SP_RADIO_GENRE_JAZZ },
-    		{ getAddonSetting("radio1genre11") == "true", SP_RADIO_GENRE_NEW_WAVE },
-    		{ getAddonSetting("radio1genre12") == "true", SP_RADIO_GENRE_RNB },
-    		{ getAddonSetting("radio1genre13") == "true", SP_RADIO_GENRE_POP },
-    		{ getAddonSetting("radio1genre14") == "true", SP_RADIO_GENRE_PUNK },
-    		{ getAddonSetting("radio1genre15") == "true", SP_RADIO_GENRE_REGGAE },
-    		{ getAddonSetting("radio1genre16") == "true", SP_RADIO_GENRE_POP_ROCK },
-    		{ getAddonSetting("radio1genre17") == "true", SP_RADIO_GENRE_SOUL },
-    		{ getAddonSetting("radio1genre18") == "true", SP_RADIO_GENRE_TECHNO }, };
+    		{ getAddonSetting("radio1genre1") == "true", 0x1 },
+    		{ getAddonSetting("radio1genre2") == "true", 0x2 },
+    		{ getAddonSetting("radio1genre3") == "true", 0x4 },
+    		{ getAddonSetting("radio1genre4") == "true", 0x8 },
+    		{ getAddonSetting("radio1genre5") == "true", 0x10 },
+    		{ getAddonSetting("radio1genre6") == "true", 0x20 },
+    		{ getAddonSetting("radio1genre7") == "true", 0x40 },
+    		{ getAddonSetting("radio1genre8") == "true", 0x80 },
+    		{ getAddonSetting("radio1genre9") == "true", 0x100 },
+    		{ getAddonSetting("radio1genre10") == "true", 0x200 },
+    		{ getAddonSetting("radio1genre11") == "true", 0x400 },
+    		{ getAddonSetting("radio1genre12") == "true", 0x800 },
+    		{ getAddonSetting("radio1genre13") == "true", 0x1000 },
+    		{ getAddonSetting("radio1genre14") == "true", 0x2000 },
+    		{ getAddonSetting("radio1genre15") == "true", 0x4000 },
+    		{ getAddonSetting("radio1genre16") == "true", 0x8000 },
+    		{ getAddonSetting("radio1genre17") == "true", 0x10000 },
+    		{ getAddonSetting("radio1genre18") == "true", 0x20000 }, 
+			{ getAddonSetting("radio1genre19") == "true", 0x40000 },
+    		{ getAddonSetting("radio1genre20") == "true", 0x80000 },
+    		{ getAddonSetting("radio1genre21") == "true", 0x100000 },
+    		{ getAddonSetting("radio1genre22") == "true", 0x200000 },
+    		{ getAddonSetting("radio1genre23") == "true", 0x400000 },
+    		{ getAddonSetting("radio1genre24") == "true", 0x800000 },
+    		{ getAddonSetting("radio1genre25") == "true", 0x1000000 },
+    		{ getAddonSetting("radio1genre26") == "true", 0x2000000 },
+    		{ getAddonSetting("radio1genre27") == "true", 0x4000000 }, };
+
     int mask = 0;
     for (int i = 0; i < sizeof(radiogenres) / sizeof(radiogenres[0]); i++)
       if (radiogenres[i].enable) mask |= radiogenres[i].id;
@@ -109,13 +119,34 @@ namespace addon_music_spotify {
     struct {
       bool enable;
       int id;
-    } radiogenres[] = { { getAddonSetting("radio2genre1") == "true", SP_RADIO_GENRE_ALT_POP_ROCK }, { getAddonSetting("radio2genre2") == "true", SP_RADIO_GENRE_BLUES }, { getAddonSetting(
-        "radio2genre3") == "true", SP_RADIO_GENRE_COUNTRY }, { getAddonSetting("radio2genre4") == "true", SP_RADIO_GENRE_DISCO }, { getAddonSetting("radio2genre5") == "true", SP_RADIO_GENRE_FUNK }, {
-        getAddonSetting("radio2genre6") == "true", SP_RADIO_GENRE_HARD_ROCK }, { getAddonSetting("radio2genre7") == "true", SP_RADIO_GENRE_HEAVY_METAL }, { getAddonSetting("radio2genre8") == "true",
-        SP_RADIO_GENRE_RAP }, { getAddonSetting("radio2genre9") == "true", SP_RADIO_GENRE_HOUSE }, { getAddonSetting("radio2genre10") == "true", SP_RADIO_GENRE_JAZZ }, { getAddonSetting(
-        "radio2genre11") == "true", SP_RADIO_GENRE_NEW_WAVE }, { getAddonSetting("radio2genre12") == "true", SP_RADIO_GENRE_RNB }, { getAddonSetting("radio2genre13") == "true", SP_RADIO_GENRE_POP }, {
-        getAddonSetting("radio2genre14") == "true", SP_RADIO_GENRE_PUNK }, { getAddonSetting("radio2genre15") == "true", SP_RADIO_GENRE_REGGAE }, { getAddonSetting("radio2genre16") == "true",
-        SP_RADIO_GENRE_POP_ROCK }, { getAddonSetting("radio2genre17") == "true", SP_RADIO_GENRE_SOUL }, { getAddonSetting("radio2genre18") == "true", SP_RADIO_GENRE_TECHNO }, };
+    }radiogenres[] = {
+    		{ getAddonSetting("radio2genre1") == "true", 0x1 },
+    		{ getAddonSetting("radio2genre2") == "true", 0x2 },
+    		{ getAddonSetting("radio2genre3") == "true", 0x4 },
+    		{ getAddonSetting("radio2genre4") == "true", 0x8 },
+    		{ getAddonSetting("radio2genre5") == "true", 0x10 },
+    		{ getAddonSetting("radio2genre6") == "true", 0x20 },
+    		{ getAddonSetting("radio2genre7") == "true", 0x40 },
+    		{ getAddonSetting("radio2genre8") == "true", 0x80 },
+    		{ getAddonSetting("radio2genre9") == "true", 0x100 },
+    		{ getAddonSetting("radio2genre10") == "true", 0x200 },
+    		{ getAddonSetting("radio2genre11") == "true", 0x400 },
+    		{ getAddonSetting("radio2genre12") == "true", 0x800 },
+    		{ getAddonSetting("radio2genre13") == "true", 0x1000 },
+    		{ getAddonSetting("radio2genre14") == "true", 0x2000 },
+    		{ getAddonSetting("radio2genre15") == "true", 0x4000 },
+    		{ getAddonSetting("radio2genre16") == "true", 0x8000 },
+    		{ getAddonSetting("radio2genre17") == "true", 0x10000 },
+    		{ getAddonSetting("radio2genre18") == "true", 0x20000 }, 
+			{ getAddonSetting("radio2genre19") == "true", 0x40000 },
+    		{ getAddonSetting("radio2genre20") == "true", 0x80000 },
+    		{ getAddonSetting("radio2genre21") == "true", 0x100000 },
+    		{ getAddonSetting("radio2genre22") == "true", 0x200000 },
+    		{ getAddonSetting("radio2genre23") == "true", 0x400000 },
+    		{ getAddonSetting("radio2genre24") == "true", 0x800000 },
+    		{ getAddonSetting("radio2genre25") == "true", 0x1000000 },
+    		{ getAddonSetting("radio2genre26") == "true", 0x2000000 },
+    		{ getAddonSetting("radio2genre27") == "true", 0x4000000 }, };
     int mask = 0;
     for (int i = 0; i < sizeof(radiogenres) / sizeof(radiogenres[0]); i++)
       if (radiogenres[i].enable) mask |= radiogenres[i].id;
