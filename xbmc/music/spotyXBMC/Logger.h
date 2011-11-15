@@ -35,7 +35,7 @@ namespace addon_music_spotify {
     Logger();
     virtual ~Logger();
     static void printOut(char* text) {
-	    CLog::Log(LOGDEBUG, "spotifylog: %s", text);
+	  CLog::Log(LOGDEBUG, "spotifylog: %s", text);
       cout << text << "\n";
     }
     static void printOut(const char* text) {
@@ -47,7 +47,7 @@ namespace addon_music_spotify {
       cout << text << "\n";
     }
     static void printOut(string text) {
-	    CLog::Log(LOGDEBUG, "spotifylog: %s", text.c_str());
+	  CLog::Log(LOGDEBUG, "spotifylog: %s", text.c_str());
       cout << text << "\n";
     }
   };

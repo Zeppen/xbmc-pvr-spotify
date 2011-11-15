@@ -76,7 +76,8 @@ namespace addon_music_spotify {
 	 
       config.api_version = SPOTIFY_API_VERSION;
       Logger::printOut("API version:");
-      Logger::printOut(SPOTIFY_API_VERSION);
+      char* version = new char[20];
+      Logger::printOut(itoa(SPOTIFY_API_VERSION, version, 10));
 	  
 	  //the api is not copying the string so create a new c string
 	  CStdString location = Settings::getCachePath();
@@ -85,10 +86,12 @@ namespace addon_music_spotify {
       strcpy (cstr, location.c_str());
       config.cache_location = cstr;
       config.settings_location = cstr;
+      config.tracefile = NULL;
 
       config.application_key = g_appkey;
       config.application_key_size = g_appkey_size;
       config.user_agent = "spotyXBMC2";
+      config.device_id = "XBMC htpc";
 
       sp_session_callbacks cb = m_sessionCallbacks.getCallbacks();
       config.callbacks = &cb;
@@ -100,6 +103,7 @@ namespace addon_music_spotify {
 
       if (SP_ERROR_OK != error) {
         Logger::printOut("Failed to create session: error:");
+        Logger::printOut(sp_error_message(error));
         m_session = NULL;
         return false;
       }
