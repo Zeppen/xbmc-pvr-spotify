@@ -304,9 +304,15 @@ void CWeatherJob::SetFromProperties()
     m_info.currentWind.Format(g_localizeStrings.Get(434).c_str(),
         direction, speed, g_langInfo.GetSpeedUnitString().c_str());
   }
+  CStdString windspeed;
+  windspeed.Format("%i %s",speed,g_langInfo.GetSpeedUnitString().c_str());
+  window->SetProperty("Current.WindSpeed",windspeed);
   FormatTemperature(m_info.currentDewPoint,
       strtol(window->GetProperty("Current.DewPoint").asString().c_str(),0,10));
-  m_info.currentHumidity.Format("%s%%",window->GetProperty("Current.Humidity").asString().c_str());
+  if (window->GetProperty("Current.Humidity").asString().empty())
+    m_info.currentHumidity.clear();
+  else
+    m_info.currentHumidity.Format("%s%%",window->GetProperty("Current.Humidity").asString().c_str());
   m_info.location           = window->GetProperty("Current.Location").asString();
   for (int i=0;i<4;++i)
   {
