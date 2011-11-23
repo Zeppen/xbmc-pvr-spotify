@@ -41,11 +41,13 @@ namespace addon_music_spotify {
     m_topLists = NULL;
     m_spContainer = sp_session_playlistcontainer(Session::getInstance()->getSpSession());
     m_spStarredList = sp_session_starred_create(Session::getInstance()->getSpSession());
+    m_spInboxList = sp_session_inbox_create(Session::getInstance()->getSpSession());
 
     for (int i = 0; i < sp_playlistcontainer_num_playlists(m_spContainer); i++) {
       sp_playlist_set_in_ram(Session::getInstance()->getSpSession(), sp_playlistcontainer_playlist(m_spContainer, i), true);
     }
 
+    sp_playlist_set_in_ram(Session::getInstance()->getSpSession(), m_spInboxList , true);
     sp_playlist_set_in_ram(Session::getInstance()->getSpSession(), m_spStarredList, true);
 
     m_pcCallbacks.playlist_added = &pc_playlist_added;
@@ -107,6 +109,11 @@ namespace addon_music_spotify {
 
     vector<SxPlaylist*> newPlaylists;
     int playlistNumber = 0;
+    //add the inbox playlist first
+    newPlaylists.push_back(new SxPlaylist(store->m_spInboxList, playlistNumber, false));
+    playlistNumber++;
+
+
     for (int i = 0; i < sp_playlistcontainer_num_playlists(store->getContainer()); i++) {
       sp_playlist_type spType = sp_playlistcontainer_playlist_type(store->m_spContainer, i);
       if (spType == SP_PLAYLIST_TYPE_PLAYLIST) {

@@ -68,7 +68,8 @@ namespace addon_music_spotify {
   }
 
   const char* SxPlaylist::getName() {
-    return sp_playlist_name(m_spPlaylist);
+	 //not the most elegant solution, but if the index is 0, its the inbox
+    return m_index == 0 ? Settings::getInboxString().GetBufferSetLength(Settings::getInboxString().GetLength() +1) : sp_playlist_name(m_spPlaylist);
   }
 
   const char* SxPlaylist::getOwnerName() {

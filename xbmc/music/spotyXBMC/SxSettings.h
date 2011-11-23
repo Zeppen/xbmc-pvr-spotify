@@ -125,6 +125,9 @@ namespace addon_music_spotify {
     static CStdString getSimilarArtistsString() {
       return getAddonString(30504);
     }
+    static CStdString getInboxString() {
+      return getAddonString(30505);
+    }
 
   private:
     static CStdString getAddonSetting(CStdString key);

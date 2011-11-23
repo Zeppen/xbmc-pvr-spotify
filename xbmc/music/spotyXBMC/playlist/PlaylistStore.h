@@ -75,6 +75,7 @@ namespace addon_music_spotify {
     StarredList* m_starredList;
     TopLists* m_topLists;
     sp_playlist* m_spStarredList;
+    sp_playlist* m_spInboxList;
     sp_playlistcontainer_callbacks m_pcCallbacks;
     sp_playlistcontainer *m_spContainer;
 
