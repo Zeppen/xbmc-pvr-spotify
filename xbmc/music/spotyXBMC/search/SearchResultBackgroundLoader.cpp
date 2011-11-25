@@ -53,6 +53,7 @@ namespace addon_music_spotify {
     if (m_search->m_cancelSearch) {
       Logger::printOut("search results arived, aborting due to request");
       sp_search_release(m_search->m_currentSearch);
+      Session::getInstance()->unlock();
       return;
     }
     Logger::printOut("search results arived");
