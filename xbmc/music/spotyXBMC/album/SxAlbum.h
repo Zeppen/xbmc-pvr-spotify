@@ -75,6 +75,9 @@ namespace addon_music_spotify {
       return m_tracks;
     }
 
+    bool isStarred();
+    bool toggleStar();
+
     bool getTrackItems(CFileItemList& items);
 
     bool hasTracksAndDetails() {

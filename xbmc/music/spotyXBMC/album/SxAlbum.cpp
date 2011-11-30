@@ -66,6 +66,24 @@ namespace addon_music_spotify {
     delete m_uri;
   }
 
+  bool SxAlbum::isStarred(){
+	for (int i = 0; i < m_tracks.size(); i++) {
+	  if (!sp_track_is_starred(Session::getInstance()->getSpSession(),m_tracks[i]->getSpTrack())) return false;
+	}
+	return true;
+  }
+
+  bool SxAlbum::toggleStar(){
+    sp_track *tracks[m_tracks.size()];
+	for (int i = 0; i < m_tracks.size(); i++) {
+      tracks[i] = m_tracks[i]->getSpTrack();
+	}
+	bool isStarred = this->isStarred();
+    sp_track_set_starred(Session::getInstance()->getSpSession(),tracks,m_tracks.size(),!isStarred);
+
+    return true;
+  }
+
   void SxAlbum::doLoadTracksAndDetails() {
     if (m_hasTracksAndDetails || m_isLoadingTracks) return;
 

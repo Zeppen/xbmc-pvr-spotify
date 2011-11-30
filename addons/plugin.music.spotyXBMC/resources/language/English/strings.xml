@@ -92,6 +92,11 @@
     <string id="30501">Top 100 Spotify albums</string>
     <string id="30502">Top 100 Spotify songs</string>
     <string id="30503">Spotify radio: </string>
-    <string id="30504">Similar artists</string>
-    <string id="30505">Spotify inbox</string>
+    <string id="30504">* Similar artists</string>
+    <string id="30505">* Spotify inbox</string>
+    
+    <string id="30600">Spotify: star track</string>
+    <string id="30601">Spotify: unstar track</string>
+    <string id="30602">Spotify: star album</string>
+    <string id="30603">Spotify: unstar album</string>
 </strings>

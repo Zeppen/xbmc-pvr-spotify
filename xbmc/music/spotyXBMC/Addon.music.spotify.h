@@ -29,6 +29,7 @@
 #include <string>
 #include "FileItem.h"
 #include "../../cores/paplayer/ICodec.h"
+#include "../../dialogs/GUIDialogContextMenu.h"
 
 using namespace std;
 using namespace addon_music_spotify;
@@ -50,12 +51,14 @@ public:
   bool GetPlaylists(CFileItemList& items);
   bool GetTopLists(CFileItemList& items);
   bool GetCustomEntries(CFileItemList& items);
+  bool GetContextButtons(CFileItemPtr& item, CContextButtons &buttons);
+  bool ToggleStarTrack(CFileItemPtr& item);
+  bool ToggleStarAlbum(CFileItemPtr& item);
   bool Search(CStdString query, CFileItemList& items);
   ICodec* GetCodec();
 
 private:
   bool m_isEnabled;
-
   bool getAlbumTracks(CFileItemList& items, CStdString& path);
   bool getArtistTracks(CFileItemList& items, CStdString& path);
   bool getAllTracks(CFileItemList& items, CStdString& path);

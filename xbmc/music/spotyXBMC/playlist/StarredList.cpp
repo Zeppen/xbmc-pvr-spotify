@@ -52,8 +52,8 @@ namespace addon_music_spotify {
 
   void StarredList::populateAlbumsAndArtists() {
     Logger::printOut("Populate starred albums and artists");
-    //ok so we got the tracks list populated within the playlist, now create the albums we want
-    //we cant do it in this thread becouse the albums will never load... create a new thread
+    //OK so we got the tracks list populated within the playlist, now create the albums we want
+    //we can't do it in this thread because the albums will never load... create a new thread
     m_backgroundLoader = new StarredBackgroundLoader();
     m_backgroundLoader->Create(true);
   }

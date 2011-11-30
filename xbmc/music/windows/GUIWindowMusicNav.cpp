@@ -19,6 +19,9 @@
  *
  */
 
+//spotify include spotify hooks so that we can allow toggling of stared tracks and albums
+#include "music/spotyXBMC/Addon.music.spotify.h"
+
 #include "GUIWindowMusicNav.h"
 #include "utils/FileUtils.h"
 #include "utils/URIUtils.h"
@@ -425,6 +428,10 @@ void CGUIWindowMusicNav::GetContextButtons(int itemNumber, CContextButtons &butt
        !item->IsLastFM() && !item->m_bIsFolder)
     {
       buttons.Add(CONTEXT_BUTTON_SONG_INFO, 658);
+
+      //Spotify allow spotyxbmc to add contextbuttons to songs and albums, for now its the star/unstar capability
+      g_spotify->GetContextButtons(item,buttons);
+
     }
     else if (item->IsVideoDb())
     {
@@ -549,6 +556,18 @@ bool CGUIWindowMusicNav::OnContextButton(int itemNumber, CONTEXT_BUTTON button)
 
   switch (button)
   {
+  //spotify toggle star for track
+
+  case CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_TRACK:
+  {
+	  g_spotify->ToggleStarTrack(item);
+	  return true;
+  }
+  case CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_ALBUM:
+  {
+	  g_spotify->ToggleStarAlbum(item);
+	  return true;
+  }
   case CONTEXT_BUTTON_INFO:
     {
       if (!item->IsVideoDb())

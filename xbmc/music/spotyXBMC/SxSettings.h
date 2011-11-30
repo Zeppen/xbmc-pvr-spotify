@@ -128,6 +128,18 @@ namespace addon_music_spotify {
     static CStdString getInboxString() {
       return getAddonString(30505);
     }
+    static CStdString getStarTrackString() {
+      return getAddonString(30600);
+    }
+    static CStdString getUnstarTrackString() {
+      return getAddonString(30601);
+    }
+    static CStdString getStarAlbumString() {
+      return getAddonString(30602);
+    }
+    static CStdString getUnstarAlbumString() {
+      return getAddonString(30603);
+    }
 
   private:
     static CStdString getAddonSetting(CStdString key);

@@ -411,6 +411,73 @@ bool Addon_music_spotify::GetCustomEntries(CFileItemList& items) {
   return true;
 }
 
+bool Addon_music_spotify::GetContextButtons(CFileItemPtr& item, CContextButtons &buttons){
+	if (isReady()) {
+		  CURL url(item->GetPath());
+		  CStdString uri = url.GetFileNameWithoutPath();
+		  //the path will look something like this "musicdb://2/spotify:artist:0LcJLqbBmaGUft1e9Mm8HV/-1/"
+		  //if we are trying to show all tracks for a spotify artist, we cant use the params becouse they are only integers.
+
+		  if (uri.Left(13).Equals("spotify:album")) {
+			uri = uri.Left(uri.Find('#'));
+			sp_link *spLink = sp_link_create_from_string(uri);
+			sp_album *spAlbum = sp_link_as_album(spLink);
+			SxAlbum* salbum = AlbumStore::getInstance()->getAlbum(spAlbum, true);
+			if (salbum){
+			  buttons.Add(CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_ALBUM, salbum->isStarred() ? Settings::getUnstarAlbumString() : Settings::getStarAlbumString());
+			  AlbumStore::getInstance()->removeAlbum(salbum);
+			}
+			sp_link_release(spLink);
+			sp_album_release(spAlbum);
+		  }
+		  else if (uri.Left(13).Equals("spotify:track")) {
+		    uri = uri.Left(uri.Find('.'));
+			Logger::printOut(uri);
+			sp_link *spLink = sp_link_create_from_string(uri);
+			sp_track* spTrack = sp_link_as_track(spLink);
+			buttons.Add(CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_TRACK,sp_track_is_starred(Session::getInstance()->getSpSession(), spTrack) ? Settings::getUnstarTrackString(): Settings::getStarTrackString());
+			//SxAlbum* salbum = AlbumStore::getInstance()->getAlbum(sp_track_album(spTrack), true);
+			//if (salbum){
+			//  buttons.Add(CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_ALBUM, salbum->isStarred() ? Settings::getUnstarAlbumString() : Settings::getStarAlbumString());
+			//  AlbumStore::getInstance()->removeAlbum(salbum);
+			//}
+			//sp_link_release(spLink);
+			sp_link_release(spLink);
+			sp_track_release(spTrack);
+		  }
+	}
+	return true;
+}
+
+bool Addon_music_spotify::ToggleStarTrack(CFileItemPtr& item){
+	if (isReady()) {
+      CURL url(item->GetPath());
+	  CStdString uri = url.GetFileNameWithoutPath();
+      uri = uri.Left(uri.Find('.'));
+	  Logger::printOut(uri);
+	  sp_link *spLink = sp_link_create_from_string(uri);
+	  sp_track* spTrack = sp_link_as_track(spLink);
+	  sp_track_set_starred(Session::getInstance()->getSpSession(),&spTrack,1, !sp_track_is_starred(Session::getInstance()->getSpSession(), spTrack));
+	  sp_link_release(spLink);
+	  sp_track_release(spTrack);
+	}
+	return true;
+}
+
+bool Addon_music_spotify::ToggleStarAlbum(CFileItemPtr& item){
+	/*if (isReady()) {
+		CStdString uri = uri.Left(uri.Find('#'));
+		sp_link *spLink = sp_link_create_from_string(uri);
+		sp_album *spAlbum = sp_link_as_album(spLink);
+		SxAlbum* salbum = AlbumStore::getInstance()->getAlbum(spAlbum, true);
+		if (salbum)
+		  salbum->toggleStar();
+		sp_link_release(spLink);
+		sp_album_release(spAlbum);
+	}*/
+	return true;
+}
+
 bool Addon_music_spotify::getTopListArtists(CFileItemList& items) {
   Logger::printOut("get toplist artists");
   if (isReady()) {
