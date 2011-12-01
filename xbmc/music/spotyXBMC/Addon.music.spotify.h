@@ -51,14 +51,18 @@ public:
   bool GetPlaylists(CFileItemList& items);
   bool GetTopLists(CFileItemList& items);
   bool GetCustomEntries(CFileItemList& items);
+
+  // Context menu related functions
   bool GetContextButtons(CFileItemPtr& item, CContextButtons &buttons);
   bool ToggleStarTrack(CFileItemPtr& item);
   bool ToggleStarAlbum(CFileItemPtr& item);
+
   bool Search(CStdString query, CFileItemList& items);
   ICodec* GetCodec();
 
 private:
   bool m_isEnabled;
+  bool getAlbumTracksFromTrack(CFileItemList& items, CStdString& trackUri);
   bool getAlbumTracks(CFileItemList& items, CStdString& path);
   bool getArtistTracks(CFileItemList& items, CStdString& path);
   bool getAllTracks(CFileItemList& items, CStdString& path);
@@ -68,6 +72,7 @@ private:
 
   bool getAllAlbums(CFileItemList& items, CStdString& path);
   bool getArtistAlbums(CFileItemList& items, CStdString& path);
+  bool getArtistAlbums(CFileItemList& items, sp_artist* spArtist);
   bool getTopListAlbums(CFileItemList& items);
 
   bool getAllArtists(CFileItemList& items);

@@ -31,114 +31,128 @@
 
 namespace addon_music_spotify {
 
-  SxAlbum::SxAlbum(sp_album *album, bool loadTracksAndDetails) {
-    m_spAlbum = album;
-    // Logger::printOut("creating album");
-    while (!sp_album_is_loaded(m_spAlbum))
-      ;
-    m_references = 1;
-    m_numberOfDiscs = 1;
-    m_isLoadingTracks = false;
-    m_hasTracksAndDetails = false;
-    m_hasThumb = false;
-    m_thumb = NULL;
-    m_review = "none";
-    m_year = sp_album_year(m_spAlbum);
-    sp_link *link = sp_link_create_from_album(album);
-    m_uri = new char[256];
-    sp_link_as_string(link, m_uri, 256);
-    sp_link_release(link);
-    m_rating = 0;
-    if (loadTracksAndDetails) doLoadTracksAndDetails();
-    doLoadThumb();
-    // Logger::printOut("creating album slut");
-  }
+SxAlbum::SxAlbum(sp_album *album, bool loadTracksAndDetails) {
+	m_spAlbum = album;
+	// Logger::printOut("creating album");
+	while (!sp_album_is_loaded(m_spAlbum))
+		;
+	m_references = 1;
+	m_numberOfDiscs = 1;
+	m_isLoadingTracks = false;
+	m_hasTracksAndDetails = false;
+	m_hasThumb = false;
+	m_thumb = NULL;
+	m_review = "none";
+	m_year = sp_album_year(m_spAlbum);
+	sp_link *link = sp_link_create_from_album(album);
+	m_uri = new char[256];
+	sp_link_as_string(link, m_uri, 256);
+	sp_link_release(link);
+	m_rating = 0;
+	if (loadTracksAndDetails)
+		doLoadTracksAndDetails();
+	doLoadThumb();
+	// Logger::printOut("creating album slut");
+}
 
-  SxAlbum::~SxAlbum() {
-    //while (!m_tracks.empty()) {
-    //  TrackStore::getInstance()->removeTrack(m_tracks.back());
-    //  m_tracks.pop_back();
-    //}
-    removeAllTracks();
+SxAlbum::~SxAlbum() {
+	//while (!m_tracks.empty()) {
+	//  TrackStore::getInstance()->removeTrack(m_tracks.back());
+	//  m_tracks.pop_back();
+	//}
+	removeAllTracks();
 
-    if (m_thumb) ThumbStore::getInstance()->removeThumb(m_thumb);
-    sp_album_release(m_spAlbum);
-    delete m_uri;
-  }
+	if (m_thumb)
+		ThumbStore::getInstance()->removeThumb(m_thumb);
+	sp_album_release(m_spAlbum);
+	delete m_uri;
+}
 
-  bool SxAlbum::isStarred(){
+bool SxAlbum::isStarred() {
 	for (int i = 0; i < m_tracks.size(); i++) {
-	  if (!sp_track_is_starred(Session::getInstance()->getSpSession(),m_tracks[i]->getSpTrack())) return false;
+		if (!sp_track_is_starred(Session::getInstance()->getSpSession(),
+				m_tracks[i]->getSpTrack()))
+			return false;
 	}
 	return true;
-  }
+}
 
-  bool SxAlbum::toggleStar(){
-    sp_track *tracks[m_tracks.size()];
+bool SxAlbum::toggleStar() {
+	Logger::printOut("toggle album star");
+	sp_track *tracks[m_tracks.size()];
 	for (int i = 0; i < m_tracks.size(); i++) {
-      tracks[i] = m_tracks[i]->getSpTrack();
+		tracks[i] = m_tracks[i]->getSpTrack();
 	}
+	Logger::printOut("toggle album star2");
 	bool isStarred = this->isStarred();
-    sp_track_set_starred(Session::getInstance()->getSpSession(),tracks,m_tracks.size(),!isStarred);
+	sp_track_set_starred(Session::getInstance()->getSpSession(), tracks,
+			m_tracks.size(), !isStarred);
+	Logger::printOut("toggle album star3");
+	return true;
+}
 
-    return true;
-  }
+void SxAlbum::doLoadTracksAndDetails() {
+	if (m_hasTracksAndDetails || m_isLoadingTracks)
+		return;
 
-  void SxAlbum::doLoadTracksAndDetails() {
-    if (m_hasTracksAndDetails || m_isLoadingTracks) return;
+	sp_albumbrowse_create(Session::getInstance()->getSpSession(), m_spAlbum,
+			&cb_albumBrowseComplete, this);
+	m_isLoadingTracks = true;
+}
 
-    sp_albumbrowse_create(Session::getInstance()->getSpSession(), m_spAlbum, &cb_albumBrowseComplete, this);
-    m_isLoadingTracks = true;
-  }
+void SxAlbum::doLoadThumb() {
+	if (m_hasThumb)
+		return;
+	//Logger::printOut("Requesting thumb for album");
+	const byte* image = sp_album_cover(m_spAlbum);
+	if (image) {
+		m_thumb = ThumbStore::getInstance()->getThumb(image);
+		if (m_thumb)
+			m_hasThumb = true;
+	}
+}
 
-  void SxAlbum::doLoadThumb() {
-    if (m_hasThumb) return;
-    //Logger::printOut("Requesting thumb for album");
-    const byte* image = sp_album_cover(m_spAlbum);
-    if (image) {
-      m_thumb = ThumbStore::getInstance()->getThumb(image);
-      if (m_thumb) m_hasThumb = true;
-    }
-  }
+void SxAlbum::tracksLoaded(sp_albumbrowse *result) {
+	if (sp_albumbrowse_error(result) == SP_ERROR_OK) {
+		m_review = sp_albumbrowse_review(result);
+		//remove the links from the review text (it contains spotify uris so maybe we can do something fun with it later)
+		Utils::cleanTags(m_review);
 
-  void SxAlbum::tracksLoaded(sp_albumbrowse *result) {
-    if (sp_albumbrowse_error(result) == SP_ERROR_OK) {
-      m_review = sp_albumbrowse_review(result);
-      //remove the links from the review text (it contains spotify uris so maybe we can do something fun with it later)
-      Utils::cleanTags(m_review);
+		//get some ratings, the album dont have rating so iterate through the tracks and calculate a mean value for the album
+		float rating = 0;
 
-      //get some ratings, the album dont have rating so iterate through the tracks and calculate a mean value for the album
-      float rating = 0;
+		for (int index = 0; index < sp_albumbrowse_num_tracks(result); index++) {
+			sp_track *track = sp_albumbrowse_track(result, index);
+			if (m_numberOfDiscs < sp_track_disc(track))
+				m_numberOfDiscs = sp_track_disc(track);
+			m_tracks.push_back(
+					TrackStore::getInstance()->getTrack(
+							sp_albumbrowse_track(result, index)));
 
-      for (int index = 0; index < sp_albumbrowse_num_tracks(result); index++) {
-        sp_track *track = sp_albumbrowse_track(result, index);
-        if (m_numberOfDiscs < sp_track_disc(track)) m_numberOfDiscs = sp_track_disc(track);
-        m_tracks.push_back(TrackStore::getInstance()->getTrack(sp_albumbrowse_track(result, index)));
+			rating += sp_track_popularity(track);
+		}
 
-        rating += sp_track_popularity(track);
-      }
+		if (sp_albumbrowse_num_tracks(result) != 0) {
+			m_rating = ceil(rating / (sp_albumbrowse_num_tracks(result)) / 10);
+		}
 
-      if (sp_albumbrowse_num_tracks(result) != 0) {
-        m_rating = ceil(rating / (sp_albumbrowse_num_tracks(result)) / 10);
-      }
+		m_hasTracksAndDetails = true;
+	}
+	m_isLoadingTracks = false;
+	sp_albumbrowse_release(result);
+	//Logger::printOut("album browse complete done");
+}
 
-      m_hasTracksAndDetails = true;
-    }
-    m_isLoadingTracks = false;
-    sp_albumbrowse_release(result);
-    //Logger::printOut("album browse complete done");
-  }
+void SxAlbum::cb_albumBrowseComplete(sp_albumbrowse *result, void *userdata) {
+	//Logger::printOut("album browse complete");
+	SxAlbum *album = (SxAlbum*) (userdata);
+	//Logger::printOut(album->getAlbumName());
+	album->tracksLoaded(result);
+}
 
-  void SxAlbum::cb_albumBrowseComplete(sp_albumbrowse *result, void *userdata) {
-    //Logger::printOut("album browse complete");
-    SxAlbum *album = (SxAlbum*) (userdata);
-    //Logger::printOut(album->getAlbumName());
-    album->tracksLoaded(result);
-  }
-
-  bool SxAlbum::getTrackItems(CFileItemList& items){
-    return true;
-  }
+bool SxAlbum::getTrackItems(CFileItemList& items) {
+	return true;
+}
 
 } /* namespace addon_music_spotify */
 

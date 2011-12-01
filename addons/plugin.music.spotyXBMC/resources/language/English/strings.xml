@@ -95,8 +95,11 @@
     <string id="30504">* Similar artists</string>
     <string id="30505">* Spotify inbox</string>
     
+    <!-- Context buttons -->
     <string id="30600">Spotify: star track</string>
     <string id="30601">Spotify: unstar track</string>
     <string id="30602">Spotify: star album</string>
     <string id="30603">Spotify: unstar album</string>
+    <string id="30604">Spotify: browse album</string>
+    <string id="30605">Spotify: browse artist</string>
 </strings>
