@@ -226,7 +226,7 @@ Modified files:
 
 Buy me a beer?
 -------------
-<a href='http://www.pledgie.com/campaigns/15827'><img alt='Click here to lend your support to: spotyXBMC2 and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/15827.png' border='0' /></a>
+<a href='http://www.pledgie.com/campaigns/15827'><img alt='Click here to lend your support to: spotyXBMC2 and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/15827.png?skin_name=chrome' border='0' /></a>
 Contact
 -------
 
