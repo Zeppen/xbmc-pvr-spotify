@@ -621,8 +621,16 @@ bool Addon_music_spotify::ToggleStarAlbum(CFileItemPtr& item) {
 			return true;
 		}
 		SxAlbum* salbum = AlbumStore::getInstance()->getAlbum(spAlbum, true);
-		if (salbum)
+		if (salbum){
+			while (!Session::getInstance()->lock())
+				;
+			while (!salbum->isLoaded()) {
+				Session::getInstance()->processEvents();
+			}
+			Session::getInstance()->unlock();
 			salbum->toggleStar();
+			AlbumStore::getInstance()->removeAlbum(salbum);
+		}
 		sp_album_release(spAlbum);
 	}
 	return true;
