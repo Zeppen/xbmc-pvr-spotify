@@ -21,6 +21,8 @@ A video showing most of the features can be seen [here](http://www.youtube.com/w
 * Modifying playlists and star/unstar items in the spotify client will result in that the lists is updated in XBMC.
 * Multi-disc albums are split up into separate albums with suffix "disc #".
 * Browsing artist albums will provide a "similar artists" folder with spotify similar artists.
+* Navigate to the album artist from an album or to the artist or album from a track using the context menu.
+* Star/unstar albums and tracks from within XBMC using the context menu.
 * The settings is changed from within a built-in addon.
 * Two spotify "radios" is provided int the music root, visit the settings to set name, years and genres.
 * Top-lists will update once every 24 hour.
