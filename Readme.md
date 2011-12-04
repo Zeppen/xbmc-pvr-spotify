@@ -42,8 +42,6 @@ Platforms
 
 Known issues
 ------------
-Exiting XBMC will result in a crash, will be fixed soon I hope.
-
 Enable preloading of artists together with preloading of top 100 lists and/or a massive collection of starred tracks will result in a short freeze of XBMC during start (about 5-10 seconds depending on your Internet speed, computer...).
 
 Memory leaks do exist, beware.
@@ -55,6 +53,13 @@ Want to help killing a bug?
 Right now the there is a lot of trace prints, they are printed out straight to the console so be sure that you start XBMC from a console in order to fetch the traces and create a bug report.
 
 Please submit a report to the github issues and provide all relevant data like logs, OS info, what track, playlist or album you have problems with. Or even better, fix it yourself and send me a pull request or an e-mail.
+
+SpotyXBMC2 for OpenElec
+-----------------------------------------------
+Thanks to Tompen a version of OpenElec with spotyXBMC2 integration is available.
+
+Read about it [here](http://openelec.tv/forum/13-general-discussion/7010-spotify).
+
 
 Installation instructions for Microsoft Windows
 -----------------------------------------------
@@ -77,17 +82,17 @@ Installation instructions for Microsoft Windows
 10. Restart XBMC
 
 11. Enable the music library and enjoy spotify music inside xbmc
-    The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
+		The spotify music is located inside the normal music categories, do not try to start the spotyXBMC addon!
 
 
 Installation instructions for Ubuntu Linux 32/64
 ------------------------------------------------
 1. Download libSpotify
 
-   For 32 bit:
-   `$ wget http://developer.spotify.com/download/libspotify/libspotify-10.1.16-Linux-i686-release.tar.gz`
+	For 32 bit:
+	`$ wget http://developer.spotify.com/download/libspotify/libspotify-10.1.16-Linux-i686-release.tar.gz`
 
-   64 bit OS:
+	64 bit OS:
    `$ wget http://developer.spotify.com/download/libspotify/libspotify-10.1.16-Linux-x86_64-release.tar.gz`
 
 2. Untar:
