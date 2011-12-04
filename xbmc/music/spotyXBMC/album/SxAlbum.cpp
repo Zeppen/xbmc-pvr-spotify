@@ -56,10 +56,6 @@ SxAlbum::SxAlbum(sp_album *album, bool loadTracksAndDetails) {
 }
 
 SxAlbum::~SxAlbum() {
-	//while (!m_tracks.empty()) {
-	//  TrackStore::getInstance()->removeTrack(m_tracks.back());
-	//  m_tracks.pop_back();
-	//}
 	removeAllTracks();
 
 	if (m_thumb)

@@ -25,68 +25,70 @@
 
 namespace addon_music_spotify {
 
-  ArtistStore::ArtistStore() {
-  }
+ArtistStore::ArtistStore() {
+}
 
-  void ArtistStore::deInit() {
-    delete m_instance;
-  }
+void ArtistStore::deInit() {
+	delete m_instance;
+}
 
-  ArtistStore::~ArtistStore() {
-    Logger::printOut("deleting artistStore");
-    for (artistMap::iterator it = m_artists.begin(); it != m_artists.end(); ++it) {
-      delete it->second;
-    }
-  }
+ArtistStore::~ArtistStore() {
+	Logger::printOut("deleting artistStore");
+	for (artistMap::iterator it = m_artists.begin(); it != m_artists.end();
+			++it) {
+		delete it->second;
+	}
+}
 
-  ArtistStore* ArtistStore::m_instance = 0;
-  ArtistStore *ArtistStore::getInstance() {
-    return m_instance ? m_instance : (m_instance = new ArtistStore);
-  }
+ArtistStore* ArtistStore::m_instance = 0;
+ArtistStore *ArtistStore::getInstance() {
+	return m_instance ? m_instance : (m_instance = new ArtistStore);
+}
 
-  SxArtist* ArtistStore::getArtist(sp_artist *spArtist, bool loadDetails) {
-    Logger::printOut("loading spArtist");
-    sp_artist_add_ref(spArtist);
-    while (!sp_artist_is_loaded(spArtist))
-      ;
+SxArtist* ArtistStore::getArtist(sp_artist *spArtist,
+		bool loadAlbumsAndTracks) {
+	Logger::printOut("loading spArtist");
+	sp_artist_add_ref(spArtist);
+	while (!sp_artist_is_loaded(spArtist))
+		;
 
-    artistMap::iterator it = m_artists.find(spArtist);
-    SxArtist *artist;
+	artistMap::iterator it = m_artists.find(spArtist);
+	SxArtist *artist;
 
-    if (it == m_artists.end()) {
-      //we need to create it
-      artist = new SxArtist(spArtist, loadDetails);
-      m_artists.insert(artistMap::value_type(spArtist, artist));
-    } else {
-      //Logger::printOut("loading artist from store");
-      artist = it->second;
+	if (it == m_artists.end()) {
+		//we need to create it
+		artist = new SxArtist(spArtist, loadAlbumsAndTracks);
+		m_artists.insert(artistMap::value_type(spArtist, artist));
+	} else {
+		//Logger::printOut("loading artist from store");
+		artist = it->second;
+		if (loadAlbumsAndTracks)
+			artist->doLoadTracksAndAlbums();
 
-      if (loadDetails) artist->doLoadDetails();
+		artist->addRef();
+	}
 
-      artist->addRef();
-    }
+	return artist;
+}
 
-    return artist;
-  }
+void ArtistStore::removeArtist(sp_artist *spArtist) {
+	artistMap::iterator it = m_artists.find(spArtist);
+	SxArtist *artist;
+	if (it != m_artists.end()) {
+		artist = it->second;
+		if (artist->getReferencesCount() <= 1) {
+			m_artists.erase(spArtist);
+			Logger::printOut("deleting artist");
+			delete artist;
+		} else {
+			artist->rmRef();
+			Logger::printOut("lower artist ref");
+		}
+	}
+}
 
-  void ArtistStore::removeArtist(sp_artist *spArtist) {
-    artistMap::iterator it = m_artists.find(spArtist);
-    SxArtist *artist;
-    if (it != m_artists.end()) {
-      artist = it->second;
-      if (artist->getReferencesCount() <= 1) {
-        m_artists.erase(spArtist);
-        Logger::printOut("deleting artist");
-        delete artist;
-      } else {
-        artist->rmRef();
-        Logger::printOut("lower artist ref");
-      }
-    }
-  }
-
-  void ArtistStore::removeArtist(SxArtist* artist) {
-    removeArtist(artist->getSpArtist());
-  }
+void ArtistStore::removeArtist(SxArtist* artist) {
+	removeArtist(artist->getSpArtist());
+}
 
 } /* namespace addon_music_spotify */

@@ -130,25 +130,24 @@ bool Addon_music_spotify::GetAlbums(CFileItemList& items, CStdString& path,
 
 bool Addon_music_spotify::getArtistAlbums(CFileItemList& items,
 		sp_artist* spArtist) {
-	SxArtist* artist = ArtistStore::getInstance()->getArtist(spArtist, false);
+	SxArtist* artist = ArtistStore::getInstance()->getArtist(spArtist, true);
 	if (!artist)
 		return true;
 
 	// Not pretty but we need to advance libspotify if we are loading the artist for the first time here (clicking "browse artist" from the context menu)
+
 	while (!Session::getInstance()->lock())
 		;
-	while (!artist->isLoaded()) {
+	while (!artist->isAlbumsLoaded()) {
 		Session::getInstance()->processEvents();
 	}
 	Session::getInstance()->unlock();
 
-	//if its the first call the artist might not be loaded yet
-	artist->doLoadTracksAndAlbums();
 	Logger::printOut(
 			"get artist albums, done browsing, waiting for all albums to load");
 
-	while (!artist->isAlbumsLoaded()) {
-	}
+//	while (!artist->isAlbumsLoaded()) {
+//	}
 
 	//add the similar artists item
 	if (artist->getArtists().size() > 0) {
