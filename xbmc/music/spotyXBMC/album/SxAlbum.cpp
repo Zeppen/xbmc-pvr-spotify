@@ -75,15 +75,17 @@ bool SxAlbum::isStarred() {
 
 bool SxAlbum::toggleStar() {
 	Logger::printOut("toggle album star");
-	sp_track *tracks[m_tracks.size()];
+	sp_track **tracks = new sp_track*[m_tracks.size()]();
+
 	for (int i = 0; i < m_tracks.size(); i++) {
 		tracks[i] = m_tracks[i]->getSpTrack();
 	}
-	Logger::printOut("toggle album star2");
+
 	bool isStarred = this->isStarred();
 	sp_track_set_starred(Session::getInstance()->getSpSession(), tracks,
 			m_tracks.size(), !isStarred);
-	Logger::printOut("toggle album star3");
+
+	delete tracks;
 	return true;
 }
 
