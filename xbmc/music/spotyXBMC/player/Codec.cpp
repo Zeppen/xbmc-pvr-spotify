@@ -51,7 +51,7 @@ namespace addon_music_spotify {
   }
 
   bool Codec::Init(const CStdString & strFile, unsigned int filecache) {
-    m_bufferSize = 2048 * sizeof(int16_t) * 2 * 10;
+    m_bufferSize = 2048 * sizeof(int16_t) * 50;
     m_buffer = new char[m_bufferSize];
     CStdString uri = URIUtils::GetFileName(strFile);
     CStdString extension = uri.Right(uri.GetLength() - uri.Find('.') - 1);
@@ -76,6 +76,7 @@ namespace addon_music_spotify {
     sp_link *spLink = sp_link_create_from_string(uri);
     m_currentTrack = sp_link_as_track(spLink);
     sp_track_add_ref(m_currentTrack);
+    sp_session_player_prefetch(getSession(), m_currentTrack);
     sp_link_release(spLink);
     m_endOfTrack = false;
     m_bufferPos = 0;
@@ -180,12 +181,15 @@ namespace addon_music_spotify {
 
     if ((m_bufferPos + amountToMove) >= m_bufferSize) {
       amountToMove = m_bufferSize - m_bufferPos;
-      //now the buffer is full, start playing
-      m_startStream = true;
     }
 
     memcpy(m_buffer + m_bufferPos, frames, amountToMove);
     m_bufferPos += amountToMove;
+
+    if (!m_startStream && m_bufferPos == m_bufferSize) {
+      //now the buffer is full, start playing
+      m_startStream = true;
+    }
 
     return amountToMove / ((int) sizeof(int16_t) * channels);
   }
