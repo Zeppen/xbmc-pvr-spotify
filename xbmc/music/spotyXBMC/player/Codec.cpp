@@ -27,8 +27,11 @@
 #include "PlayerHandler.h"
 #include "../radio/RadioHandler.h"
 #include "../SxSettings.h"
+#include "../../PlayListPlayer.h"
+#include "../../../playlists/PlayList.h"
 
 using namespace std;
+using namespace PLAYLIST;
 
 namespace addon_music_spotify {
 
@@ -76,13 +79,32 @@ namespace addon_music_spotify {
     sp_link *spLink = sp_link_create_from_string(uri);
     m_currentTrack = sp_link_as_track(spLink);
     sp_track_add_ref(m_currentTrack);
-    sp_session_player_prefetch(getSession(), m_currentTrack);
     sp_link_release(spLink);
     m_endOfTrack = false;
     m_bufferPos = 0;
     m_startStream = false;
     m_isPlayerLoaded = false;
     m_TotalTime = sp_track_duration(m_currentTrack);
+
+    //prefetch the next track!
+
+	  CPlayList& playlist = g_playlistPlayer.GetPlaylist(PLAYLIST_MUSIC);
+	  int nextSong = g_playlistPlayer.GetNextSong();
+	  if (nextSong != -1){
+	  	CFileItemPtr song = playlist[nextSong];
+	  	if (song != NULL){
+	  		CStdString uri = song->GetPath();
+	  		if (uri.Left(7).Equals("spotify")){
+	  			uri = uri.Left(uri.Find('.'));
+	  	    Logger::printOut("prefetching track:");
+	  	    Logger::printOut(uri);
+	  	    sp_link *spLink = sp_link_create_from_string(uri);
+	  	    sp_track* track = sp_link_as_track(spLink);
+	  	    sp_session_player_prefetch(getSession(), track);
+	  	    sp_link_release(spLink);
+	  		}
+	  	}
+	  }
 
     return true;
   }
