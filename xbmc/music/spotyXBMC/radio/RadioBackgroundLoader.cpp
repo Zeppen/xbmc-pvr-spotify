@@ -29,7 +29,7 @@
 
 namespace addon_music_spotify {
 
-  RadioBackgroundLoader::RadioBackgroundLoader(SxRadio* radio) {
+  RadioBackgroundLoader::RadioBackgroundLoader(SxRadio* radio) : CThread("Spotify RadioBackgroundLoader") {
     m_radio = radio;
   }
 

@@ -28,7 +28,7 @@
 
 namespace addon_music_spotify {
 
-  SearchResultBackgroundLoader::SearchResultBackgroundLoader(Search* search) {
+  SearchResultBackgroundLoader::SearchResultBackgroundLoader(Search* search) : CThread("Spotify SearchResultBackgroundLoader"){
     m_search = search;
   }
 

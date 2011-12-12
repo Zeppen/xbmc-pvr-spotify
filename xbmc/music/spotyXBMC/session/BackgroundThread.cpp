@@ -25,7 +25,7 @@
 
 namespace addon_music_spotify {
 
-  BackgroundThread::BackgroundThread() {
+  BackgroundThread::BackgroundThread() : CThread("Spotify BackgroundThread") {
   }
 
   BackgroundThread::~BackgroundThread() {

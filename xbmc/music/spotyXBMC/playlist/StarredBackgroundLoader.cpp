@@ -33,7 +33,7 @@
 
 namespace addon_music_spotify {
 
-StarredBackgroundLoader::StarredBackgroundLoader() {
+StarredBackgroundLoader::StarredBackgroundLoader() : CThread("Spotify StarredBackgroundLoader"){
 }
 
 StarredBackgroundLoader::~StarredBackgroundLoader() {
