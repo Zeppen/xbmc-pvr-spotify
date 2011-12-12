@@ -130,6 +130,7 @@ namespace addon_music_spotify {
     label.Format("A %s", artist->getArtistName());
 
     pItem->GetMusicInfoTag()->SetTitle(label);
+    pItem->GetMusicInfoTag()->SetArtist(artist->getArtistName());
     if (artist->hasThumb())
       pItem->SetThumbnailImage(artist->getThumb()->getPath());
     pItem->SetIconImage("DefaultArtist.png");
