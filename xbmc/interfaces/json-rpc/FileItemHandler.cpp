@@ -164,7 +164,12 @@ void CFileItemHandler::HandleFileItem(const char *ID, bool allowFile, const char
       if (stricmp(ID, "id") == 0)
       {
         if (item->HasMusicInfoTag())
-          object["type"] = "song";
+        {
+          if (item->m_bIsFolder && item->IsAlbum())
+            object["type"] = "album";
+          else
+            object["type"] = "song";
+        }
         else if (item->HasVideoInfoTag())
         {
           switch (item->GetVideoContentType())
@@ -179,6 +184,9 @@ void CFileItemHandler::HandleFileItem(const char *ID, bool allowFile, const char
 
             case VIDEODB_CONTENT_MOVIES:
               object["type"] = "movie";
+              break;
+
+            default:
               break;
           }
         }
