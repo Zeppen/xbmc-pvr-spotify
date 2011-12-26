@@ -57,7 +57,7 @@ JSON_STATUS CAudioLibrary::GetArtists(const CStdString &method, ITransportLayer 
     albumArtistsOnly = parameterObject["albumartistsonly"].asBoolean();
 
   CFileItemList items;
-  if (musicdatabase.GetArtistsNav("", items, genreID, albumArtistsOnly))
+  if (musicdatabase.GetArtistsNav("musicdb://2/", items, genreID, albumArtistsOnly))
     HandleFileItemList("artistid", false, "artists", items, param, result);
 
   musicdatabase.Close();
@@ -103,7 +103,7 @@ JSON_STATUS CAudioLibrary::GetAlbums(const CStdString &method, ITransportLayer *
   CStdString s_artistStr = "";
 
   CFileItemList items;
-  if (musicdatabase.GetAlbumsNav("", items, genreID, artistID, -1, -1))
+  if (musicdatabase.GetAlbumsNav("musicdb://3/", items, genreID, artistID, -1, -1))
     HandleFileItemList("albumid", false, "albums", items, parameterObject, result);
   items.Clear();
   if(!(artistID > 0) && g_spotify->GetAlbums(items, s_path,s_artistStr))
@@ -152,7 +152,8 @@ JSON_STATUS CAudioLibrary::GetSongs(const CStdString &method, ITransportLayer *t
   CStdString spotifyID = (CStdString) parameterObject["spotify_albumid"].asString();
   CStdString artistName = "";
   CFileItemList items;
-  if (spotifyID.IsEmpty() && musicdatabase.GetSongsNav("", items, genreID, artistID, albumID))
+
+  if (spotifyID.IsEmpty() && musicdatabase.GetSongsNav("musicdb://4/", items, genreID, artistID, albumID))
     HandleFileItemList("songid", true, "songs", items, parameterObject, result);
   else if(g_spotify->GetTracks(items,spotifyID,artistName,0))
    {
@@ -236,7 +237,7 @@ JSON_STATUS CAudioLibrary::GetGenres(const CStdString &method, ITransportLayer *
     return InternalError;
 
   CFileItemList items;
-  if (musicdatabase.GetGenresNav("", items))
+  if (musicdatabase.GetGenresNav("musicdb://1/", items))
   {
     /* need to set strTitle in each item*/
     for (unsigned int i = 0; i < (unsigned int)items.Size(); i++)
