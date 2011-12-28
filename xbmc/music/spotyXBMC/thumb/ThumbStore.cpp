@@ -26,73 +26,183 @@
 #include "../session/Session.h"
 #include "../Utils.h"
 #include <string.h>
+#include "URL.h"
+#include "../../../filesystem/FileCurl.h"
+#include "tinyXML/tinyxml.h"
+#include <fstream>
+#include "../../../filesystem/File.h"
+
+using namespace XFILE;
 
 namespace addon_music_spotify {
 
-  using namespace std;
+	using namespace std;
 
-  ThumbStore::ThumbStore() {
-    Utils::removeDir(Settings::getThumbPath());
-    Utils::createDir(Settings::getThumbPath());
-  }
+	ThumbStore::ThumbStore() {
+		Utils::removeDir(Settings::getThumbPath());
+		Utils::createDir(Settings::getThumbPath());
+		Utils::removeDir(Settings::getArtistThumbPath());
+		Utils::createDir(Settings::getArtistThumbPath());
 
-  void ThumbStore::deInit() {
-    delete m_instance;
-    Utils::removeDir(Settings::getThumbPath());
-  }
+		m_stdFanart = new CStdString(Settings::getFanart());
 
-  ThumbStore::~ThumbStore() {
-    for (thumbMap::iterator it = m_thumbs.begin(); it != m_thumbs.end(); ++it) {
-      delete it->second;
-    }
-  }
+		//load the fanartmap from file
+		string path = Settings::getCachePath() + "fanarts.txt";
+		Logger::printOut("loading fanart list");
+		ifstream file(path.c_str());
+		if (file.is_open()) {
+			while (file.good()) {
+				string name;
+				string path;
+				getline(file, name);
+				getline(file, path);
+				CStdString *fanartUrl = new CStdString(path);
+				m_fanarts.insert(stringMap::value_type(name, fanartUrl));
+			}
+		}
+		file.close();
+	}
 
-  ThumbStore* ThumbStore::m_instance = 0;
-  ThumbStore *ThumbStore::getInstance() {
-    return m_instance ? m_instance : (m_instance = new ThumbStore);
-  }
+	void ThumbStore::deInit() {
+		delete m_instance;
+		Utils::removeDir(Settings::getThumbPath());
+	}
 
-  SxThumb *ThumbStore::getThumb(const unsigned char* image) {
-    //check if we got the thumb
-    thumbMap::iterator it = m_thumbs.find(image);
-    SxThumb *thumb;
-    if (it == m_thumbs.end()) {
-      //we need to create it
-      //Logger::printOut("create thumb");
-      sp_image* spImage = sp_image_create(Session::getInstance()->getSpSession(), (unsigned char*) image);
+	ThumbStore::~ThumbStore() {
+		for (thumbMap::iterator it = m_thumbs.begin(); it != m_thumbs.end(); ++it) {
+			delete it->second;
+		}
 
-      if (!spImage) {
-        Logger::printOut("no image");
-        return NULL;
-      }
+		//save the fanart list
+		string path = Settings::getCachePath() + "fanarts.txt";
+		Logger::printOut("saving fanart list");
+		ofstream file(path.c_str(), ios::trunc);
+		bool dowrite = file.is_open();
 
-      string path = Settings::getThumbPath();
-      thumb = new SxThumb(spImage, path);
-      m_thumbs.insert(thumbMap::value_type(image, thumb));
-    } else {
-      //Logger::printOut("loading thumb from store");
-      thumb = it->second;
-      thumb->addRef();
-    }
+		for (stringMap::iterator it = m_fanarts.begin(); it != m_fanarts.end();
+				++it) {
+			if (dowrite) {
+				if (it->second != m_stdFanart)
+					file << it->first << "\n" << *it->second << "\n";
+			}
+		}
+		file.close();
 
-    return thumb;
-  }
+	}
 
-  void ThumbStore::removeThumb(const unsigned char* image) {
-    thumbMap::iterator it = m_thumbs.find(image);
-    SxThumb *thumb;
-    if (it != m_thumbs.end()) {
-      thumb = it->second;
-      if (thumb->getReferencesCount() <= 1) {
-        m_thumbs.erase(image);
-        delete thumb;
-      } else
-        thumb->rmRef();
-    }
-  }
+	ThumbStore* ThumbStore::m_instance = 0;
+	ThumbStore *ThumbStore::getInstance() {
+		return m_instance ? m_instance : (m_instance = new ThumbStore);
+	}
 
-  void ThumbStore::removeThumb(SxThumb* thumb) {
-    removeThumb((const unsigned char*) thumb->m_image);
-  }
+	SxThumb *ThumbStore::getThumb(const unsigned char* image) {
+		//check if we got the thumb
+		thumbMap::iterator it = m_thumbs.find(image);
+		SxThumb *thumb;
+		if (it == m_thumbs.end()) {
+			//we need to create it
+			//Logger::printOut("create thumb");
+			sp_image* spImage = sp_image_create(
+					Session::getInstance()->getSpSession(), (unsigned char*) image);
+
+			if (!spImage) {
+				Logger::printOut("no image");
+				return NULL;
+			}
+
+			string path = Settings::getThumbPath();
+			thumb = new SxThumb(spImage, path);
+			m_thumbs.insert(thumbMap::value_type(image, thumb));
+		} else {
+			//Logger::printOut("loading thumb from store");
+			thumb = it->second;
+			thumb->addRef();
+		}
+
+		return thumb;
+	}
+
+	void ThumbStore::removeThumb(const unsigned char* image) {
+		thumbMap::iterator it = m_thumbs.find(image);
+		SxThumb *thumb;
+		if (it != m_thumbs.end()) {
+			thumb = it->second;
+			if (thumb->getReferencesCount() <= 1) {
+				m_thumbs.erase(image);
+				delete thumb;
+			} else
+				thumb->rmRef();
+		}
+	}
+
+	void ThumbStore::removeThumb(SxThumb* thumb) {
+		removeThumb((const unsigned char*) thumb->m_image);
+	}
+
+	CStdString *ThumbStore::getFanart(const char *artistName) {
+		Logger::printOut("Looking for fanart");
+
+		if (!Settings::getUseHTFanarts())
+			return m_stdFanart;
+
+		//check if we got the fanart
+		string artistNameString = artistName;
+		stringMap::iterator it = m_fanarts.find(artistNameString);
+		if (it == m_fanarts.end()) {
+			//we dont have it so we need to to a search for it
+
+			CFileCurl http;
+			CStdString artistString = artistName;
+			artistString.Replace(' ', '+');
+			CStdString urlString;
+			CStdString apiKey = "TESTKEY";
+			urlString.Format(
+					"http://htbackdrops.com/api/%s/searchXML?keywords=%s&default_operator=and&aid=1&fields=title,keywords,caption,mb_name,mb_alias&inc=keywords,caption,mb_name,mb_aliases&limit=1",
+					apiKey, artistString);
+
+			CURL url(urlString);
+
+			if (http.Open(url)) {
+				Logger::printOut("Looking for fanart, need to fetch a new address");
+				//try to parse the resulting file for a fanart image
+				CStdString data;
+				http.ReadData(data);
+
+				TiXmlDocument xmlDoc;
+				xmlDoc.Parse(data);
+				TiXmlNode* element = xmlDoc.RootElement();
+				//get the images child
+				element = element->FirstChild("images");
+				if (element) {
+
+					//get the first image child, (should only be one)
+					element = element->FirstChild();
+					if (element) {
+						//get the id
+						TiXmlNode* idElement = element->FirstChild("id");
+						CStdString id = idElement->ToElement()->GetText();
+						//get the filename
+						TiXmlNode* fileNameElement = element->FirstChild("filename");
+						CStdString name = fileNameElement->ToElement()->GetText();
+
+						CStdString *fanartUrl = new CStdString();
+						fanartUrl->Format(
+								"http://htbackdrops.com/api/%s/download/%s/fullsize/%s",
+								apiKey,id, name);
+						Logger::printOut("Adding online fanart");
+
+						m_fanarts.insert(
+								stringMap::value_type(artistNameString, fanartUrl));
+						return fanartUrl;
+					}
+				}
+			}
+			Logger::printOut("Adding standard fanart");
+			m_fanarts.insert(stringMap::value_type(artistNameString, m_stdFanart));
+			return m_stdFanart;
+		}
+		Logger::printOut("Returning cached fanart");
+		return it->second;
+	}
 
 } /* namespace addon_music_spotify */

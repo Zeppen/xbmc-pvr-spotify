@@ -27,6 +27,7 @@
 #include <string>
 #include "../thumb/SxThumb.h"
 #include "../track/TrackContainer.h"
+#include "URL.h"
 
 using namespace std;
 
@@ -110,6 +111,10 @@ namespace addon_music_spotify {
       return m_thumb;
     }
 
+    CStdString *getFanart(){
+    	return m_fanart;
+    }
+
   private:
     SxAlbum(sp_album *album, bool loadTracksAndDetails);
     virtual ~SxAlbum();
@@ -124,6 +129,7 @@ namespace addon_music_spotify {
     bool m_isLoadingThumb;
     bool m_hasTracksAndDetails;
     bool m_hasThumb;
+    CStdString *m_fanart;
     int m_references;
 
     char *m_uri;

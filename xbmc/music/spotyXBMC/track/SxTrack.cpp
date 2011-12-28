@@ -60,6 +60,7 @@ namespace addon_music_spotify {
       m_thumb = sAlbum->getThumb();
       m_albumName = sAlbum->getAlbumName();
       m_albumArtistName = sAlbum->getAlbumArtistName();
+      m_fanart = sAlbum->getFanart();
       m_year = sAlbum->getAlbumYear();
       //release it again
       AlbumStore::getInstance()->removeAlbum(sAlbum);
@@ -78,6 +79,7 @@ namespace addon_music_spotify {
     m_uri = new char[256];
     sp_link_as_string(link, m_uri, 256);
     sp_link_release(link);
+
 
   }
 

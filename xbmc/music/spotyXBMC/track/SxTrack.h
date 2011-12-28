@@ -24,6 +24,7 @@
 
 #include <string>
 #include <libspotify/api.h>
+#include "URL.h"
 
 using namespace std;
 
@@ -89,6 +90,10 @@ namespace addon_music_spotify {
       return m_hasTHumb;
     }
 
+    CStdString *getFanart(){
+    	return m_fanart;
+    }
+
     const char* getUri() {
       return m_uri;
     }
@@ -110,6 +115,7 @@ namespace addon_music_spotify {
     int m_references;
     sp_track* m_spTrack;
     SxThumb* m_thumb;
+    CStdString *m_fanart;
     bool m_hasTHumb;
     char* m_uri;
     string m_name;

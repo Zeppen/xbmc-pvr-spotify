@@ -33,6 +33,7 @@ SRCS=Album.cpp \
      spotyXBMC/session/SessionCallbacks.cpp \
      spotyXBMC/thumb/SxThumb.cpp \
      spotyXBMC/thumb/ThumbStore.cpp \
+     spotyXBMC/thumb/SxFanart.cpp \
      spotyXBMC/track/SxTrack.cpp \
      spotyXBMC/track/TrackStore.cpp \
      spotyXBMC/track/TrackContainer.cpp

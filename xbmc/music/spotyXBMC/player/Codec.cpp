@@ -90,7 +90,8 @@ namespace addon_music_spotify {
 
 	  CPlayList& playlist = g_playlistPlayer.GetPlaylist(PLAYLIST_MUSIC);
 	  int nextSong = g_playlistPlayer.GetNextSong();
-	  if (nextSong != -1){
+
+	  if (nextSong >= 0 && nextSong < playlist.size()){
 	  	CFileItemPtr song = playlist[nextSong];
 	  	if (song != NULL){
 	  		CStdString uri = song->GetPath();

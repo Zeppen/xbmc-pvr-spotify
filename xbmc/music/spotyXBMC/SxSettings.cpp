@@ -38,6 +38,10 @@ namespace addon_music_spotify {
 	return CSpecialProtocol::TranslatePath("special://temp/spotify/thumbs/");
   }
 
+  CStdString Settings::getArtistThumbPath() {
+	return CSpecialProtocol::TranslatePath("special://temp/spotify/artistthumbs/");
+  }
+
   int Settings::getArtistNumberArtists() {
     int i = atoi(getAddonSetting("artistNoArtists")) + 1;
     if (i == 11) return -1;

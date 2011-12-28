@@ -15,7 +15,9 @@
     <string id="30407">Use spotify fanart</string>
     <string id="30408">Use custom fanart image</string>
     <string id="30409">Use volume normalization</string>
-
+    <string id="30410">Download fanarts from HTBackdrops</string>
+    <string id="30411">Download artist thumbs from HTBackdrops</string>
+    
     <string id="30420">Performance</string>
     <string id="30421">Search: Max number of artists</string>
     <string id="30422">Search: Max number of albums</string>

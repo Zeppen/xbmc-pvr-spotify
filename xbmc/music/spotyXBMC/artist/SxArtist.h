@@ -41,109 +41,121 @@
 using namespace std;
 
 namespace addon_music_spotify {
-  class SxTrack;
-  class SxAlbum;
-  class SxArtist;
-  class ArtistStore;
-  class SxArtist: private TrackContainer, private AlbumContainer, private ArtistContainer {
-  public:
+	class SxTrack;
+	class SxAlbum;
+	class SxArtist;
+	class ArtistStore;
+	class SxArtist: private TrackContainer,
+			private AlbumContainer,
+			private ArtistContainer {
+	public:
 
-    static void SP_CALLCONV cb_artistBrowseComplete(sp_artistbrowse *result, void *userdata);
-    void doLoadDetails();
-    void doLoadTracksAndAlbums();
+		static void SP_CALLCONV cb_artistBrowseComplete(sp_artistbrowse *result,
+				void *userdata);
+		void doLoadDetails();
+		void doLoadTracksAndAlbums();
 
-    void detailsLoaded(sp_artistbrowse *result);
+		void detailsLoaded(sp_artistbrowse *result);
 
-    friend class ArtistStore;
+		friend class ArtistStore;
 
-    void addRef() {
-      m_references++;
-    }
+		void addRef() {
+			m_references++;
+		}
 
-    int getReferencesCount() {
-      return m_references;
-    }
+		int getReferencesCount() {
+			return m_references;
+		}
 
-    bool isLoaded() {
-      return !m_isLoadingDetails && (!m_hasThumb || (m_hasThumb && m_thumb->isLoaded()));
-    }
+		bool isLoaded() {
+			return !m_isLoadingDetails
+					&& (!m_hasThumb || (m_hasThumb && m_thumb->isLoaded()));
+		}
 
-    bool isAlbumsLoaded();
-    bool isTracksLoaded();
-    bool isArtistsLoaded();
+		bool isAlbumsLoaded();
+		bool isTracksLoaded();
+		bool isArtistsLoaded();
 
-    const char* getArtistName() {
-      return sp_artist_name(m_spArtist);
-    }
+		const char* getArtistName() {
+			return sp_artist_name(m_spArtist);
+		}
 
-    SxThumb* getThumb() {
-      return m_thumb;
-    }
+		SxThumb* getThumb() {
+			return m_thumb;
+		}
 
-    sp_artist* getSpArtist() {
-      return m_spArtist;
-    }
+		sp_artist* getSpArtist() {
+			return m_spArtist;
+		}
 
-    vector<SxTrack*> getTracks() {
-      return m_tracks;
-    }
+		vector<SxTrack*> getTracks() {
+			return m_tracks;
+		}
 
-    bool getTrackItems(CFileItemList& items);
+		bool getTrackItems(CFileItemList& items);
 
-    vector<SxAlbum*> getAlbums() {
-      return m_albums;
-    }
+		vector<SxAlbum*> getAlbums() {
+			return m_albums;
+		}
 
-    bool getAlbumItems(CFileItemList& items);
+		bool getAlbumItems(CFileItemList& items);
 
-    vector<SxArtist*> getArtists() {
-      return m_artists;
-    }
+		vector<SxArtist*> getArtists() {
+			return m_artists;
+		}
 
-    bool getArtistItems(CFileItemList& items);
+		bool getArtistItems(CFileItemList& items);
 
-    bool hasDetails() {
-      return m_hasDetails;
-    }
+		bool hasDetails() {
+			return m_hasDetails;
+		}
 
-    bool hasTracksAndAlbums() {
-      return m_hasTracksAndAlbums;
-    }
+		bool hasTracksAndAlbums() {
+			return m_hasTracksAndAlbums;
+		}
 
-    bool hasThumb() {
-      return m_hasThumb;
-    }
+		bool hasThumb() {
+			return m_hasThumb;
+		}
 
-    string getBio() {
-      return m_bio;
-    }
+		string getBio() {
+			return m_bio;
+		}
 
-    const char *getUri() {
-      return m_uri;
-    }
+		const char *getUri() {
+			return m_uri;
+		}
 
-  private:
-    SxArtist(sp_artist *artist, bool loadTracksAndAlbums);
-    virtual ~SxArtist();
+		CStdString *getFanart() {
+			return m_fanart;
+		}
 
-    void rmRef() {
-      m_references--;
-    }
 
-    bool m_isLoadingDetails;
-    bool m_loadTrackAndAlbums;
-    bool m_hasDetails;
-    bool m_hasTracksAndAlbums;
-    int m_references;
+	private:
+		SxArtist(sp_artist *artist, bool loadTracksAndAlbums);
+		virtual ~SxArtist();
 
-    string m_bio;
-    sp_artistbrowse* m_browse;
+		void rmRef() {
+			m_references--;
+		}
 
-    char *m_uri;
-    sp_artist *m_spArtist;
-    SxThumb *m_thumb;
-    bool m_hasThumb;
-  };
+		bool m_isLoadingDetails;
+		bool m_loadTrackAndAlbums;
+		bool m_hasDetails;
+		bool m_hasTracksAndAlbums;
+		int m_references;
+
+		string m_bio;
+		sp_artistbrowse* m_browse;
+
+		char *m_uri;
+		sp_artist *m_spArtist;
+		SxThumb *m_thumb;
+
+		CStdString *m_fanart;
+
+		bool m_hasThumb;
+	};
 
 } /* namespace addon_music_spotify */
 #endif /* SXARTIST_H_ */

@@ -30,67 +30,69 @@
 
 namespace addon_music_spotify {
 
-  using namespace std;
+	using namespace std;
 
-  SxThumb::SxThumb(sp_image* image, string path) {
-    m_isLoaded = false;
-    m_image = image;
-    sp_link *link = sp_link_create_from_image(image);
-    char linkString[256];
-    sp_link_as_string(link, linkString, 256);
-	CStdString linkStringClean = linkString;
-	linkStringClean.Remove(':');
-    sp_link_release(link);
-	m_file = path + linkStringClean.c_str() + ".jpg";
-    CStdString pathS(m_file);
-    CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
-    if (!cached.IsEmpty()) {
-      //Logger::printOut("Thumb already in XBMC cache, no need to download again");
-      m_file = cached;
-      m_imageIsFromCache = true;
-      m_isLoaded = true;
-    } else{
-      m_imageIsFromCache = false;
-      sp_image_add_load_callback(m_image, &cb_imageLoaded, this);
-    }
+	SxThumb::SxThumb(sp_image* image, string path) {
+		m_isLoaded = false;
+		m_image = image;
+		sp_link *link = sp_link_create_from_image(image);
+		char linkString[256];
+		sp_link_as_string(link, linkString, 256);
+		CStdString linkStringClean = linkString;
+		linkStringClean.Remove(':');
+		sp_link_release(link);
+		m_file = path + linkStringClean.c_str() + ".jpg";
+		CStdString pathS(m_file);
+		CStdString cached(CTextureCache::Get().CheckCachedImage(pathS));
+		if (!cached.IsEmpty()) {
+			//Logger::printOut("Thumb already in XBMC cache, no need to download again");
+			m_file = cached;
+			m_imageIsFromCache = true;
+			m_isLoaded = true;
+		} else {
+			m_imageIsFromCache = false;
+			sp_image_add_load_callback(m_image, &cb_imageLoaded, this);
+		}
 
-    m_references = 1;
+		m_references = 1;
 
-  }
-
-  SxThumb::~SxThumb() {
-    if (!m_isLoaded) sp_image_remove_load_callback(m_image, &cb_imageLoaded, this);
-    sp_image_release(m_image);
-    //dont delete it from the cache
-    if (!m_imageIsFromCache) Utils::removeFile(m_file.c_str());
-
-  }
-
-  void SxThumb::thumbLoaded(sp_image *image) {
-    if (sp_image_error(image) != SP_ERROR_OK) {
-      Logger::printOut("creating image error");
-      m_file = "";
-      //well its loaded but without image
-      m_isLoaded = true;
-      return;
-    }
-
-	XFILE::CFile file;
-    if (file.OpenForWrite(m_file,true)){
-      const void *buffer;
-      size_t len;
-      buffer = sp_image_data(image, &len);
-      file.Write((const char*) buffer, len);
-      file.Close();
 	}
 
-    m_isLoaded = true;
-    //Logger::printOut("thumb downloaded");
-  }
+	SxThumb::~SxThumb() {
+		if (!m_isLoaded)
+			sp_image_remove_load_callback(m_image, &cb_imageLoaded, this);
+		sp_image_release(m_image);
+		//dont delete it from the cache
+		if (!m_imageIsFromCache)
+			Utils::removeFile(m_file.c_str());
 
-  void SxThumb::cb_imageLoaded(sp_image *image, void *userdata) {
-    SxThumb *thumb = (SxThumb*) userdata;
-    thumb->thumbLoaded(image);
-  }
+	}
+
+	void SxThumb::thumbLoaded(sp_image *image) {
+		if (sp_image_error(image) != SP_ERROR_OK) {
+			Logger::printOut("creating image error");
+			m_file = "";
+			//well its loaded but without image
+			m_isLoaded = true;
+			return;
+		}
+
+		XFILE::CFile file;
+		if (file.OpenForWrite(m_file, true)) {
+			const void *buffer;
+			size_t len;
+			buffer = sp_image_data(image, &len);
+			file.Write((const char*) buffer, len);
+			file.Close();
+		}
+
+		m_isLoaded = true;
+		//Logger::printOut("thumb downloaded");
+	}
+
+	void SxThumb::cb_imageLoaded(sp_image *image, void *userdata) {
+		SxThumb *thumb = (SxThumb*) userdata;
+		thumb->thumbLoaded(image);
+	}
 
 } /* namespace addon_music_spotify */

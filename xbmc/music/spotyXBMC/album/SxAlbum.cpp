@@ -52,6 +52,7 @@ SxAlbum::SxAlbum(sp_album *album, bool loadTracksAndDetails) {
 	if (loadTracksAndDetails)
 		doLoadTracksAndDetails();
 	doLoadThumb();
+	m_fanart = ThumbStore::getInstance()->getFanart(sp_artist_name(sp_album_artist(m_spAlbum)));
 	// Logger::printOut("creating album slut");
 }
 

@@ -28,6 +28,10 @@
 #include <tr1/unordered_map>
 #endif
 #include <libspotify/api.h>
+#include <string.h>
+#include "URL.h"
+
+using namespace std;
 
 namespace addon_music_spotify {
 
@@ -39,8 +43,11 @@ namespace addon_music_spotify {
     static void deInit();
 
     SxThumb *getThumb(const unsigned char* image);
+
     void removeThumb(const unsigned char* image);
     void removeThumb(SxThumb* thumb);
+
+    CStdString *getFanart(const char *artist_name);
 
   private:
     ThumbStore();
@@ -50,6 +57,11 @@ namespace addon_music_spotify {
 
     typedef std::tr1::unordered_map<const unsigned char*, SxThumb*> thumbMap;
     thumbMap m_thumbs;
+
+    typedef std::tr1::unordered_map<string, CStdString*> stringMap;
+    stringMap m_fanarts;
+
+    CStdString* m_stdFanart;
   };
 
 } /* namespace addon_music_spotify */

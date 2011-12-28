@@ -48,6 +48,8 @@ namespace addon_music_spotify {
     }
     static CStdString getCachePath();
     static CStdString getThumbPath();
+    static CStdString getArtistThumbPath();
+
     static bool useHighBitrate() {
       return getAddonSetting("highBitrate") == "true";
     }
@@ -56,6 +58,13 @@ namespace addon_music_spotify {
     }
 
     static CStdString getFanart();
+
+    static bool getUseHTFanarts() {
+      return getAddonSetting("htfanart") == "true";
+    }
+    static bool getUseHTArtistThumbs() {
+      return getAddonSetting("htartistthumb") == "true";
+    }
 
     static int getSearchNumberArtists() {
       return 10 * atoi(getAddonSetting("searchNoArtists")) + 1;

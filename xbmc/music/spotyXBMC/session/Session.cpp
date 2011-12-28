@@ -138,7 +138,7 @@ namespace addon_music_spotify {
     PlayerHandler::deInit();
     Logger::printOut("cleaned player");
 
-    delete m_playlists;
+    //delete m_playlists;
     //m_playlists = NULL;
     Logger::printOut("cleaned playlists");
 
@@ -157,7 +157,7 @@ namespace addon_music_spotify {
     //TrackStore::deInit();
     Logger::printOut("cleaned tracks");
 
-    //ThumbStore::deInit();
+    ThumbStore::deInit();
     Logger::printOut("cleaned thumbs");
 
     //TODO FIX THE LOGOUT... Why is it crashing on logout?
