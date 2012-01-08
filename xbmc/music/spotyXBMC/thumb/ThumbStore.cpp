@@ -82,7 +82,7 @@ namespace addon_music_spotify {
 		for (stringMap::iterator it = m_fanarts.begin(); it != m_fanarts.end();
 				++it) {
 			if (dowrite) {
-				if (it->second != m_stdFanart)
+			//	if (it->second != m_stdFanart)
 					file << it->first << "\n" << *it->second << "\n";
 			}
 		}
@@ -141,13 +141,10 @@ namespace addon_music_spotify {
 
 	CStdString *ThumbStore::getFanart(const char *artistName) {
 
-		Logger::printOut(itoa(m_fanarts.size()));
-		Logger::printOut(itoa(m_fanarts.bucket_count()));
-
 		if (!Settings::getUseHTFanarts())
 			return m_stdFanart;
 
-		Logger::printOut("Looking for fanart");
+		//Logger::printOut("Looking for fanart");
 
 		//check if we got the fanart
 		string artistNameString = artistName;
@@ -167,6 +164,7 @@ namespace addon_music_spotify {
 
 			if (http.Open(url)) {
 				Logger::printOut("Looking for fanart, need to fetch a new address");
+				Logger::printOut(artistNameString);
 				//try to parse the resulting file for a fanart image
 				CStdString data;
 				http.ReadData(data);
@@ -192,7 +190,7 @@ namespace addon_music_spotify {
 						fanartUrl->Format(
 								"http://htbackdrops.com/api/afb0f6cdbd412a7888005de34f86e4a5/download/%s/fullsize/%s",
 								id, name);
-						Logger::printOut("Adding online fanart");
+						//Logger::printOut("Adding online fanart");
 
 						m_fanarts.insert(
 								stringMap::value_type(artistNameString, fanartUrl));
@@ -200,11 +198,11 @@ namespace addon_music_spotify {
 					}
 				}
 			}
-			Logger::printOut("Adding standard fanart");
+			//Logger::printOut("Adding standard fanart");
 			m_fanarts.insert(stringMap::value_type(artistNameString, m_stdFanart));
 			return m_stdFanart;
 		}
-		Logger::printOut("Returning cached fanart");
+		//Logger::printOut("Returning cached fanart");
 		return it->second;
 	}
 

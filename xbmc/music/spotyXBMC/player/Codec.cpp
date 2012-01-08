@@ -59,7 +59,7 @@ namespace addon_music_spotify {
     CStdString uri = URIUtils::GetFileName(strFile);
     CStdString extension = uri.Right(uri.GetLength() - uri.Find('.') - 1);
     if (extension.Left(12) == "spotifyradio") {
-      //if its a readiotrack the radionumber and tracknumber is secretly encoded at the end of the extension
+      //if its a radiotrack the radionumber and tracknumber is secretly encoded at the end of the extension
       CStdString trackStr = extension.Right(
           extension.GetLength() - extension.ReverseFind('#') - 1);
       Logger::printOut(extension);
