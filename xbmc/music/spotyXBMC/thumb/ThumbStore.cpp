@@ -140,10 +140,14 @@ namespace addon_music_spotify {
 	}
 
 	CStdString *ThumbStore::getFanart(const char *artistName) {
-		Logger::printOut("Looking for fanart");
+
+		Logger::printOut(itoa(m_fanarts.size()));
+		Logger::printOut(itoa(m_fanarts.bucket_count()));
 
 		if (!Settings::getUseHTFanarts())
 			return m_stdFanart;
+
+		Logger::printOut("Looking for fanart");
 
 		//check if we got the fanart
 		string artistNameString = artistName;
@@ -155,10 +159,9 @@ namespace addon_music_spotify {
 			CStdString artistString = artistName;
 			artistString.Replace(' ', '+');
 			CStdString urlString;
-			CStdString apiKey = "TESTKEY";
 			urlString.Format(
-					"http://htbackdrops.com/api/%s/searchXML?keywords=%s&default_operator=and&aid=1&fields=title,keywords,caption,mb_name,mb_alias&inc=keywords,caption,mb_name,mb_aliases&limit=1",
-					apiKey, artistString);
+					"http://htbackdrops.com/api/afb0f6cdbd412a7888005de34f86e4a5/searchXML?keywords=%s&default_operator=and&aid=1&fields=title,keywords,caption,mb_name,mb_alias&inc=keywords,caption,mb_name,mb_aliases&limit=1",
+					artistString);
 
 			CURL url(urlString);
 
@@ -187,8 +190,8 @@ namespace addon_music_spotify {
 
 						CStdString *fanartUrl = new CStdString();
 						fanartUrl->Format(
-								"http://htbackdrops.com/api/%s/download/%s/fullsize/%s",
-								apiKey,id, name);
+								"http://htbackdrops.com/api/afb0f6cdbd412a7888005de34f86e4a5/download/%s/fullsize/%s",
+								id, name);
 						Logger::printOut("Adding online fanart");
 
 						m_fanarts.insert(

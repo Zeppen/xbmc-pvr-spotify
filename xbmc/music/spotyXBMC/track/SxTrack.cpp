@@ -60,7 +60,6 @@ namespace addon_music_spotify {
       m_thumb = sAlbum->getThumb();
       m_albumName = sAlbum->getAlbumName();
       m_albumArtistName = sAlbum->getAlbumArtistName();
-      m_fanart = sAlbum->getFanart();
       m_year = sAlbum->getAlbumYear();
       //release it again
       AlbumStore::getInstance()->removeAlbum(sAlbum);
@@ -74,12 +73,12 @@ namespace addon_music_spotify {
       Logger::printOut("no album loaded for track");
 
     m_artistName = sp_artist_name(sp_track_artist(spTrack, 0));
+    m_fanart = ThumbStore::getInstance()->getFanart(sp_artist_name(sp_track_artist(spTrack, 0)));
 
     sp_link *link = sp_link_create_from_track(spTrack, 0);
     m_uri = new char[256];
     sp_link_as_string(link, m_uri, 256);
     sp_link_release(link);
-
 
   }
 
