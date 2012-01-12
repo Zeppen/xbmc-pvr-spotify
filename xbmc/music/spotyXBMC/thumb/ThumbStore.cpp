@@ -72,22 +72,6 @@ namespace addon_music_spotify {
 		for (thumbMap::iterator it = m_thumbs.begin(); it != m_thumbs.end(); ++it) {
 			delete it->second;
 		}
-
-		//save the fanart list
-		string path = Settings::getCachePath() + "fanarts.txt";
-		Logger::printOut("saving fanart list");
-		ofstream file(path.c_str(), ios::trunc);
-		bool dowrite = file.is_open();
-
-		for (stringMap::iterator it = m_fanarts.begin(); it != m_fanarts.end();
-				++it) {
-			if (dowrite) {
-			//	if (it->second != m_stdFanart)
-					file << it->first << "\n" << *it->second << "\n";
-			}
-		}
-		file.close();
-
 	}
 
 	ThumbStore* ThumbStore::m_instance = 0;
@@ -194,12 +178,36 @@ namespace addon_music_spotify {
 
 						m_fanarts.insert(
 								stringMap::value_type(artistNameString, fanartUrl));
+
+						//save the fanart url to the cachefile
+						string path = Settings::getCachePath() + "fanarts.txt";
+						Logger::printOut("saving fanart list");
+						ofstream file(path.c_str(), ios::app);
+						bool dowrite = file.is_open();
+						if (file.is_open()) {
+							file << artistNameString << "\n" << *fanartUrl << "\n";
+						}
+
+						file.close();
+
 						return fanartUrl;
 					}
 				}
 			}
 			//Logger::printOut("Adding standard fanart");
 			m_fanarts.insert(stringMap::value_type(artistNameString, m_stdFanart));
+
+			//save the fanart url to the cachefile
+			string path = Settings::getCachePath() + "fanarts.txt";
+			Logger::printOut("saving fanart list");
+			ofstream file(path.c_str(), ios::app);
+			bool dowrite = file.is_open();
+			if (file.is_open()) {
+				file << artistNameString << "\n" << *m_stdFanart << "\n";
+			}
+
+			file.close();
+
 			return m_stdFanart;
 		}
 		//Logger::printOut("Returning cached fanart");
