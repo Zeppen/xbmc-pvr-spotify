@@ -145,18 +145,12 @@ void CFileItemHandler::HandleFileItem(const char *ID, bool allowFile, const char
 
     if (ID)
     {
-  	  if(stricmp(ID, "spotify_albumid") == 0)
-  	  { 
-	 	CStdString spotify_albumid = item->GetPath();
-  	  	object[ID] = spotify_albumid.c_str();
-  	  }
-      if (stricmp(ID, "genreid") == 0)
-      {
-        CStdString genre = item->GetPath();
-        genre.TrimRight('/');
-        object[ID] = atoi(genre.c_str());
+      if(stricmp(ID, "spotify_albumid") == 0)
+      { 
+	CStdString spotify_albumid = item->GetPath();
+  	object[ID] = spotify_albumid.c_str();
       }
-      else if (item->HasMusicInfoTag() && item->GetMusicInfoTag()->GetDatabaseId() > 0)
+      if (item->HasMusicInfoTag() && item->GetMusicInfoTag()->GetDatabaseId() > 0)
         object[ID] = (int)item->GetMusicInfoTag()->GetDatabaseId();
       else if (item->HasVideoInfoTag() && item->GetVideoInfoTag()->m_iDbId > 0)
         object[ID] = item->GetVideoInfoTag()->m_iDbId;

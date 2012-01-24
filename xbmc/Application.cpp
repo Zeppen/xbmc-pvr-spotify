@@ -1207,6 +1207,7 @@ bool CApplication::Initialize()
 #ifdef HAS_JSONRPC
     CJSONRPC::Initialize();
 #endif
+    ADDON::CAddonMgr::Get().StartServices(false);
     g_windowManager.ActivateWindow(g_SkinInfo->GetFirstWindow());
   }
 
@@ -1218,9 +1219,16 @@ bool CApplication::Initialize()
   CLog::Log(LOGINFO, "removing tempfiles");
   CUtil::RemoveTempFiles();
 
-  //  Show mute symbol
+  //  Restore volume
   if (g_settings.m_bMute)
+  {
+    SetVolume(g_settings.m_iPreMuteVolumeLevel);
     Mute();
+  }
+  else
+  {
+    SetVolume(g_settings.m_nVolumeLevel, false);
+  }
 
   // if the user shutoff the xbox during music scan
   // restore the settings
@@ -1247,7 +1255,7 @@ bool CApplication::Initialize()
   CCrystalHD::GetInstance();
 #endif
 
-  CAddonMgr::Get().StartServices(false);
+  CAddonMgr::Get().StartServices(true);
 
   CLog::Log(LOGNOTICE, "initialize done");
 
@@ -3010,6 +3018,11 @@ bool CApplication::ProcessEventServer(float frameTime)
   bool isAxis = false;
   float fAmount = 0.0;
 
+  // es->ExecuteNextAction() invalidates the ref to the CEventServer instance
+  // when the action exits XBMC
+  es = CEventServer::GetInstance();
+  if (!es || !es->Running() || es->GetNumberOfClients()==0)
+    return false;
   WORD wKeyID = es->GetButtonCode(joystickName, isAxis, fAmount);
 
   if (wKeyID)
