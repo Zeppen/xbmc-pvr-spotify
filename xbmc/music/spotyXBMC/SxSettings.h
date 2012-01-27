@@ -66,6 +66,10 @@ namespace addon_music_spotify {
       return getAddonSetting("htartistthumb") == "true";
     }
 
+    static int getStartDelay() {
+      return 1000 * atoi(getAddonSetting("delay"));
+    }
+
     static int getSearchNumberArtists() {
       return 10 * atoi(getAddonSetting("searchNoArtists")) + 1;
     }

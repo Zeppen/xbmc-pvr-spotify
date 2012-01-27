@@ -22,6 +22,7 @@
 #include "Session.h"
 #include "BackgroundThread.h"
 #include "../Logger.h"
+#include "../SxSettings.h"
 
 namespace addon_music_spotify {
 
@@ -32,6 +33,7 @@ namespace addon_music_spotify {
   }
 
   void BackgroundThread::OnStartup() {
+  	Sleep(Settings::getStartDelay());
     Logger::printOut("bgthread OnStartup");
     Session::getInstance()->connect();
     Session::getInstance()->unlock();

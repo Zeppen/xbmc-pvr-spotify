@@ -8,14 +8,15 @@
     <setting id="enable" type="bool" label="30405" default="false" />
     <setting id="username" type="text" enable="eq(-1,true)" label="30401" default="" />
     <setting id="password" type="text" enable="eq(-2,true)" option="hidden" label="30402" default="" />
+    <setting id="delay" type="enum" enable="eq(-3,true)" label="30412" values="0|1|2|3|5|10|20|30|40|60" default="1" />
     <setting type="sep" />
-    <setting id="highBitrate" type="bool" enable="eq(-4,true)" label="30404" default="true" />
-    <setting id="normalization" type="bool" enable="eq(-5,true)" label="30409" default="true" />
-    <setting id="enablefanart" type="bool" enable="eq(-6,true)"  label="30407" default="true" />
+    <setting id="highBitrate" type="bool" enable="eq(-5,true)" label="30404" default="true" />
+    <setting id="normalization" type="bool" enable="eq(-6,true)" label="30409" default="true" />
+    <setting id="enablefanart" type="bool" enable="eq(-7,true)"  label="30407" default="true" />
     <setting id="customfanart" type="bool" enable="eq(-1,true)" visible="eq(-1,true)" label="30408" default="false" />
     <setting id="fanart" type="file" enable="eq(-1,true)" visible="eq(-1,true)" label="30406" default="" />
     <setting id="htfanart" type="bool" enable="eq(-3,true)" visible="eq(-3,true)" label="30410" default="false" />
-    <setting id="htartistthumb" type="bool" enable="false" visible="false" label="30411" default="false" />
+    <setting id="htartistthumb" type="bool" enable="eq(-4,true)" visible="eq(-4,true)" label="30411" default="false" />
   </category>
   <category label="30420">
     <setting id="searchNoArtists" type="enum" label="30421" values="10|20|30|40|50|60|70|80|90|100" default="1" />

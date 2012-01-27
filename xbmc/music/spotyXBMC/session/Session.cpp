@@ -54,8 +54,6 @@ namespace addon_music_spotify {
   bool Session::enable() {
     if (isEnabled()) return true;
 
-    m_isEnabled = true;
-
     lock();
     m_bgThread = new BackgroundThread();
     m_bgThread->Create(true);
