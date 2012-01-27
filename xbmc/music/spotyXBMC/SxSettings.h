@@ -70,6 +70,10 @@ namespace addon_music_spotify {
       return 1000 * atoi(getAddonSetting("delay"));
     }
 
+    static bool saveLogToFile() {
+      return getAddonSetting("logtofile") == "true";
+    }
+
     static int getSearchNumberArtists() {
       return 10 * atoi(getAddonSetting("searchNoArtists")) + 1;
     }
