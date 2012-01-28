@@ -38,6 +38,8 @@ namespace addon_music_spotify {
 		  ADDON::CAddonMgr::Get().LoadAddonDescription(pluginId, addon);
 
 		  m_enabled = addon->GetSetting("enable") == "true";
+		  if (!m_enabled)
+		  	return false;
 		  m_userName =  addon->GetSetting("username");
 		  m_password = addon->GetSetting("password");
 
@@ -116,7 +118,6 @@ namespace addon_music_spotify {
 	}
 
   Settings::Settings() {
-  	init();
   }
 
   Settings::~Settings() {

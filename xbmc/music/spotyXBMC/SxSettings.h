@@ -264,8 +264,6 @@ namespace addon_music_spotify {
 
     sp_radio_genre getRadioGenres(ADDON::AddonPtr addon, int radio);
 
-
-    bool isInit;
     Settings();
     virtual ~Settings();
 

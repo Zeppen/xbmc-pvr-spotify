@@ -49,7 +49,6 @@ using namespace std;
 Addon_music_spotify* g_spotify;
 
 Addon_music_spotify::Addon_music_spotify() {
-	if (Settings::getInstance()->enabled())
 		Session::getInstance()->enable();
 }
 
