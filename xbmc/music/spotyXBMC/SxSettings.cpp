@@ -116,7 +116,7 @@ namespace addon_music_spotify {
 	}
 
   Settings::Settings() {
-
+  	init();
   }
 
   Settings::~Settings() {
