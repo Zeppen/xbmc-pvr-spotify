@@ -35,8 +35,8 @@ namespace addon_music_spotify {
   RadioHandler::RadioHandler() {
     Logger::printOut("creating radio handler");
     //hardcode two radios, allow for any number of radios later maybe
-    SxRadio *radio1 = new SxRadio(1, Settings::getRadio1From(), Settings::getRadio1To(), Settings::getRadio1Genres());
-    SxRadio *radio2 = new SxRadio(2, Settings::getRadio2From(), Settings::getRadio2To(), Settings::getRadio2Genres());
+    SxRadio *radio1 = new SxRadio(1, Settings::getInstance()->getRadio1From(), Settings::getInstance()->getRadio1To(), Settings::getInstance()->getRadio1Genres());
+    SxRadio *radio2 = new SxRadio(2, Settings::getInstance()->getRadio2From(), Settings::getInstance()->getRadio2To(), Settings::getInstance()->getRadio2Genres());
 
     m_radios.push_back(radio1);
     m_radios.push_back(radio2);

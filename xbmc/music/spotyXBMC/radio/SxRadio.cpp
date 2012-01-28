@@ -38,7 +38,7 @@ namespace addon_music_spotify {
     m_currentResultPos = 0;
     m_currentSearch = NULL;
     //hard code the number of tracks to 15 for now
-    m_numberOfTracksToDisplay = Settings::getRadioNumberTracks();
+    m_numberOfTracksToDisplay = Settings::getInstance()->getRadioNumberTracks();
     m_isWaitingForResults = false;
     fetchNewTracks();
   }

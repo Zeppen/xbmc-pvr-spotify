@@ -65,7 +65,7 @@ namespace addon_music_spotify {
 		if (loadTracksAndAlbums)
 			doLoadTracksAndAlbums();
 		//sometimes the thumb is not loaded correct here, do a small artist browse and try again!
-		else if (Settings::getPreloadArtistDetails() || !m_hasThumb)
+		else if (Settings::getInstance()->getPreloadArtistDetails() || !m_hasThumb)
 			doLoadDetails();
 		else
 			m_hasDetails = true;
@@ -150,9 +150,9 @@ namespace addon_music_spotify {
 			if (m_loadTrackAndAlbums) {
 				//add the albums
 				int maxAlbums =
-						Settings::getArtistNumberAlbums() == -1 ?
+						Settings::getInstance()->getArtistNumberAlbums() == -1 ?
 								sp_artistbrowse_num_albums(m_browse) :
-								Settings::getArtistNumberAlbums();
+								Settings::getInstance()->getArtistNumberAlbums();
 
 				int addedAlbums = 0;
 				for (int index = 0;
@@ -168,9 +168,9 @@ namespace addon_music_spotify {
 
 				//add the tracks
 				int maxTracks =
-						Settings::getArtistNumberTracks() == -1 ?
+						Settings::getInstance()->getArtistNumberTracks() == -1 ?
 								sp_artistbrowse_num_tracks(m_browse) :
-								Settings::getArtistNumberTracks();
+								Settings::getInstance()->getArtistNumberTracks();
 
 				int addedTracks = 0;
 				for (int index = 0;
@@ -187,9 +187,9 @@ namespace addon_music_spotify {
 
 				//add the artists
 				int maxArtists =
-						Settings::getArtistNumberArtists() == -1 ?
+						Settings::getInstance()->getArtistNumberArtists() == -1 ?
 								sp_artistbrowse_num_similar_artists(m_browse) :
-								Settings::getArtistNumberArtists();
+								Settings::getInstance()->getArtistNumberArtists();
 
 				int addedArtists = 0;
 				for (int index = 0;

@@ -39,8 +39,8 @@ namespace addon_music_spotify {
     static void printOut(char* text) {
 	  CLog::Log(LOGDEBUG, "spotifylog: %s", text);
       cout << text << "\n";
-      if (Settings::saveLogToFile()){
-        string path = Settings::getCachePath() + "log.txt";
+      if (Settings::getInstance()->saveLogToFile()){
+        string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
         bool dowrite = file.is_open();
         if (file.is_open()) {
@@ -52,8 +52,8 @@ namespace addon_music_spotify {
     static void printOut(const char* text) {
       CLog::Log(LOGDEBUG, "spotifylog: %s", text);
       cout << text << "\n";
-      if (Settings::saveLogToFile()){
-        string path = Settings::getCachePath() + "log.txt";
+      if (Settings::getInstance()->saveLogToFile()){
+        string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
         bool dowrite = file.is_open();
         if (file.is_open()) {
@@ -65,8 +65,8 @@ namespace addon_music_spotify {
     static void printOut(char text) {
       CLog::Log(LOGDEBUG, "spotifylog: %c", text);
       cout << text << "\n";
-      if (Settings::saveLogToFile()){
-        string path = Settings::getCachePath() + "log.txt";
+      if (Settings::getInstance()->saveLogToFile()){
+        string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
         bool dowrite = file.is_open();
         if (file.is_open()) {
@@ -78,8 +78,8 @@ namespace addon_music_spotify {
     static void printOut(string text) {
     	CLog::Log(LOGDEBUG, "spotifylog: %s", text.c_str());
       cout << text << "\n";
-      if (Settings::saveLogToFile()){
-        string path = Settings::getCachePath() + "log.txt";
+      if (Settings::getInstance()->saveLogToFile()){
+        string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
         bool dowrite = file.is_open();
         if (file.is_open()) {

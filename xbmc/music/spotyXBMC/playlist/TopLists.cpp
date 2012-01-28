@@ -37,7 +37,7 @@ TopLists::TopLists() {
 	m_artistsLoaded = false;
 	m_tracksLoaded = false;
 	Logger::printOut("creating toplists");
-	if (Settings::getPreloadTopLists()) {
+	if (Settings::getInstance()->getPreloadTopLists()) {
 		reLoadArtists();
 		reLoadAlbums();
 		reLoadTracks();
@@ -63,12 +63,12 @@ void TopLists::reLoadArtists() {
 		return;
 	m_waitingForArtists = true;
 	sp_toplistregion region =
-			Settings::toplistRegionEverywhere() ?
+			Settings::getInstance()->toplistRegionEverywhere() ?
 					SP_TOPLIST_REGION_EVERYWHERE :
 					(sp_toplistregion) sp_session_user_country(
 							Session::getInstance()->getSpSession());
 	sp_toplistbrowse_create(Session::getInstance()->getSpSession(),
-			SP_TOPLIST_TYPE_ARTISTS, region, Settings::getUserName(),
+			SP_TOPLIST_TYPE_ARTISTS, region, Settings::getInstance()->getUserName(),
 			&cb_toplistArtistsComplete, this);
 }
 
@@ -77,12 +77,12 @@ void TopLists::reLoadAlbums() {
 		return;
 	m_waitingForAlbums = true;
 	sp_toplistregion region =
-			Settings::toplistRegionEverywhere() ?
+			Settings::getInstance()->toplistRegionEverywhere() ?
 					SP_TOPLIST_REGION_EVERYWHERE :
 					(sp_toplistregion) sp_session_user_country(
 							Session::getInstance()->getSpSession());
 	sp_toplistbrowse_create(Session::getInstance()->getSpSession(),
-			SP_TOPLIST_TYPE_ALBUMS, region, Settings::getUserName(),
+			SP_TOPLIST_TYPE_ALBUMS, region, Settings::getInstance()->getUserName(),
 			&cb_toplistAlbumsComplete, this);
 }
 
@@ -91,12 +91,12 @@ void TopLists::reLoadTracks() {
 		return;
 	m_waitingForTracks = true;
 	sp_toplistregion region =
-			Settings::toplistRegionEverywhere() ?
+			Settings::getInstance()->toplistRegionEverywhere() ?
 					SP_TOPLIST_REGION_EVERYWHERE :
 					(sp_toplistregion) sp_session_user_country(
 							Session::getInstance()->getSpSession());
 	sp_toplistbrowse_create(Session::getInstance()->getSpSession(),
-			SP_TOPLIST_TYPE_TRACKS, region, Settings::getUserName(),
+			SP_TOPLIST_TYPE_TRACKS, region, Settings::getInstance()->getUserName(),
 			&cb_toplistTracksComplete, this);
 }
 

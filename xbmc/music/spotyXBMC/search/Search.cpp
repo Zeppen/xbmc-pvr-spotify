@@ -32,9 +32,9 @@
 namespace addon_music_spotify {
 
   Search::Search(string query) {
-    m_maxArtistResults = Settings::getSearchNumberArtists();
-    m_maxAlbumResults = Settings::getSearchNumberAlbums();
-    m_maxTrackResults = Settings::getSearchNumberTracks();
+    m_maxArtistResults = Settings::getInstance()->getSearchNumberArtists();
+    m_maxAlbumResults = Settings::getInstance()->getSearchNumberAlbums();
+    m_maxTrackResults = Settings::getInstance()->getSearchNumberTracks();
 
     m_query = query;
 

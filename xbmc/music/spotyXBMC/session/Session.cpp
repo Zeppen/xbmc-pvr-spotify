@@ -78,7 +78,7 @@ namespace addon_music_spotify {
       Logger::printOut(itoa(SPOTIFY_API_VERSION, version, 10));
 	  
 	  //the api is not copying the string so create a new c string
-	  CStdString location = Settings::getCachePath();
+	  CStdString location = Settings::getInstance()->getCachePath();
 	  char * cstr;
       cstr = new char [location.size()+1];
       strcpy (cstr, location.c_str());
@@ -107,13 +107,13 @@ namespace addon_music_spotify {
       }
 
       //set high bitrate
-      if (Settings::useHighBitrate()) sp_session_preferred_bitrate(m_session, SP_BITRATE_320k);
+      if (Settings::getInstance()->useHighBitrate()) sp_session_preferred_bitrate(m_session, SP_BITRATE_320k);
 
       sp_session_set_connection_type(m_session, SP_CONNECTION_TYPE_WIRED);
       sp_session_set_connection_rules(m_session, SP_CONNECTION_RULE_NETWORK);
-      sp_session_set_volume_normalization(m_session, Settings::useNormalization());
+      sp_session_set_volume_normalization(m_session, Settings::getInstance()->useNormalization());
 
-      sp_session_login(m_session, Settings::getUserName().c_str(), Settings::getPassword().c_str(), true);
+      sp_session_login(m_session, Settings::getInstance()->getUserName().c_str(), Settings::getInstance()->getPassword().c_str(), true);
       m_isEnabled = true;
       Logger::printOut("Logged in, returning");
       return true;

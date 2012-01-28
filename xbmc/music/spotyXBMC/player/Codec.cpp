@@ -40,7 +40,7 @@ namespace addon_music_spotify {
     m_Channels = 2;
     m_BitsPerSample = 16;
     //the bitrate is hardcoded, we dont no it before first music delivery and then its to late, the skin has already printed it out
-    m_Bitrate = Settings::useHighBitrate() ? 320000 : 160000;
+    m_Bitrate = Settings::getInstance()->useHighBitrate() ? 320000 : 160000;
     m_CodecName = "spotify";
     m_TotalTime = 0;
     m_currentTrack = 0;
