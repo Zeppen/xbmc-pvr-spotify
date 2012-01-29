@@ -39,11 +39,12 @@ namespace addon_music_spotify {
 	using namespace std;
 
 	ThumbStore::ThumbStore() {
-		Utils::removeDir(Settings::getInstance()->getThumbPath());
+		Logger::printOut("ThumbStore creating paths");
+		//Utils::removeDir(Settings::getInstance()->getThumbPath());
 		Utils::createDir(Settings::getInstance()->getThumbPath());
-		Utils::removeDir(Settings::getInstance()->getArtistThumbPath());
+		//Utils::removeDir(Settings::getInstance()->getArtistThumbPath());
 		Utils::createDir(Settings::getInstance()->getArtistThumbPath());
-
+		Logger::printOut("ThumbStore creating paths done");
 		m_stdFanart = new CStdString(Settings::getInstance()->getFanart());
 
 		//load the fanartmap from file
