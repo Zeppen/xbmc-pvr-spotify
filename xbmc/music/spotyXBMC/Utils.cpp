@@ -142,17 +142,17 @@ namespace addon_music_spotify {
     return pItem;
   }
 
-  void Utils::createDir(string path) {
-    XFILE::CDirectory::Create(CStdString(path));
+  void Utils::createDir(CStdString path) {
+    XFILE::CDirectory::Create(path);
 
   }
 
-  void Utils::removeDir(string path) {
-    XFILE::CDirectory::Remove(CStdString(path));
+  void Utils::removeDir(CStdString path) {
+    XFILE::CDirectory::Remove(path);
   }
 
-  void Utils::removeFile(string path) {
-    XFILE::CFile::Delete(CStdString(path));
+  void Utils::removeFile(CStdString path) {
+    XFILE::CFile::Delete(path);
   }
 
   void Utils::updatePlaylists() {
