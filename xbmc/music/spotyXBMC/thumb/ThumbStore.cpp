@@ -43,7 +43,7 @@ namespace addon_music_spotify {
 		//Utils::removeDir(Settings::getInstance()->getThumbPath());
 		Utils::createDir(Settings::getInstance()->getThumbPath());
 		//Utils::removeDir(Settings::getInstance()->getArtistThumbPath());
-		Utils::createDir(Settings::getInstance()->getArtistThumbPath());
+		//Utils::createDir(Settings::getInstance()->getArtistThumbPath());
 		Logger::printOut("ThumbStore creating paths done");
 		m_stdFanart = new CStdString(Settings::getInstance()->getFanart());
 
@@ -57,7 +57,14 @@ namespace addon_music_spotify {
 				string path;
 				getline(file, name);
 				getline(file, path);
-				CStdString *fanartUrl = new CStdString(path);
+				CStdString *fanartUrl;
+				if (path[0] == '/') {
+					// Don't create a new string if its not necessary
+					fanartUrl = m_stdFanart;
+				}
+				else {
+					fanartUrl= new CStdString(path);
+				}
 				m_fanarts.insert(stringMap::value_type(name, fanartUrl));
 			}
 		}
