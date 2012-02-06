@@ -86,7 +86,7 @@ namespace addon_music_spotify {
 		  m_radio1Genres = getRadioGenres(addon, 1);
 
 		  m_radio2Name = addon->GetSetting("radio2name");
-		  m_radio2From = 1900 + (10 * (4 + atoi(addon->GetSetting("radio12rom"))));
+		  m_radio2From = 1900 + (10 * (4 + atoi(addon->GetSetting("radio2from"))));
 		  m_radio2To = 1900 + (10 * (4 + atoi(addon->GetSetting("radio2to"))));
 
 		  m_radio2Genres = getRadioGenres(addon, 2);
