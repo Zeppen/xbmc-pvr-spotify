@@ -54,8 +54,6 @@ namespace addon_music_spotify {
   bool Session::enable() {
     if (isEnabled()) return true;
 
-    m_isEnabled = true;
-
     lock();
     m_bgThread = new BackgroundThread();
     m_bgThread->Create(true);
@@ -80,7 +78,7 @@ namespace addon_music_spotify {
       Logger::printOut(itoa(SPOTIFY_API_VERSION, version, 10));
 	  
 	  //the api is not copying the string so create a new c string
-	  CStdString location = Settings::getCachePath();
+	  CStdString location = Settings::getInstance()->getCachePath();
 	  char * cstr;
       cstr = new char [location.size()+1];
       strcpy (cstr, location.c_str());
@@ -109,13 +107,13 @@ namespace addon_music_spotify {
       }
 
       //set high bitrate
-      if (Settings::useHighBitrate()) sp_session_preferred_bitrate(m_session, SP_BITRATE_320k);
+      if (Settings::getInstance()->useHighBitrate()) sp_session_preferred_bitrate(m_session, SP_BITRATE_320k);
 
       sp_session_set_connection_type(m_session, SP_CONNECTION_TYPE_WIRED);
       sp_session_set_connection_rules(m_session, SP_CONNECTION_RULE_NETWORK);
-      sp_session_set_volume_normalization(m_session, Settings::useNormalization());
+      sp_session_set_volume_normalization(m_session, Settings::getInstance()->useNormalization());
 
-      sp_session_login(m_session, Settings::getUserName().c_str(), Settings::getPassword().c_str(), true);
+      sp_session_login(m_session, Settings::getInstance()->getUserName().c_str(), Settings::getInstance()->getPassword().c_str(), true);
       m_isEnabled = true;
       Logger::printOut("Logged in, returning");
       return true;
@@ -133,45 +131,46 @@ namespace addon_music_spotify {
   }
 
   bool Session::disConnect() {
-    Logger::printOut("Logging out");
+  	if (m_isEnabled) {
+      Logger::printOut("Logging out");
 
-    PlayerHandler::deInit();
-    Logger::printOut("cleaned player");
+      PlayerHandler::deInit();
+      Logger::printOut("cleaned player");
 
-    //delete m_playlists;
-    //m_playlists = NULL;
-    Logger::printOut("cleaned playlists");
+      //delete m_playlists;
+      //m_playlists = NULL;
+      Logger::printOut("cleaned playlists");
 
-    //SearchHandler::deInit();
-    Logger::printOut("cleaned search");
+      //SearchHandler::deInit();
+      Logger::printOut("cleaned search");
 
-    //RadioHandler::deInit();
-    Logger::printOut("cleaned radios");
+      //RadioHandler::deInit();
+      Logger::printOut("cleaned radios");
 
-    //ArtistStore::deInit();
-    Logger::printOut("cleaned artists");
+      //ArtistStore::deInit();
+      Logger::printOut("cleaned artists");
 
-    //AlbumStore::deInit();
-    Logger::printOut("cleaned albums");
+      //AlbumStore::deInit();
+      Logger::printOut("cleaned albums");
 
-    //TrackStore::deInit();
-    Logger::printOut("cleaned tracks");
+      //TrackStore::deInit();
+      Logger::printOut("cleaned tracks");
 
-    ThumbStore::deInit();
-    Logger::printOut("cleaned thumbs");
+      ThumbStore::deInit();
+      Logger::printOut("cleaned thumbs");
 
-    //TODO FIX THE LOGOUT... Why is it crashing on logout?
-    m_isLoggedOut = false;
-    sp_session_logout(m_session);
+      //TODO FIX THE LOGOUT... Why is it crashing on logout?
+      m_isLoggedOut = false;
+      sp_session_logout(m_session);
 
-    Logger::printOut("logged out waiting for callback");
-    while (!m_isLoggedOut) {
-      processEvents();
-    }
-    Logger::printOut("logged out");
-    sp_session_release(m_session);
-    Logger::printOut("cleaned session");
-
+      Logger::printOut("logged out waiting for callback");
+      while (!m_isLoggedOut) {
+        processEvents();
+      }
+      Logger::printOut("logged out");
+      sp_session_release(m_session);
+      Logger::printOut("cleaned session");
+  	}
     return true;
   }
 

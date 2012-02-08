@@ -34,131 +34,240 @@ namespace addon_music_spotify {
 
   class Settings {
   public:
-    Settings();
-    virtual ~Settings();
 
-    static bool enabled() {
-      return getAddonSetting("enable") == "true";
-    }
-    static CStdString getUserName() {
-      return getAddonSetting("username");
-    }
-    static CStdString getPassword() {
-      return getAddonSetting("password");
-    }
-    static CStdString getCachePath();
-    static CStdString getThumbPath();
-    static CStdString getArtistThumbPath();
+    static Settings *getInstance();
+    bool init();
+    void deInit();
 
-    static bool useHighBitrate() {
-      return getAddonSetting("highBitrate") == "true";
-    }
-    static bool useNormalization(){
-    	return getAddonSetting("normalization") == "true";
+    bool enabled() {
+      return m_enabled;
     }
 
-    static CStdString getFanart();
-
-    static bool getUseHTFanarts() {
-      return getAddonSetting("htfanart") == "true";
-    }
-    static bool getUseHTArtistThumbs() {
-      return getAddonSetting("htartistthumb") == "true";
+    CStdString getUserName() {
+      return m_userName;
     }
 
-    static int getSearchNumberArtists() {
-      return 10 * atoi(getAddonSetting("searchNoArtists")) + 1;
-    }
-    static int getSearchNumberAlbums() {
-      return 10 * atoi(getAddonSetting("searchNoAlbums")) + 1;
-    }
-    static int getSearchNumberTracks() {
-      return 10 * atoi(getAddonSetting("searchNoTracks")) + 1;
+    CStdString getPassword() {
+      return m_password;
     }
 
-    static bool getPreloadArtistDetails() {
-      return getAddonSetting("preloadArtistDetails") == "true";
-    }
-    static int getArtistNumberArtists();
-    static int getArtistNumberAlbums();
-    static int getArtistNumberTracks();
-
-    static CStdString getRadio1Name() {
-      return getAddonSetting("radio1name");
-    }
-    static int getRadio1From() {
-      return 1900 + (10 * (4 + atoi(getAddonSetting("radio1from"))));
-    }
-    static int getRadio1To() {
-      return 1900 + (10 * (4 + atoi(getAddonSetting("radio1to"))));
-    }
-    static sp_radio_genre getRadio1Genres();
-
-    static CStdString getRadio2Name() {
-      return getAddonSetting("radio2name");
-    }
-    static int getRadio2From() {
-      return 1900 + (10 * (4 + atoi(getAddonSetting("radio12rom"))));
-    }
-    static int getRadio2To() {
-      return 1900 + (10 * (4 + atoi(getAddonSetting("radio2to"))));
-    }
-    static sp_radio_genre getRadio2Genres();
-
-    static int getRadioNumberTracks() {
-      return atoi(getAddonSetting("radioNoTracks")) + 3;
+    CStdString getCachePath() {
+    	return m_cachePath;
     }
 
-    static bool toplistRegionEverywhere() {
-      return getAddonSetting("topListRegion") == "1";
+    CStdString getThumbPath() {
+    	return m_thumbPath;
     }
 
-    static bool getPreloadTopLists() {
-      return getAddonSetting("preloadToplists") == "true";
+    CStdString getArtistThumbPath() {
+    	return m_artistThumbPath;
     }
-    static CStdString getByString() {
-      return getAddonString(30002);
+
+    bool useHighBitrate() {
+      return m_useHighBitrate;
     }
-    static CStdString getTopListArtistString() {
-      return getAddonString(30500);
+    bool useNormalization(){
+    	return m_useNormalization;
     }
-    static CStdString getTopListAlbumString() {
-      return getAddonString(30501);
+
+    CStdString getFanart() {
+    	return m_fanart;
     }
-    static CStdString getTopListTrackString() {
-      return getAddonString(30502);
+
+    bool getUseHTFanarts() {
+      return m_useHTFanarts;
     }
-    static CStdString getRadioPrefixString() {
-      return getAddonString(30503);
+    bool getUseHTArtistThumbs() {
+      return m_useHTArtistThumbs;
     }
-    static CStdString getSimilarArtistsString() {
-      return getAddonString(30504);
+
+    int getStartDelay() {
+      return m_startDelay;
     }
-    static CStdString getInboxString() {
-      return getAddonString(30505);
+
+    bool saveLogToFile() {
+      return m_saveLogToFile;
     }
-    static CStdString getStarTrackString() {
-      return getAddonString(30600);
+
+    int getSearchNumberArtists() {
+      return m_searchNumberArtists;
     }
-    static CStdString getUnstarTrackString() {
-      return getAddonString(30601);
+
+    int getSearchNumberAlbums() {
+      return m_searchNumberAlbums;
     }
-    static CStdString getStarAlbumString() {
-      return getAddonString(30602);
+
+    int getSearchNumberTracks() {
+      return m_searchNumberTracks;
     }
-    static CStdString getUnstarAlbumString() {
-      return getAddonString(30603);
+
+    bool getPreloadArtistDetails() {
+      return m_preloadArtistDetails;
     }
-    static CStdString getBrowseAlbumString() {
-      return getAddonString(30604);
+
+    int getArtistNumberArtists() {
+    	return m_artistNumberArtists;
     }
-    static CStdString getBrowseArtistString() {
-      return getAddonString(30605);
+
+    int getArtistNumberAlbums() {
+    	return m_artistNumberAlbums;
+    }
+
+    int getArtistNumberTracks() {
+    	return m_artistNumberTracks;
+    }
+
+    CStdString getRadio1Name() {
+      return m_radio1Name;
+    }
+
+    int getRadio1From() {
+      return m_radio1From;
+    }
+
+    int getRadio1To() {
+      return m_radio1To;
+    }
+
+    sp_radio_genre getRadio1Genres() {
+    	return m_radio1Genres;
+    }
+
+    CStdString getRadio2Name() {
+      return m_radio2Name;
+    }
+
+    int getRadio2From() {
+      return m_radio2From;
+    }
+
+    int getRadio2To() {
+      return m_radio2To;
+    }
+
+    sp_radio_genre getRadio2Genres() {
+    	return m_radio2Genres;
+    }
+
+    int getRadioNumberTracks() {
+      return m_radioNumberTracks;
+    }
+
+    bool toplistRegionEverywhere() {
+      return m_toplistRegionEverywhere;
+    }
+
+    bool getPreloadTopLists() {
+      return m_preloadTopLists;
+    }
+
+    CStdString getByString() {
+      return m_byString;
+    }
+
+    CStdString getTopListArtistString() {
+      return m_topListArtistString;
+    }
+
+    CStdString getTopListAlbumString() {
+      return m_topListAlbumString;
+    }
+
+    CStdString getTopListTrackString() {
+      return m_topListTrackString;
+    }
+
+    CStdString getRadioPrefixString() {
+      return m_radioPrefixString;
+    }
+
+    CStdString getSimilarArtistsString() {
+      return m_similarArtistsString;
+    }
+
+    CStdString getInboxString() {
+      return m_inboxString;
+    }
+
+    CStdString getStarTrackString() {
+      return m_starTrackString;
+    }
+
+    CStdString getUnstarTrackString() {
+      return m_unstarTrackString;
+    }
+
+    CStdString getStarAlbumString() {
+      return m_starAlbumString;
+    }
+
+    CStdString getUnstarAlbumString() {
+      return m_unstarAlbumString;
+    }
+
+    CStdString getBrowseAlbumString() {
+      return m_browseAlbumString;
+    }
+
+    CStdString getBrowseArtistString() {
+      return m_browseArtistString;
     }
 
   private:
-    static CStdString getAddonSetting(CStdString key);
-    static CStdString getAddonString(int id);
+    bool m_enabled;
+    bool m_useHighBitrate;
+    bool m_useNormalization;
+    bool m_useHTFanarts;
+    bool m_useHTArtistThumbs;
+    bool m_saveLogToFile;
+    bool m_preloadArtistDetails;
+    bool m_toplistRegionEverywhere;
+    bool m_preloadTopLists;
+
+    int m_startDelay;
+    int m_searchNumberArtists;
+    int m_searchNumberAlbums;
+    int m_searchNumberTracks;
+    int m_radio1From;
+    int m_radio1To;
+    int m_radio2From;
+    int m_radio2To;
+    int m_radioNumberTracks;
+    int m_artistNumberArtists;
+    int m_artistNumberAlbums;
+    int m_artistNumberTracks;
+
+    sp_radio_genre m_radio1Genres;
+    sp_radio_genre m_radio2Genres;
+
+    CStdString m_userName;
+    CStdString m_password;
+    CStdString m_cachePath;
+    CStdString m_thumbPath;
+    CStdString m_artistThumbPath;
+    CStdString m_byString;
+    CStdString m_fanart;
+    CStdString m_radio1Name;
+    CStdString m_radio2Name;
+    CStdString m_topListArtistString;
+    CStdString m_topListAlbumString;
+    CStdString m_topListTrackString;
+    CStdString m_radioPrefixString;
+    CStdString m_similarArtistsString;
+    CStdString m_inboxString;
+    CStdString m_starTrackString;
+    CStdString m_unstarTrackString;
+    CStdString m_starAlbumString;
+    CStdString m_unstarAlbumString;
+    CStdString m_browseAlbumString;
+    CStdString m_browseArtistString;
+
+    sp_radio_genre getRadioGenres(ADDON::AddonPtr addon, int radio);
+
+    Settings();
+    virtual ~Settings();
+
+    static Settings *m_instance;
   };
 
 } /* namespace addon_music_spotify */

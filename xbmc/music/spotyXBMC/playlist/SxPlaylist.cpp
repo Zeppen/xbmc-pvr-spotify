@@ -69,7 +69,7 @@ namespace addon_music_spotify {
 
   const char* SxPlaylist::getName() {
 	 //not the most elegant solution, but if the index is 0, its the inbox
-    return m_index == 0 ? Settings::getInboxString().GetBufferSetLength(Settings::getInboxString().GetLength() +1) : sp_playlist_name(m_spPlaylist);
+    return m_index == 0 ? Settings::getInstance()->getInboxString().GetBufferSetLength(Settings::getInstance()->getInboxString().GetLength() +1) : sp_playlist_name(m_spPlaylist);
   }
 
   const char* SxPlaylist::getOwnerName() {
@@ -105,6 +105,7 @@ namespace addon_music_spotify {
       if (sp_playlist_get_image(m_spPlaylist, image)) {
         m_thumb = ThumbStore::getInstance()->getThumb(image);
       }
+      Logger::printOut("reload play 3");
 
       vector<SxTrack*> newTracks;
       for (int index = 0; index < sp_playlist_num_tracks(m_spPlaylist); index++) {
@@ -114,11 +115,10 @@ namespace addon_music_spotify {
         if (track) {
           newTracks.push_back(track);
           //no thumb, lets pick one from the track list
-          if (m_thumb == NULL
-          ) if (track->getThumb() != NULL
-          )
-          //no need to add ref to the thumb, when the track disappears the playlist will switch thumb
-            m_thumb = track->getThumb();
+          if (m_thumb == NULL)
+          	if (track->getThumb() != NULL)
+              //no need to add ref to the thumb, when the track disappears the playlist will switch thumb
+              m_thumb = track->getThumb();
         }
       }
 

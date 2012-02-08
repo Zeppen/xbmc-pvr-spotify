@@ -22,6 +22,7 @@
 #include "Session.h"
 #include "BackgroundThread.h"
 #include "../Logger.h"
+#include "../SxSettings.h"
 
 namespace addon_music_spotify {
 
@@ -32,7 +33,13 @@ namespace addon_music_spotify {
   }
 
   void BackgroundThread::OnStartup() {
+  	Sleep(1000);
     Logger::printOut("bgthread OnStartup");
+    if (!Settings::getInstance()->init()){
+    	Logger::printOut("bgthread quiting, spotyxbmc is not enabled or the addon is missing");
+    	return;
+    }
+  	Sleep(Settings::getInstance()->getStartDelay());
     Session::getInstance()->connect();
     Session::getInstance()->unlock();
     Logger::printOut("bgthread OnStartup done");

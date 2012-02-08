@@ -3,7 +3,6 @@
     <string id="30001">spotyXBMC</string>
     <string id="30002">by</string>
     <string id="30003">Restart XBMC to apply</string>
-
     
     <string id="30400">General</string>
     <string id="30401">Username</string>
@@ -17,6 +16,8 @@
     <string id="30409">Use volume normalization</string>
     <string id="30410">Download fanarts from HTBackdrops</string>
     <string id="30411">Download artist thumbs from HTBackdrops.com</string>
+    <string id="30412">Delayed start (seconds)</string>
+    <string id="30413">Write log to file (temp/spotify/log.txt)</string>
     
     <string id="30420">Performance</string>
     <string id="30421">Search: Max number of artists</string>
@@ -54,7 +55,7 @@
     <string id="30458">Latin</string>
     <string id="30459">Pop</string>
     <string id="30462">Punk</string>
-    <string id="30463">Reggea</string>
+    <string id="30463">Reggae</string>
     <string id="30464">R&B</string>
     <string id="30465">Rock</string>
     <string id="30466">Singer-songwriter</string>
@@ -63,30 +64,9 @@
     <string id="30469">60s</string>
     <string id="30471">70s</string>
     <string id="30472">80s</string>
-
-    
-  <!--<string id="30443">Alternative</string>
-    <string id="30444">Blues</string>
-    <string id="30445">Country</string>
-    <string id="30446">Disco</string>
-    <string id="30447">Funk</string>
-    <string id="30448">Hard Rock</string>
-    <string id="30449">Heavy Metal</string>
-    <string id="30450">Rap</string>
-    <string id="30451">House</string>
-    <string id="30452">Jazz</string>
-    <string id="30453">New Wave</string>
-    <string id="30454">RNB</string>
-    <string id="30455">Pop</string>
-    <string id="30456">Punk</string>
-    <string id="30457">Reggae</string>
-    <string id="30458">Pop Rock</string>
-    <string id="30459">Soul</string>
-    <string id="30462">Techno</string>-->
     
     <string id="30460">From decade</string>
     <string id="30461">To decade</string>
-
 
     <string id="30470">Number of radio tracks</string>
 

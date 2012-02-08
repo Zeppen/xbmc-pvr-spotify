@@ -39,15 +39,16 @@ namespace addon_music_spotify {
 	using namespace std;
 
 	ThumbStore::ThumbStore() {
-		Utils::removeDir(Settings::getThumbPath());
-		Utils::createDir(Settings::getThumbPath());
-		Utils::removeDir(Settings::getArtistThumbPath());
-		Utils::createDir(Settings::getArtistThumbPath());
-
-		m_stdFanart = new CStdString(Settings::getFanart());
+		Logger::printOut("ThumbStore creating paths");
+		//Utils::removeDir(Settings::getInstance()->getThumbPath());
+		Utils::createDir(Settings::getInstance()->getThumbPath());
+		//Utils::removeDir(Settings::getInstance()->getArtistThumbPath());
+		//Utils::createDir(Settings::getInstance()->getArtistThumbPath());
+		Logger::printOut("ThumbStore creating paths done");
+		m_stdFanart = new CStdString(Settings::getInstance()->getFanart());
 
 		//load the fanartmap from file
-		string path = Settings::getCachePath() + "fanarts.txt";
+		string path = Settings::getInstance()->getCachePath() + "fanarts.txt";
 		Logger::printOut("loading fanart list");
 		ifstream file(path.c_str());
 		if (file.is_open()) {
@@ -56,7 +57,14 @@ namespace addon_music_spotify {
 				string path;
 				getline(file, name);
 				getline(file, path);
-				CStdString *fanartUrl = new CStdString(path);
+				CStdString *fanartUrl;
+				if (path[0] == '/') {
+					// Don't create a new string if its not necessary
+					fanartUrl = m_stdFanart;
+				}
+				else {
+					fanartUrl= new CStdString(path);
+				}
 				m_fanarts.insert(stringMap::value_type(name, fanartUrl));
 			}
 		}
@@ -65,7 +73,7 @@ namespace addon_music_spotify {
 
 	void ThumbStore::deInit() {
 		delete m_instance;
-		Utils::removeDir(Settings::getThumbPath());
+		Utils::removeDir(Settings::getInstance()->getThumbPath());
 	}
 
 	ThumbStore::~ThumbStore() {
@@ -94,7 +102,7 @@ namespace addon_music_spotify {
 				return NULL;
 			}
 
-			string path = Settings::getThumbPath();
+			string path = Settings::getInstance()->getThumbPath();
 			thumb = new SxThumb(spImage, path);
 			m_thumbs.insert(thumbMap::value_type(image, thumb));
 		} else {
@@ -125,7 +133,7 @@ namespace addon_music_spotify {
 
 	CStdString *ThumbStore::getFanart(const char *artistName) {
 
-		if (!Settings::getUseHTFanarts())
+		if (!Settings::getInstance()->getUseHTFanarts())
 			return m_stdFanart;
 
 		//Logger::printOut("Looking for fanart");
@@ -180,7 +188,7 @@ namespace addon_music_spotify {
 								stringMap::value_type(artistNameString, fanartUrl));
 
 						//save the fanart url to the cachefile
-						string path = Settings::getCachePath() + "fanarts.txt";
+						string path = Settings::getInstance()->getCachePath() + "fanarts.txt";
 						Logger::printOut("saving fanart list");
 						ofstream file(path.c_str(), ios::app);
 						bool dowrite = file.is_open();
@@ -198,7 +206,7 @@ namespace addon_music_spotify {
 			m_fanarts.insert(stringMap::value_type(artistNameString, m_stdFanart));
 
 			//save the fanart url to the cachefile
-			string path = Settings::getCachePath() + "fanarts.txt";
+			string path = Settings::getInstance()->getCachePath() + "fanarts.txt";
 			Logger::printOut("saving fanart list");
 			ofstream file(path.c_str(), ios::app);
 			bool dowrite = file.is_open();

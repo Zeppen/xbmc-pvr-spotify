@@ -39,9 +39,9 @@ namespace addon_music_spotify {
     static const CFileItemPtr SxTrackToItem(SxTrack* track, string prefix = "", int trackNumber = -1);
     static const CFileItemPtr SxArtistToItem(SxArtist* artist, string prefix = "");
 
-    static void createDir(string path);
-    static void removeDir(string path);
-    static void removeFile(string file);
+    static void createDir(CStdString path);
+    static void removeDir(CStdString path);
+    static void removeFile(CStdString file);
 
     static void updateMenu();
     static void updatePlaylists();

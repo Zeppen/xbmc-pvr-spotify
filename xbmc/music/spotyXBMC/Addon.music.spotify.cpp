@@ -49,7 +49,6 @@ using namespace std;
 Addon_music_spotify* g_spotify;
 
 Addon_music_spotify::Addon_music_spotify() {
-	if (Settings::enabled())
 		Session::getInstance()->enable();
 }
 
@@ -79,14 +78,14 @@ bool Addon_music_spotify::GetPlaylists(CFileItemList& items) {
 				const char* owner = ps->getPlaylist(i)->getOwnerName();
 				if (owner != NULL)
 					playlistShare.strName.Format("%s %s %s",
-							ps->getPlaylist(i)->getName(), Settings::getByString(), owner);
+							ps->getPlaylist(i)->getName(), Settings::getInstance()->getByString(), owner);
 				else
 					playlistShare.strName.Format("%s", ps->getPlaylist(i)->getName());
 				CFileItemPtr pItem(new CFileItem(playlistShare));
 				SxThumb* thumb = ps->getPlaylist(i)->getThumb();
 				if (thumb != NULL)
 					pItem->SetThumbnailImage(thumb->getPath());
-				pItem->SetProperty("fanart_image", Settings::getFanart());
+				pItem->SetProperty("fanart_image", Settings::getInstance()->getFanart());
 				items.Add(pItem);
 			}
 		}
@@ -151,7 +150,7 @@ bool Addon_music_spotify::getArtistAlbums(CFileItemList& items,
 
 	//add the similar artists item
 	if (artist->getArtists().size() > 0) {
-		CFileItemPtr pItem(new CFileItem(Settings::getSimilarArtistsString()));
+		CFileItemPtr pItem(new CFileItem(Settings::getInstance()->getSimilarArtistsString()));
 		CStdString path;
 		sp_link* link = sp_link_create_from_artist(spArtist);
 		char* uri = new char[256];
@@ -163,7 +162,7 @@ bool Addon_music_spotify::getArtistAlbums(CFileItemList& items,
 		pItem->m_bIsFolder = true;
 		items.Add(pItem);
 		pItem->SetIconImage("DefaultMusicArtists.png");
-		pItem->SetProperty("fanart_image", Settings::getFanart());
+		pItem->SetProperty("fanart_image", Settings::getInstance()->getFanart());
 	}
 
 	//add the albums
@@ -457,29 +456,29 @@ bool Addon_music_spotify::GetTopLists(CFileItemList& items) {
 			return true;
 
 		//add the tracks entry
-		CFileItemPtr pItem(new CFileItem(Settings::getTopListTrackString()));
+		CFileItemPtr pItem(new CFileItem(Settings::getInstance()->getTopListTrackString()));
 		CStdString path;
 		path.Format("musicdb://2/spotify:toplist/-1/");
 		pItem->SetPath(path);
 		pItem->m_bIsFolder = true;
 		items.Add(pItem);
-		pItem->SetProperty("fanart_image", Settings::getFanart());
+		pItem->SetProperty("fanart_image", Settings::getInstance()->getFanart());
 
 		//add the album entry
-		CFileItemPtr pItem2(new CFileItem(Settings::getTopListAlbumString()));
+		CFileItemPtr pItem2(new CFileItem(Settings::getInstance()->getTopListAlbumString()));
 		path.Format("musicdb://2/spotify:toplist");
 		pItem2->SetPath(path);
 		pItem2->m_bIsFolder = true;
 		items.Add(pItem2);
-		pItem2->SetProperty("fanart_image", Settings::getFanart());
+		pItem2->SetProperty("fanart_image", Settings::getInstance()->getFanart());
 
 		//add the artist entry
-		CFileItemPtr pItem3(new CFileItem(Settings::getTopListArtistString()));
+		CFileItemPtr pItem3(new CFileItem(Settings::getInstance()->getTopListArtistString()));
 		path.Format("musicdb://1/spotify:toplist");
 		pItem3->SetPath(path);
 		pItem3->m_bIsFolder = true;
 		items.Add(pItem3);
-		pItem3->SetProperty("fanart_image", Settings::getFanart());
+		pItem3->SetProperty("fanart_image", Settings::getInstance()->getFanart());
 	}
 	return true;
 }
@@ -488,25 +487,25 @@ bool Addon_music_spotify::GetCustomEntries(CFileItemList& items) {
 	if (isReady()) {
 		//add radio 1
 		CStdString name;
-		name.Format("%s%s", Settings::getRadioPrefixString(),
-				Settings::getRadio1Name());
+		name.Format("%s%s", Settings::getInstance()->getRadioPrefixString(),
+				Settings::getInstance()->getRadio1Name());
 		CFileItemPtr pItem(new CFileItem(name));
 		CStdString path;
 		path.Format("musicdb://3/spotify:radio:1/");
 		pItem->SetPath(path);
 		pItem->m_bIsFolder = true;
 		items.Add(pItem);
-		pItem->SetProperty("fanart_image", Settings::getFanart());
+		pItem->SetProperty("fanart_image", Settings::getInstance()->getFanart());
 
 		//add radio 2
-		name.Format("%s%s", Settings::getRadioPrefixString(),
-				Settings::getRadio2Name());
+		name.Format("%s%s", Settings::getInstance()->getRadioPrefixString(),
+				Settings::getInstance()->getRadio2Name());
 		CFileItemPtr pItem2(new CFileItem(name));
 		path.Format("musicdb://3/spotify:radio:2/");
 		pItem2->SetPath(path);
 		pItem2->m_bIsFolder = true;
 		items.Add(pItem2);
-		pItem2->SetProperty("fanart_image", Settings::getFanart());
+		pItem2->SetProperty("fanart_image", Settings::getInstance()->getFanart());
 
 	}
 	return true;
@@ -529,11 +528,11 @@ bool Addon_music_spotify::GetContextButtons(CFileItemPtr& item,
 				buttons.Add(
 						CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_ALBUM,
 						salbum->isStarred() ?
-								Settings::getUnstarAlbumString() :
-								Settings::getStarAlbumString());
+								Settings::getInstance()->getUnstarAlbumString() :
+								Settings::getInstance()->getStarAlbumString());
 				AlbumStore::getInstance()->removeAlbum(salbum);
 				buttons.Add(CONTEXT_BUTTON_SPOTIFY_BROWSE_ARTIST,
-						Settings::getBrowseArtistString());
+						Settings::getInstance()->getBrowseArtistString());
 			}
 			sp_link_release(spLink);
 			sp_album_release(spAlbum);
@@ -545,12 +544,12 @@ bool Addon_music_spotify::GetContextButtons(CFileItemPtr& item,
 			buttons.Add(
 					CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_TRACK,
 					sp_track_is_starred(Session::getInstance()->getSpSession(), spTrack) ?
-							Settings::getUnstarTrackString() :
-							Settings::getStarTrackString());
+							Settings::getInstance()->getUnstarTrackString() :
+							Settings::getInstance()->getStarTrackString());
 			buttons.Add(CONTEXT_BUTTON_SPOTIFY_BROWSE_ALBUM,
-					Settings::getBrowseAlbumString());
+					Settings::getInstance()->getBrowseAlbumString());
 			buttons.Add(CONTEXT_BUTTON_SPOTIFY_BROWSE_ARTIST,
-					Settings::getBrowseArtistString());
+					Settings::getInstance()->getBrowseArtistString());
 
 			//this is unstable as it is now... find a solution later
 
@@ -566,8 +565,8 @@ bool Addon_music_spotify::GetContextButtons(CFileItemPtr& item,
 				buttons.Add(
 						CONTEXT_BUTTON_SPOTIFY_TOGGLE_STAR_ALBUM,
 						salbum->isStarred() ?
-								Settings::getUnstarAlbumString() :
-								Settings::getStarAlbumString());
+								Settings::getInstance()->getUnstarAlbumString() :
+								Settings::getInstance()->getStarAlbumString());
 				AlbumStore::getInstance()->removeAlbum(salbum);
 			}
 
