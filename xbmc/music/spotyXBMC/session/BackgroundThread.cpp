@@ -33,7 +33,7 @@ namespace addon_music_spotify {
   }
 
   void BackgroundThread::OnStartup() {
-  	Sleep(1000);
+  	Sleep(100);
     Logger::printOut("bgthread OnStartup");
     if (!Settings::getInstance()->init()){
     	Logger::printOut("bgthread quiting, spotyxbmc is not enabled or the addon is missing");
@@ -63,7 +63,7 @@ namespace addon_music_spotify {
         Session::getInstance()->unlock();
       }
       Session::getInstance()->m_nextEvent -= 5;
-      Sleep(5);
+      Sleep(0);
     }
     Logger::printOut("exiting process thread");
     Session::getInstance()->disConnect();
