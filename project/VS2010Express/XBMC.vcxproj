@@ -86,12 +86,12 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|Win32'">XBMC\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|Win32'">XBMC\$(Configuration)\objs\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|Win32'">true</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug (DirectX)|Win32'">$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug (DirectX)|Win32'">..\..\lib\libspotify\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug (DirectX)|Win32'">$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">$(DXSDK_DIR)Include;..\..\lib\libspotify\include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release (DirectX)|Win32'">$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|Win32'">$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|Win32'">..\..\lib\libspotify\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">..\..\lib\libspotify\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug (OpenGL)|Win32'">$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release (OpenGL)|Win32'">$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -123,9 +123,9 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 /IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;opengl32.lib;DSound.lib;glew32.lib;glu32.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;opengl32.lib;DSound.lib;glew32.lib;glu32.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;libspotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)XBMC.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\lib\libSDL-WIN32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\libspotify;..\..\lib\libSDL-WIN32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc;msvcrt;libci;msvcprt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>dnssd.dll;dwmapi.dll;libmicrohttpd-5.dll;ssh.dll;sqlite3.dll;libsamplerate-0.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -165,9 +165,9 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 /IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;D3D9.lib;D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;strmiids.lib;dxguid.lib;mfuuid.lib;comctl32.lib;yajl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;D3D9.lib;D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;strmiids.lib;dxguid.lib;mfuuid.lib;comctl32.lib;yajl.lib;libspotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)XBMC.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\lib\libSDL-WIN32\lib;..\..\xbmc\cores\DSPlayer\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\libspotify;..\..\lib\libSDL-WIN32\lib;..\..\xbmc\cores\DSPlayer\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc;msvcrt;libcmt;msvcrtd;msvcprtd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
@@ -214,9 +214,9 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 /IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;D3D9.lib;D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;strmiids.lib;mfuuid.lib;comctl32.lib;yajl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;D3D9.lib;D3dx9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;strmiids.lib;mfuuid.lib;comctl32.lib;yajl.lib;libspotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)XBMC.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\lib\libSDL-WIN32\lib;..\..\xbmc\cores\DSPlayer\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\libSDL-WIN32\lib;..\..\lib\libspotify;..\..\xbmc\cores\DSPlayer\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc;msvcrt;libci;msvcprt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>dnssd.dll;dwmapi.dll;libmicrohttpd-5.dll;ssh.dll;sqlite3.dll;libsamplerate-0.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -256,9 +256,9 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 /IGNORE:4089 /ignore:4254 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>SDL.lib;D3D9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;D3D9.lib;DInput8.lib;DSound.lib;winmm.lib;ws2_32.lib;Mpr.lib;Iphlpapi.lib;PowrProf.lib;setupapi.lib;dwmapi.lib;yajl.lib;libspotify.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)XBMC.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\lib\libSDL-WIN32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\libspotify;..\..\lib\libSDL-WIN32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc;msvcrt;libcmt;msvcrtd;msvcprtd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
@@ -639,6 +639,37 @@
     <ClCompile Include="..\..\xbmc\music\MusicDatabase.cpp" />
     <ClCompile Include="..\..\xbmc\music\MusicInfoLoader.cpp" />
     <ClCompile Include="..\..\xbmc\music\Song.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\Addon.music.spotify.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\album\AlbumContainer.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\album\AlbumStore.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\album\SxAlbum.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\artist\ArtistContainer.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\artist\ArtistStore.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\artist\SxArtist.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\Logger.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\player\Codec.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\player\PlayerHandler.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\playlist\PlaylistStore.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\playlist\StarredBackgroundLoader.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\playlist\StarredList.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\playlist\SxPlaylist.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\playlist\TopLists.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\radio\RadioBackgroundLoader.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\radio\RadioHandler.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\radio\SxRadio.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\search\Search.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\search\SearchHandler.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\search\SearchResultBackgroundLoader.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\session\BackgroundThread.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\session\Session.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\session\SessionCallbacks.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\SxSettings.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\thumb\SxThumb.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\thumb\ThumbStore.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\track\SxTrack.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\track\TrackContainer.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\track\TrackStore.cpp" />
+    <ClCompile Include="..\..\xbmc\music\spotyXBMC\Utils.cpp" />
     <ClCompile Include="..\..\xbmc\music\tags\APEv2Tag.cpp" />
     <ClCompile Include="..\..\xbmc\music\tags\FlacTag.cpp" />
     <ClCompile Include="..\..\xbmc\music\tags\Id3Tag.cpp" />
@@ -1546,6 +1577,39 @@
     <ClInclude Include="..\..\xbmc\music\MusicDatabase.h" />
     <ClInclude Include="..\..\xbmc\music\MusicInfoLoader.h" />
     <ClInclude Include="..\..\xbmc\music\Song.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\Addon.music.spotify.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\album\AlbumContainer.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\album\AlbumStore.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\album\SxAlbum.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\appkey.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\artist\ArtistContainer.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\artist\ArtistStore.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\artist\SxArtist.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\Logger.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\player\Codec.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\player\PlayerHandler.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\playlist\PlaylistStore.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\playlist\StarredBackgroundLoader.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\playlist\StarredList.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\playlist\SxPlaylist.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\playlist\TopLists.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\radio\RadioBackgroundLoader.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\radio\RadioHandler.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\radio\SxRadio.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\search\Search.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\search\SearchHandler.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\search\SearchResultBackgroundLoader.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\session\BackgroundThread.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\session\Session.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\session\SessionCallbacks.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\SxSettings.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\SxSettings.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\thumb\SxThumb.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\thumb\ThumbStore.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\track\SxTrack.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\track\TrackContainer.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\track\TrackStore.h" />
+    <ClInclude Include="..\..\xbmc\music\spotyXBMC\Utils.h" />
     <ClInclude Include="..\..\xbmc\music\tags\APEv2Tag.h" />
     <ClInclude Include="..\..\xbmc\music\tags\DllLibapetag.h" />
     <ClInclude Include="..\..\xbmc\music\tags\DllLibid3tag.h" />

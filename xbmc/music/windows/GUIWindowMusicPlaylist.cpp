@@ -659,8 +659,8 @@ void CGUIWindowMusicPlayList::MoveItem(int iStart, int iDest)
 }
 
 void CGUIWindowMusicPlayList::MarkPlaying()
-{
-/*  // clear markings
+{/*
+  // clear markings
   for (int i = 0; i < m_vecItems->Size(); i++)
     m_vecItems->Get(i)->Select(false);
 

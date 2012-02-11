@@ -19,6 +19,9 @@
  *
  */
 
+//spotify
+#include "music/spotyXBMC/Addon.music.spotify.h"
+
 #include "threads/SystemClock.h"
 #include "system.h"
 #include "Application.h"
@@ -326,6 +329,7 @@
 #ifdef HAS_IRSERVERSUITE
   #include "input/windows/IRServerSuite.h"
 #endif
+
 
 using namespace std;
 using namespace ADDON;
@@ -1258,6 +1262,9 @@ bool CApplication::Initialize()
     g_windowManager.ActivateWindow(g_SkinInfo->GetFirstWindow());
   }
 
+  //spotify
+  g_spotify = new Addon_music_spotify();
+
   g_sysinfo.Refresh();
 
   CLog::Log(LOGINFO, "removing tempfiles");
@@ -1307,6 +1314,7 @@ bool CApplication::Initialize()
 
   // reset our screensaver (starts timers etc.)
   ResetScreenSaver();
+
   return true;
 }
 
@@ -3207,6 +3215,10 @@ bool CApplication::Cleanup()
 {
   try
   {
+    //spotify
+    if (g_spotify)
+      g_spotify->enable(false);
+      //delete g_spotify;
     g_windowManager.Delete(WINDOW_MUSIC_PLAYLIST);
     g_windowManager.Delete(WINDOW_MUSIC_PLAYLIST_EDITOR);
     g_windowManager.Delete(WINDOW_MUSIC_FILES);
@@ -4471,6 +4483,12 @@ void CApplication::CheckScreenSaverAndDPMS()
   {
     m_bScreenSave = true;
     maybeScreensaver = false;
+  }
+
+  if (m_bScreenSave && IsPlayingVideo() && !m_pPlayer->IsPaused())
+  {
+    WakeUpScreenSaverAndDPMS();
+    return;
   }
 
   if (!maybeScreensaver && !maybeDPMS) return;  // Nothing to do.

@@ -19,6 +19,8 @@
  *
  */
 
+//spotify
+#include "../../music/spotyXBMC/Addon.music.spotify.h"
 #include "DirectoryNodeArtist.h"
 #include "QueryParams.h"
 #include "music/MusicDatabase.h"
@@ -26,19 +28,16 @@
 
 using namespace XFILE::MUSICDATABASEDIRECTORY;
 
-CDirectoryNodeArtist::CDirectoryNodeArtist(const CStdString& strName, CDirectoryNode* pParent)
-  : CDirectoryNode(NODE_TYPE_ARTIST, strName, pParent)
-{
+CDirectoryNodeArtist::CDirectoryNodeArtist(const CStdString& strName, CDirectoryNode* pParent) :
+    CDirectoryNode(NODE_TYPE_ARTIST, strName, pParent) {
 
 }
 
-NODE_TYPE CDirectoryNodeArtist::GetChildType() const
-{
+NODE_TYPE CDirectoryNodeArtist::GetChildType() const {
   return NODE_TYPE_ALBUM;
 }
 
-CStdString CDirectoryNodeArtist::GetLocalizedName() const
-{
+CStdString CDirectoryNodeArtist::GetLocalizedName() const {
   if (GetID() == -1)
     return g_localizeStrings.Get(15103); // All Artists
   CMusicDatabase db;
@@ -47,8 +46,7 @@ CStdString CDirectoryNodeArtist::GetLocalizedName() const
   return "";
 }
 
-bool CDirectoryNodeArtist::GetContent(CFileItemList& items) const
-{
+bool CDirectoryNodeArtist::GetContent(CFileItemList& items) const {
   CMusicDatabase musicdatabase;
   if (!musicdatabase.Open())
     return false;
@@ -57,6 +55,12 @@ bool CDirectoryNodeArtist::GetContent(CFileItemList& items) const
   CollectQueryParams(params);
 
   bool bSuccess = musicdatabase.GetArtistsNav(BuildPath(), items, params.GetGenreId(), !g_guiSettings.GetBool("musiclibrary.showcompilationartists"));
+
+  //spotify
+  // TODO ask all loaded music addons for artists
+  CStdString strBaseDir = BuildPath();
+  bSuccess = g_spotify->GetArtists(items, strBaseDir);
+
 
   musicdatabase.Close();
 

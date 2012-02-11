@@ -19,6 +19,8 @@
  *
  */
 
+#include <iostream>
+#include "music/spotyXBMC/Addon.music.spotify.h"
 #include "AudioLibrary.h"
 #include "music/MusicDatabase.h"
 #include "FileItem.h"
@@ -96,11 +98,18 @@ JSON_STATUS CAudioLibrary::GetAlbums(const CStdString &method, ITransportLayer *
 
   int artistID  = (int)parameterObject["artistid"].asInteger();
   int genreID   = (int)parameterObject["genreid"].asInteger();
+  
+  CStdString s_path = "";
+  CStdString s_artistStr = "";
 
   CFileItemList items;
   if (musicdatabase.GetAlbumsNav("musicdb://3/", items, genreID, artistID, -1, -1))
     HandleFileItemList("albumid", false, "albums", items, parameterObject, result);
-
+  items.Clear();
+  if(!(artistID > 0) && g_spotify->GetAlbums(items, s_path,s_artistStr))
+  {  
+      HandleFileItemList("spotify_albumid", false, "albums", items, parameterObject, result);
+  }
   musicdatabase.Close();
   return OK;
 }
@@ -140,11 +149,16 @@ JSON_STATUS CAudioLibrary::GetSongs(const CStdString &method, ITransportLayer *t
   int artistID = (int)parameterObject["artistid"].asInteger();
   int albumID  = (int)parameterObject["albumid"].asInteger();
   int genreID  = (int)parameterObject["genreid"].asInteger();
-
+  CStdString spotifyID = (CStdString) parameterObject["spotify_albumid"].asString();
+  CStdString artistName = "";
   CFileItemList items;
-  if (musicdatabase.GetSongsNav("musicdb://4/", items, genreID, artistID, albumID))
-    HandleFileItemList("songid", true, "songs", items, parameterObject, result);
 
+  if (spotifyID.IsEmpty() && musicdatabase.GetSongsNav("musicdb://4/", items, genreID, artistID, albumID))
+    HandleFileItemList("songid", true, "songs", items, parameterObject, result);
+  else if(g_spotify->GetTracks(items,spotifyID,artistName,0))
+   {
+   	HandleFileItemList("songid", true, "songs", items, parameterObject, result);
+   }
   musicdatabase.Close();
   return OK;
 }
@@ -306,7 +320,9 @@ bool CAudioLibrary::FillFileItemList(const CVariant &parameterObject, CFileItemL
     int artistID = (int)parameterObject["artistid"].asInteger(-1);
     int albumID = (int)parameterObject["albumid"].asInteger(-1);
     int genreID = (int)parameterObject["genreid"].asInteger(-1);
-
+  	CStdString spotifyID = "";
+  	spotifyID = (CStdString) parameterObject["spotify_albumid"].asString();
+    CStdString artistName = "";
     CFileItem fileItem;
     if (FillFileItem(file, fileItem))
     {
@@ -314,9 +330,15 @@ bool CAudioLibrary::FillFileItemList(const CVariant &parameterObject, CFileItemL
       list.Add(CFileItemPtr(new CFileItem(fileItem)));
     }
 
-    if (artistID != -1 || albumID != -1 || genreID != -1)
-      success |= musicdatabase.GetSongsNav("", list, genreID, artistID, albumID);
-
+    if(spotifyID != "")
+    {
+       success |= g_spotify->GetTracks(list,spotifyID,artistName,0);
+    }
+    else
+    {
+  	  if (artistID != -1 || albumID != -1 || genreID != -1)
+  	    success |= musicdatabase.GetSongsNav("", list, genreID, artistID, albumID);
+    }    
     int songID = (int)parameterObject["songid"].asInteger(-1);
     if (songID != -1)
     {
