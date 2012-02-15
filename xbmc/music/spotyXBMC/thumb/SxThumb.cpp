@@ -42,7 +42,7 @@ namespace addon_music_spotify {
 		linkStringClean.Remove(':');
 		sp_link_release(link);
 		m_file = path + linkStringClean.c_str() + ".jpg";
-		if (XFILE::CFile::Exists(m_file, false)) {
+		if (XFILE::CFile::Exists(m_file, true)) {
 			m_isLoaded = true;
 		} else {
 		  CStdString pathS(m_file);
