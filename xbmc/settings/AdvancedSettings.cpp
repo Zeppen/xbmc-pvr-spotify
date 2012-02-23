@@ -128,6 +128,7 @@ void CAdvancedSettings::Initialize()
   m_cddbAddress = "freedb.freedb.org";
 
   m_handleMounting = g_application.IsStandAlone();
+  m_serverMode = g_application.IsServerMode();
 
   m_fullScreenOnMovieStart = true;
   m_cachePath = "special://temp/";
@@ -655,6 +656,7 @@ void CAdvancedSettings::ParseSettingsFile(const CStdString &file)
   
 
   XMLUtils::GetBoolean(pRootElement, "handlemounting", m_handleMounting);
+  XMLUtils::GetBoolean(pRootElement, "servermode", m_serverMode);
 
 #ifdef HAS_SDL
   XMLUtils::GetBoolean(pRootElement, "fullscreen", m_startFullScreen);
