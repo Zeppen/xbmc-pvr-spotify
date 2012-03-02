@@ -25,7 +25,7 @@
     <setting id="searchNoTracks" type="enum" label="30423" values="10|20|30|40|50|60|70|80|90|100" default="1" />
     <setting type="sep" />
     <setting id="preloadArtistDetails" type="bool" label="30427" default="false" />
-    <setting id="artistNoArtists" type="enum" label="30424" values="10|20|30|40|50|60|70|80|90|100|All" default="4" />
+    <setting id="artistNoArtists" type="enum" label="30424" values="10|20|30|40|50|60|70|80|90|100|All" default="1" />
     <setting id="artistNoAlbums" type="enum" label="30425" values="10|20|30|40|50|60|70|80|90|100|All" default="6" />
     <setting id="artistNoTracks" type="enum" label="30426" values="10|20|30|40|50|60|70|80|90|100|All" default="6" />
     <setting type="sep" />
@@ -36,7 +36,7 @@
     <setting id="preloadToplists" type="bool" label="30434" default="false" />
   </category>
   <category label="30440">
-    <setting id="radio1name" type="text" label="30440" default="Rock"/>
+    <setting id="radio1name" type="text" label="30442" default="Rock"/>
     <setting id="radio1from" type="enum" label="30460" values="Older|50s|60s|70s|80s|90s|00s|10s" default="3" />
     <setting id="radio1to" type="enum" label="30461" values="Older|50s|60s|70s|80s|90s|00s|10s" default="7" />
     <setting id="radio1genre1" type="bool" label="30443" default="false" />
@@ -70,7 +70,7 @@
 
 </category>
   <category label="30441">
-    <setting id="radio2name" type="text" label="30441" default="Dance"/>
+    <setting id="radio2name" type="text" label="30442" default="Dance"/>
     <setting id="radio2from" type="enum" label="30460" values="Older|50s|60s|70s|80s|90s|00s|10s" default="0" />
     <setting id="radio2to" type="enum" label="30461" values="Older|50s|60s|70s|80s|90s|00s|10s" default="7" />
     <setting id="radio2genre1" type="bool" label="30443" default="false" />

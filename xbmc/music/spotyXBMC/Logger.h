@@ -42,7 +42,6 @@ namespace addon_music_spotify {
       if (Settings::getInstance()->saveLogToFile()){
         string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
-        bool dowrite = file.is_open();
         if (file.is_open()) {
       	  file << text << "\n";
         }
@@ -55,7 +54,6 @@ namespace addon_music_spotify {
       if (Settings::getInstance()->saveLogToFile()){
         string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
-        bool dowrite = file.is_open();
         if (file.is_open()) {
       	  file << text << "\n";
         }
@@ -68,7 +66,6 @@ namespace addon_music_spotify {
       if (Settings::getInstance()->saveLogToFile()){
         string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
-        bool dowrite = file.is_open();
         if (file.is_open()) {
       	  file << text << "\n";
         }
@@ -81,7 +78,6 @@ namespace addon_music_spotify {
       if (Settings::getInstance()->saveLogToFile()){
         string path = Settings::getInstance()->getCachePath() + "log.txt";
         ofstream file(path.c_str(), ios::app);
-        bool dowrite = file.is_open();
         if (file.is_open()) {
       	  file << text << "\n";
         }

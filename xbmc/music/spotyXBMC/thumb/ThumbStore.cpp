@@ -191,7 +191,6 @@ namespace addon_music_spotify {
 						string path = Settings::getInstance()->getCachePath() + "fanarts.txt";
 						Logger::printOut("saving fanart list");
 						ofstream file(path.c_str(), ios::app);
-						bool dowrite = file.is_open();
 						if (file.is_open()) {
 							file << artistNameString << "\n" << *fanartUrl << "\n";
 						}
@@ -209,7 +208,6 @@ namespace addon_music_spotify {
 			string path = Settings::getInstance()->getCachePath() + "fanarts.txt";
 			Logger::printOut("saving fanart list");
 			ofstream file(path.c_str(), ios::app);
-			bool dowrite = file.is_open();
 			if (file.is_open()) {
 				file << artistNameString << "\n" << *m_stdFanart << "\n";
 			}
