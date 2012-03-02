@@ -63,7 +63,7 @@ namespace addon_music_spotify {
         Session::getInstance()->unlock();
       }
       Session::getInstance()->m_nextEvent -= 5;
-      Sleep(0);
+      Sleep(5);
     }
     Logger::printOut("exiting process thread");
     Session::getInstance()->disConnect();
