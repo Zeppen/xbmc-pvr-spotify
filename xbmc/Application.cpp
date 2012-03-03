@@ -1238,10 +1238,9 @@ bool CApplication::Initialize()
     }
   }
   else
-  {   
-#ifdef HAS_JSONRPC
+  {    #ifdef HAS_JSONRPC
       CJSONRPC::Initialize();
-#endif
+    #endif
     ADDON::CAddonMgr::Get().StartServices(false);
     if (!g_application.IsServerMode())
     {
