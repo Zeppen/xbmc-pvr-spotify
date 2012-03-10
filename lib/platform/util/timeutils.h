@@ -92,9 +92,9 @@ namespace PLATFORM
     }
     return -1;
   #else
-    timeval time;
-    gettimeofday(&time, NULL);
-    return (int64_t) (time.tv_sec * 1000 + time.tv_usec / 1000);
+    timespec time;
+    clock_gettime(CLOCK_MONOTONIC, &time);
+    return (int64_t)time.tv_sec * 1000 + time.tv_nsec / 1000000;
   #endif
   }
 
@@ -107,13 +107,16 @@ namespace PLATFORM
   class CTimeout
   {
   public:
-    CTimeout(uint32_t iTime) :
-      m_iTarget(GetTimeMs() + iTime) {}
+    CTimeout(void) : m_iTarget(0) {}
+    CTimeout(uint32_t iTimeout) { Init(iTimeout); }
 
-    uint64_t TimeLeft(void) const
+    bool IsSet(void) const       { return m_iTarget > 0; }
+    void Init(uint32_t iTimeout) { m_iTarget = GetTimeMs() + iTimeout; }
+
+    uint32_t TimeLeft(void) const
     {
       uint64_t iNow = GetTimeMs();
-      return (iNow > m_iTarget) ? 0 : m_iTarget - iNow;
+      return (iNow > m_iTarget) ? 0 : (uint32_t)(m_iTarget - iNow);
     }
 
   private:

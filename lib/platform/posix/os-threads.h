@@ -48,13 +48,19 @@ namespace PLATFORM
 
   inline struct timespec GetAbsTime(uint64_t iIncreaseBy = 0)
   {
-    struct timespec abstime;
-    struct timeval now;
-    gettimeofday(&now, NULL);
-    iIncreaseBy += now.tv_usec / 1000;
-    abstime.tv_sec = now.tv_sec + (time_t)(iIncreaseBy / 1000);
-    abstime.tv_nsec = (int32_t)((iIncreaseBy % (uint32_t)1000) * (uint32_t)1000000);
-    return abstime;
+    struct timespec now;
+    #ifdef __APPLE__
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    now.tv_sec  = tv.tv_sec + 0;
+    now.tv_nsec = 0;
+    #else
+    clock_gettime(CLOCK_REALTIME, &now);
+    #endif
+    now.tv_nsec += iIncreaseBy % 1000 * 1000000;
+    now.tv_sec  += iIncreaseBy / 1000 + now.tv_nsec / 1000000000;
+    now.tv_nsec %= 1000000000;
+    return now;
   }
 
   typedef pthread_t thread_t;
@@ -92,15 +98,20 @@ namespace PLATFORM
       pthread_cond_broadcast(&m_condition);
     }
 
-    bool Wait(mutex_t &mutex, uint32_t iTimeoutMs)
+    bool Wait(mutex_t &mutex)
     {
       sched_yield();
-      if (iTimeoutMs > 0)
-      {
-        struct timespec timeout = GetAbsTime(iTimeoutMs);
-        return (pthread_cond_timedwait(&m_condition, &mutex, &timeout) == 0);
-      }
       return (pthread_cond_wait(&m_condition, &mutex) == 0);
+    }
+
+    bool Wait(mutex_t &mutex, uint32_t iTimeoutMs)
+    {
+      if (iTimeoutMs == 0)
+        return Wait(mutex);
+
+      sched_yield();
+      struct timespec timeout = GetAbsTime(iTimeoutMs);
+      return (pthread_cond_timedwait(&m_condition, &mutex, &timeout) == 0);
     }
 
     pthread_cond_t m_condition;
