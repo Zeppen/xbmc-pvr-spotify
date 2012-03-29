@@ -44,8 +44,13 @@ fi
 
 PACKAGE=org.xbmc.xbmc-atv2
 
+<<<<<<< HEAD
 VERSION=10.0
 REVISION=9
+=======
+VERSION=11.0
+REVISION=0
+>>>>>>> 1712010458dc8a9a1b28941310d2363862cbc517
 ARCHIVE=${PACKAGE}_${VERSION}-${REVISION}_iphoneos-arm.deb
 
 echo Creating $PACKAGE package version $VERSION revision $REVISION
