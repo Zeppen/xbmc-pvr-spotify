@@ -53,6 +53,7 @@ CEpgContainer::CEpgContainer(void) :
   m_iNextEpgId = 0;
   m_bPreventUpdates = false;
   m_updateEvent.Reset();
+  m_bLoaded = false;
 
   m_database.Open();
 }
@@ -127,9 +128,6 @@ void CEpgContainer::Start(void)
   m_iNextEpgUpdate  = 0;
   m_iNextEpgActiveTagCheck = 0;
 
-  LoadFromDB();
-  CheckPlayingEvents();
-
   Create();
   SetPriority(-1);
   CLog::Log(LOGNOTICE, "%s - EPG thread started", __FUNCTION__);
@@ -150,14 +148,31 @@ void CEpgContainer::Notify(const Observable &obs, const CStdString& msg)
 
 void CEpgContainer::LoadFromDB(void)
 {
+  bool bLoaded(true);
+  unsigned int iCounter(0);
   if (!m_bIgnoreDbForClient && m_database.IsOpen())
   {
+    ShowProgressDialog(false);
+
     m_database.DeleteOldEpgEntries();
     m_database.Get(*this);
 
     for (map<unsigned int, CEpg *>::iterator it = m_epgs.begin(); it != m_epgs.end(); it++)
+    {
+      if (InterruptUpdate())
+      {
+        bLoaded = false;
+        break;
+      }
+      UpdateProgressDialog(++iCounter, m_epgs.size(), it->second->Name());
       it->second->Load();
+    }
+
+    CloseProgressDialog();
   }
+
+  CSingleLock lock(m_critSection);
+  m_bLoaded = bLoaded;
 }
 
 bool CEpgContainer::PersistAll(void)
@@ -178,20 +193,27 @@ bool CEpgContainer::PersistAll(void)
 
 void CEpgContainer::Process(void)
 {
-  bool bLoaded(false);
   time_t iNow       = 0;
 
   bool bUpdateEpg(true);
+
+  if (!m_bLoaded)
+  {
+    CSingleLock lock(m_critSection);
+    LoadFromDB();
+    CheckPlayingEvents();
+  }
+
   while (!m_bStop && !g_application.m_bStop)
   {
     CDateTime::GetCurrentDateTime().GetAsUTCDateTime().GetAsTime(iNow);
     {
       CSingleLock lock(m_critSection);
-      bUpdateEpg = (iNow >= m_iNextEpgUpdate || !bLoaded);
+      bUpdateEpg = (iNow >= m_iNextEpgUpdate);
     }
 
-    /* load or update the EPG */
-    if (!InterruptUpdate() && bUpdateEpg && UpdateEPG(m_bIsInitialising))
+    /* update the EPG */
+    if (!InterruptUpdate() && bUpdateEpg && UpdateEPG())
       m_bIsInitialising = false;
 
     /* clean up old entries */
@@ -201,8 +223,6 @@ void CEpgContainer::Process(void)
     /* check for updated active tag */
     if (!m_bStop)
       CheckPlayingEvents();
-
-    bLoaded = true;
 
     Sleep(1000);
   }
@@ -337,13 +357,13 @@ void CEpgContainer::CloseProgressDialog(void)
   }
 }
 
-void CEpgContainer::ShowProgressDialog(void)
+void CEpgContainer::ShowProgressDialog(bool bUpdating /* = true */)
 {
-  if (!m_progressDialog && !g_PVRManager.IsInitialising())
+  if (!m_progressDialog)
   {
     m_progressDialog = (CGUIDialogExtendedProgressBar *)g_windowManager.GetWindow(WINDOW_DIALOG_EXT_PROGRESS);
     m_progressDialog->Show();
-    m_progressDialog->SetHeader(g_localizeStrings.Get(19004));
+    m_progressDialog->SetHeader(bUpdating ? g_localizeStrings.Get(19004) : g_localizeStrings.Get(19250));
   }
 }
 
@@ -389,10 +409,11 @@ void CEpgContainer::WaitForUpdateFinish(bool bInterrupt /* = true */)
   m_updateEvent.Wait();
 }
 
-bool CEpgContainer::UpdateEPG(bool bShowProgress /* = false */)
+bool CEpgContainer::UpdateEPG()
 {
   bool bInterrupted(false);
   unsigned int iUpdatedTables(0);
+  bool bShowProgress(false);
 
   /* set start and end time */
   time_t start;
@@ -400,6 +421,7 @@ bool CEpgContainer::UpdateEPG(bool bShowProgress /* = false */)
   CDateTime::GetCurrentDateTime().GetAsUTCDateTime().GetAsTime(start);
   end = start + m_iDisplayTime;
   start -= g_advancedSettings.m_iEpgLingerTime * 60;
+  bShowProgress = g_advancedSettings.m_bEpgDisplayUpdatePopup && (m_bIsInitialising || g_advancedSettings.m_bEpgDisplayIncrementalUpdatePopup);
 
   {
     CSingleLock lock(m_critSection);
@@ -433,11 +455,11 @@ bool CEpgContainer::UpdateEPG(bool bShowProgress /* = false */)
     if (!epg)
       continue;
 
+    if (bShowProgress)
+          UpdateProgressDialog(++iCounter, m_epgs.size(), epg->Name());
+
     if (epg->Update(start, end, m_iUpdateTime))
       ++iUpdatedTables;
-
-    if (bShowProgress)
-      UpdateProgressDialog(++iCounter, m_epgs.size(), epg->Name());
   }
 
   if (!bInterrupted)
