@@ -19,8 +19,6 @@
  *
  */
 
-//spotify
-#include "../../music/spotyXBMC/Addon.music.spotify.h"
 #include "DirectoryNodeTop100.h"
 #include "FileItem.h"
 #include "guilib/LocalizeStrings.h"
@@ -67,10 +65,6 @@ bool CDirectoryNodeTop100::GetContent(CFileItemList& items) const
     pItem->m_bIsFolder = true;
     items.Add(pItem);
   }
-
-  //spotify
-  //get all toplists from addons, now just fetch the spotify lists
-  g_spotify->GetTopLists(items);
 
   return true;
 }

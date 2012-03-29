@@ -19,9 +19,6 @@
  *
  */
 
-//spotify
-#include "music/spotyXBMC/Addon.music.spotify.h"
-
 #include "threads/SystemClock.h"
 #include "system.h"
 #include "Application.h"
@@ -328,7 +325,6 @@
 #ifdef HAS_IRSERVERSUITE
   #include "input/windows/IRServerSuite.h"
 #endif
-
 
 using namespace std;
 using namespace ADDON;
@@ -1247,9 +1243,6 @@ bool CApplication::Initialize()
     ADDON::CAddonMgr::Get().StartServices(false);
     g_windowManager.ActivateWindow(g_SkinInfo->GetFirstWindow());
   }
-
-  //spotify
-  g_spotify = new Addon_music_spotify();
 
   g_sysinfo.Refresh();
 
@@ -3205,10 +3198,6 @@ bool CApplication::Cleanup()
 {
   try
   {
-    //spotify
-    if (g_spotify)
-      g_spotify->enable(false);
-      //delete g_spotify;
     g_windowManager.Delete(WINDOW_MUSIC_PLAYLIST);
     g_windowManager.Delete(WINDOW_MUSIC_PLAYLIST_EDITOR);
     g_windowManager.Delete(WINDOW_MUSIC_FILES);

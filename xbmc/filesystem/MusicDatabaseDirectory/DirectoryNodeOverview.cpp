@@ -19,8 +19,6 @@
  *
  */
 
-//spotify
-#include "../../music/spotyXBMC/Addon.music.spotify.h"
 #include "DirectoryNodeOverview.h"
 #include "FileItem.h"
 #include "music/MusicDatabase.h"
@@ -95,11 +93,6 @@ bool CDirectoryNodeOverview::GetContent(CFileItemList& items) const
     pItem->SetCanQueue(false);
     items.Add(pItem);
   }
-
-  //spotify
-   // TODO ask all loaded music addons for custom entries
-   g_spotify->GetCustomEntries(items);
-
 
   return true;
 }

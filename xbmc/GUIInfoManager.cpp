@@ -5078,9 +5078,7 @@ bool CGUIInfoManager::GetLibraryBool(int condition)
         db.Close();
       }
     }
-    //spotify ugly hack to allow library to be enabled without music
-    return true;
-    //return m_libraryHasMusic > 0;
+    return m_libraryHasMusic > 0;
   }
   else if (condition == LIBRARY_HAS_MOVIES)
   {

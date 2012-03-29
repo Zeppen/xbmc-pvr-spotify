@@ -93,7 +93,6 @@ INT CXBApplicationEx::Run()
     try
     {
 #endif
-
       Process();
       //reset exception count
       processExceptionCount = 0;
